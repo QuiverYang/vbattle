@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import vbattle.Button.InterfaceBtn;
 
 /**
  *
@@ -18,45 +19,57 @@ public class MainPanel extends javax.swing.JPanel {
 
     private BufferedImage img;
     private ImgResource rc;
-    Button btn;
+    private Button introBtn;
+    private Button loadBtn;
+    private Button newGameBtn;
      private boolean clickState;
      private BufferedImage introImg;
 
-    class MouseListener extends MouseAdapter {
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-            if (e.getButton() == MouseEvent.BUTTON1 && e.getX() >= 100
-                    && e.getX() <= 200 && e.getY() >= 100 && e.getY() <= 200) {
-                btn.setClickState(true);
-                clickState = true;
-                System.out.println(btn.getClickState());
-                System.out.println("ddd");
-            }
-        }
-
-    }
+//    class MouseListener extends MouseAdapter {
+//
+//        @Override
+//        public void mousePressed(MouseEvent e) {
+//            if (e.getButton() == MouseEvent.BUTTON1 && e.getX() >= 100
+//                    && e.getX() <= 200 && e.getY() >= 100 && e.getY() <= 200) {
+//                btn.setClickState(true);
+//                clickState = true;
+//                System.out.println(btn.getClickState());
+//                System.out.println("ddd");
+//            }
+//        }
+//
+//    }
+     
+     
 
     public MainPanel() {
         clickState = false;
         rc = ImgResource.getInstance();
         introImg =  rc.tryGetImage("/resources/BlueSky.png");
-        btn = new Button("/resources/1ILL.jpg", 100, 100);
-        btn.setX(100);
-        btn.setY(100);
+        introBtn = new Button("/resources/1ILL.jpg", 100, 100, new InterfaceBtn(){
+            
+            @Override
+            public void doSomething(){
+                 System.out.println("jijjd");
+                 introBtn.setClickState(true);
+            }
+            
+        });
+        introBtn.setX(100);
+        introBtn.setY(100);
         
-        this.addMouseListener(new MouseListener());
-        this.addMouseMotionListener(new MouseListener());
+        this.addMouseListener(new MouseListenerDragStuff(introBtn));
+        this.addMouseMotionListener(new MouseListenerDragStuff(introBtn));
 
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        btn.paint(g);
-        if(this.clickState){
+        introBtn.paint(g);
+        if(this.introBtn.getClickState()){
             System.out.println("ccc");
-            g.drawImage(this.introImg, 500, 500, 200, 200, null);
-            this.clickState = false;
+            g.drawImage(this.introImg, 100, 100, 200, 200, null);
+           
         }
     }
     

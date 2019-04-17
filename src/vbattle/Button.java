@@ -33,10 +33,23 @@ public class Button {
 
     public Button(String iconName, int height, int width, InterfaceBtn ib) {
         rc = ImgResource.getInstance();
+        buttonImg = rc.tryGetImage(iconName);
         this.height = height;
         this.width = width;
         this.ib = ib;
         clickState = false;
+    }
+    
+    public int getImgWidth(){
+        return this.width;
+    }
+    
+    public int getImgHeight(){
+        return this.height;
+    }
+    
+    public void action(){
+        ib.doSomething();
     }
     
    

@@ -16,11 +16,14 @@ public class MouseListenerDragStuff extends MouseAdapter{
     public MouseListenerDragStuff(Stuff stuff){
         this.stuff = stuff;
     }
+    public MouseListenerDragStuff(Button btn){
+        this.btn = btn;
+    }
     
     @Override
     public void mouseClicked(MouseEvent e){
         if(e.getButton() == MouseEvent.BUTTON1){
-            if(isOnBtn()){
+            if(isOnBtn(e)){
                 btn.action();
             }
         }

@@ -22,9 +22,6 @@ public class IntroScene extends Scene{
     private BufferedImage img;
     private ImgResource rc;
     private Button introBtn;
-    private Button loadBtn;
-    private Button newGameBtn;
-    private boolean clickState;
     private BufferedImage introImg;
     
     public IntroScene(GameStatusChangeListener gsChangeListener) {
@@ -32,11 +29,8 @@ public class IntroScene extends Scene{
         
         rc = ImgResource.getInstance();
         introImg =  rc.tryGetImage("/resources/BlueSky.png");
-        introBtn = new Button("/resources/1ILL.jpg", 200, 100);
-        
-//        loadBtn = new Button("/resources/1ILL.jpg", 5, 100, );
-        introBtn.setX(200);
-        introBtn.setY(500);
+        introBtn = new Button("/resources/1ILL.jpg",200,500, 200, 100);
+
 
         
 

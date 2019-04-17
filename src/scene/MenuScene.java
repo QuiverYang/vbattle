@@ -6,7 +6,6 @@
 package scene;
 
 import java.awt.Graphics;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -16,10 +15,8 @@ import vbattle.ImgResource;
 import vbattle.MainPanel;
 import vbattle.MainPanel.GameStatusChangeListener;
 
-/**
- *
- * @author anny
- */
+
+//每個scene都繼承至 Abstract Class Scene
 public class MenuScene extends Scene{
 
     private BufferedImage img;
@@ -32,26 +29,18 @@ public class MenuScene extends Scene{
 
      
      
-
     public MenuScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
         
         clickState = false;
         rc = ImgResource.getInstance();
         introImg =  rc.tryGetImage("/resources/BlueSky.png");
-        introBtn = new Button("/resources/1ILL.jpg", 200, 100);
+        introBtn = new Button("/resources/1ILL.jpg",100,600, 200, 100);
         
-//        loadBtn = new Button("/resources/1ILL.jpg", 5, 100, );
-        introBtn.setX(100);
-        introBtn.setY(600);
-        
-        newGameBtn = new Button("/resources/1ILL.jpg", 200, 100);
-        newGameBtn.setX(500);
-        newGameBtn.setY(600);
-        
-        loadBtn =  new Button("/resources/1ILL.jpg", 200, 100);
-        loadBtn.setX(900);
-        loadBtn.setY(600);
+        newGameBtn = new Button("/resources/1ILL.jpg",500,600, 200, 100);
+             
+        loadBtn =  new Button("/resources/1ILL.jpg",900,600, 200, 100);
+
         
 
     }
@@ -81,7 +70,6 @@ public class MenuScene extends Scene{
                 int ex = e.getX();
                 int ey = e.getY();
                 if(ex>100&&ex<300&&ey>600&&ey<700){
-                    
                     gsChangeListener.changeScene(MainPanel.INTRO_SCENE);
                 }
             }

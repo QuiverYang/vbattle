@@ -9,7 +9,6 @@ import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import vbattle.Button.InterfaceBtn;
 
 /**
  *
@@ -46,15 +45,9 @@ public class MainPanel extends javax.swing.JPanel {
         clickState = false;
         rc = ImgResource.getInstance();
         introImg =  rc.tryGetImage("/resources/BlueSky.png");
-        introBtn = new Button("/resources/1ILL.jpg", 100, 100, new InterfaceBtn(){
-            
-            @Override
-            public void doSomething(){
-                 System.out.println("jijjd");
-                 introBtn.setClickState(true);
-            }
-            
-        });
+        introBtn = new Button("/resources/1ILL.jpg", 100, 100);
+        
+//        loadBtn = new Button("/resources/1ILL.jpg", 5, 100, );
         introBtn.setX(100);
         introBtn.setY(100);
         

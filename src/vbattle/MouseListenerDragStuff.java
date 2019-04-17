@@ -24,7 +24,7 @@ public class MouseListenerDragStuff extends MouseAdapter{
     public void mouseClicked(MouseEvent e){
         if(e.getButton() == MouseEvent.BUTTON1){
             if(isOnBtn(e)){
-                btn.action();
+                btn.setClickState(true);
             }
         }
     }

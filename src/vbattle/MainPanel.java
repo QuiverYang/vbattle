@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import scene.IntroScene;
 
 /**
  *
@@ -20,9 +21,12 @@ import javax.swing.Timer;
  */
 public class MainPanel extends JPanel{
     
-    
+    //設定各個場景代號
     public static final int MENU_SCENE = 0;
     public static final int INTRO_SCENE = 1;
+    public static final int NEW_GAME_SCENE = 2;
+    public static final int LOAD_GAME_SCENE = 3;
+    
     
     public interface GameStatusChangeListener{
         void changeScene(int sceneId);
@@ -65,11 +69,17 @@ public class MainPanel extends JPanel{
     }
     
     private Scene genSceneById(int id){
+        //設定切換場景
+        
         switch(id){
             case MENU_SCENE:
                 return new MenuScene(gsChangeListener);
             case INTRO_SCENE:
-                return new MenuScene(gsChangeListener);
+                return new IntroScene(gsChangeListener);
+//            case NEW_GAME_SCENE:
+//                return new NewGameScene(gsChangeListener);
+//            case LOAD_GAME_SCENE:
+//                return LoadGameScene(gsChangeListener);
         }
         return null;
     }

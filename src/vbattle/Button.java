@@ -41,7 +41,6 @@ public class Button {
         return this.height;
     }
     
-   
     
     public void setX(int x) {
         this.x = x;
@@ -63,7 +62,6 @@ public class Button {
         g.drawImage(buttonImg, x, y, this.width, this.height, null);
         
     }
-
 
     public void setClickState(boolean a) {
         this.clickState = a;

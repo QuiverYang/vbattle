@@ -77,11 +77,16 @@ public class MenuScene extends Scene{
         return new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){
-                gsChangeListener.changeScene(MainPanel.MENU_SCENE);
+                //判斷哪一個btn被點擊到
+                int ex = e.getX();
+                int ey = e.getY();
+                if(ex>100&&ex<300&&ey>600&&ey<700){
+                    
+                    gsChangeListener.changeScene(MainPanel.INTRO_SCENE);
+                }
             }
         };
     }
-
 
     @Override
     public void logicEvent() {

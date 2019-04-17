@@ -25,7 +25,7 @@ public class Stuff {
         this.y1 = y0 + imgHeight;
         //設定建構子參數
         //讀取參數txt檔
-        BufferedReader br = new BufferedReader(new FileReader("src\\"+txtpath+".txt"));
+        BufferedReader br = new BufferedReader(new FileReader("src/"+txtpath+".txt"));
         String status[] = br.readLine().split(",");
         this.test = status[0];//測試
         this.img = ImageIO.read(getClass().getResource(status[0]));

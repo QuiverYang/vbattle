@@ -1,6 +1,7 @@
 
 package vbattle;
 
+import scene.MenuScene;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -16,8 +17,8 @@ public class VBattle {
         
         jf.setTitle("test");
         jf.setSize(Resource.SCREEN_WIDTH,Resource.SCREEN_HEIGHT);
-        Menu menu = new Menu();
-        jf.add(menu);
+        MainPanel mainPanel = new MainPanel();
+        jf.add(mainPanel);
         jf.setVisible(true);
         
         Timer timer = new Timer(Resource.FPS,new ActionListener() {

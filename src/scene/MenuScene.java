@@ -3,31 +3,39 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vbattle;
+package scene;
 
 import java.awt.Graphics;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import vbattle.Button;
+import vbattle.ImgResource;
+import vbattle.MainPanel;
+import vbattle.MainPanel.GameStatusChangeListener;
 
 /**
  *
  * @author anny
  */
-public class Menu extends javax.swing.JPanel {
+public class MenuScene extends Scene{
 
     private BufferedImage img;
     private ImgResource rc;
     private Button introBtn;
     private Button loadBtn;
     private Button newGameBtn;
-     private boolean clickState;
-     private BufferedImage introImg;
+    private boolean clickState;
+    private BufferedImage introImg;
 
      
      
 
-    public Menu() {
+    public MenuScene(GameStatusChangeListener gsChangeListener) {
+        super(gsChangeListener);
+        
         clickState = false;
         rc = ImgResource.getInstance();
         introImg =  rc.tryGetImage("/resources/BlueSky.png");
@@ -45,13 +53,11 @@ public class Menu extends javax.swing.JPanel {
         loadBtn.setX(900);
         loadBtn.setY(600);
         
-        this.addMouseListener(new MouseListenerDragStuff(introBtn));
-        this.addMouseMotionListener(new MouseListenerDragStuff(introBtn));
 
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    public void paint(Graphics g) {
         introBtn.paint(g);
         newGameBtn.paint(g);
         loadBtn.paint(g);
@@ -64,6 +70,22 @@ public class Menu extends javax.swing.JPanel {
     
     public boolean getClickState(){
         return this.clickState;
+    }
+
+    @Override
+    public MouseListener genMouseListener() {
+        return new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                gsChangeListener.changeScene(MainPanel.MENU_SCENE);
+            }
+        };
+    }
+
+
+    @Override
+    public void logicEvent() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

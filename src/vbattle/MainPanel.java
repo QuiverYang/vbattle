@@ -5,10 +5,80 @@
  */
 package vbattle;
 
+import scene.Scene;
+import scene.MenuScene;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
+import javax.swing.JPanel;
+import javax.swing.Timer;
+
 /**
  *
  * @author anny
  */
-public class MainPanel {
+public class MainPanel extends JPanel{
+    
+    
+    public static final int MENU_SCENE = 0;
+    public static final int INTRO_SCENE = 1;
+    
+    public interface GameStatusChangeListener{
+        void changeScene(int sceneId);
+    }
+    
+    MouseListener mouseListener;
+    Scene currentScene;
+    GameStatusChangeListener gsChangeListener;
+    
+    public MainPanel(){
+        gsChangeListener = new GameStatusChangeListener(){
+            @Override
+            public void changeScene(int sceneId){
+                changeCurrentScene(genSceneById(sceneId));
+            }
+        };
+        
+        changeCurrentScene(genSceneById(MENU_SCENE));
+        
+        Timer t1 = new Timer(25, new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if(currentScene != null){
+                   currentScene.logicEvent();
+                }
+            }
+        });
+        t1.start();
+    }
+    
+    
+    
+    private void changeCurrentScene(Scene scene){
+        if(currentScene != null){
+            this.removeMouseListener(mouseListener);
+        }
+        currentScene = scene;
+        mouseListener = scene.genMouseListener();
+        this.addMouseListener(mouseListener);
+    }
+    
+    private Scene genSceneById(int id){
+        switch(id){
+            case MENU_SCENE:
+                return new MenuScene(gsChangeListener);
+            case INTRO_SCENE:
+                return new MenuScene(gsChangeListener);
+        }
+        return null;
+    }
+    
+    @Override
+    public void paintComponent(Graphics g){
+        if(currentScene != null){
+            currentScene.paint(g);
+        }
+    }
     
 }

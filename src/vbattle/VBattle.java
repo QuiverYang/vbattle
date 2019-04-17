@@ -11,11 +11,13 @@ public class VBattle {
 
     public static void main(String[] args) throws IOException {
         final JFrame jf = new JFrame();
-        Stuff s = new Stuff(0, 0, 96, 96, "test"); //測試
-        s.print(); //測試
+//        Stuff s = new Stuff(0, 0, 96, 96, "test"); //測試
+//        s.print(); //測試
         
         jf.setTitle("test");
         jf.setSize(Resource.SCREEN_WIDTH,Resource.SCREEN_HEIGHT);
+        Menu menu = new Menu();
+        jf.add(menu);
         jf.setVisible(true);
         
         Timer timer = new Timer(Resource.FPS,new ActionListener() {

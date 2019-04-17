@@ -25,7 +25,7 @@ public class Button {
    
     
 
-    public Button(String iconName, int height, int width) {
+    public Button(String iconName, int width, int height) {
         rc = ImgResource.getInstance();
         buttonImg = rc.tryGetImage(iconName);
         this.height = height;

@@ -48,7 +48,7 @@ public class MenuScene extends Scene {
     }
 
     @Override
-    public MouseAdapter genMouseListener() {
+    public MouseAdapter genMouseAdapter() {
         return new MouseAdapter() {
 
             public boolean isOnBtn(MouseEvent e, Button btn) {
@@ -87,6 +87,9 @@ public class MenuScene extends Scene {
                      gsChangeListener.changeScene(MainPanel.STORE_SCENE);
                 }
                 
+                if(e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, loadBtn)){
+                    gsChangeListener.changeScene(MainPanel.LOAD_GAME_SCENE);
+                }
             }
             
         };

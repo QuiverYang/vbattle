@@ -9,7 +9,17 @@ import java.io.IOException;
 public class Player {
     private int inventory,stage;
     private int unlock[] = new int[5];//資源存量,破關進度,解鎖腳色
+    private String savePath;
+    private static Player player;
+    private String playerName;
     //GETTER SETTER
+    
+    public static Player getPlayerInstane(){
+        if(player == null){
+            player = new Player();
+        }
+            return player;
+    }
 
     public int getInventory() {
         return inventory;
@@ -38,29 +48,43 @@ public class Player {
         for (int i = 0; i < unlock.length; i++) {
             this.unlock[i] = 0;
         }
-    }
-    public Player(String loadPath)throws IOException{ //載入存檔
-        load(loadPath);
+        
+        savePath = "Playertest";
     }
     
-    public void save(String savePath)throws IOException{  //存檔方法
+    public void setPlayerName(String name){
+        this.playerName = name;
+    }
+    
+    
+//    public Player(String loadPath)throws IOException{ //載入存檔
+//        load(loadPath);
+//    }
+    
+    public void save()throws IOException{  //存檔方法
         BufferedWriter bw = new BufferedWriter(new FileWriter("src/"+savePath+".txt"));
+        bw.write(playerName+",");
         bw.write(String.valueOf(this.inventory));
         bw.write(","+String.valueOf(this.stage));
         for (int i = 0; i < 5; i++) {
             bw.write(String.valueOf(","+this.unlock[i]));
         }
+        bw.newLine();
         bw.flush();
         bw.close();
     }
     
-    public void load(String loadPath)throws IOException{ //載入方法
-        BufferedReader br = new BufferedReader(new FileReader(loadPath+".txt"));
+    public void load(String loadPath, int index)throws IOException{ //載入方法
+        BufferedReader br = new BufferedReader(new FileReader("src/"+loadPath+".txt"));
+        for(int i=0; i<index; i++){
+            br.readLine();
+        }
         String status[] = br.readLine().split(",");
-        this.inventory = Integer.parseInt(status[0]);
-        this.stage = Integer.parseInt(status[1]);
+        this.playerName = status[0];
+        this.inventory = Integer.parseInt(status[1]);
+        this.stage = Integer.parseInt(status[2]);
         for (int i = 0; i < unlock.length; i++) {
-            this.unlock[i] = Integer.parseInt(status[i+2]);
+            this.unlock[i] = Integer.parseInt(status[i+3]);
         }
         br.close();
     }

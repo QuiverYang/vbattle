@@ -40,18 +40,18 @@ public class LoadGameScene extends Scene {
         player = Player.getPlayerInstane();
 
         path = "Playertest";
-        playerBtn[0] = new Button("/resources/clickBtn.png", 400, 100, 150, 200);
-        playerBtn[1] = new Button("/resources/clickBtn.png", 400, 100, 150, 350);
-        playerBtn[2] = new Button("/resources/clickBtn.png", 400, 100, 150, 500);
-        playerBtn[3] = new Button("/resources/clickBtn.png", 400, 100, 650, 200);
-        playerBtn[4] = new Button("/resources/clickBtn.png", 400, 100, 650,350);
-        playerBtn[5] = new Button("/resources/clickBtn.png", 400, 100, 650,500);
+        playerBtn[0] = new Button("/resources/clickBtn.png", 300, 100, 200, 200);
+        playerBtn[1] = new Button("/resources/clickBtn.png", 300, 100, 200, 350);
+        playerBtn[2] = new Button("/resources/clickBtn.png", 300, 100, 200, 500);
+        playerBtn[3] = new Button("/resources/clickBtn.png", 300, 100, 650, 200);
+        playerBtn[4] = new Button("/resources/clickBtn.png", 300, 100, 650,350);
+        playerBtn[5] = new Button("/resources/clickBtn.png", 300, 100, 650,500);
         
-        backBtn = new Button("/resource/back_click2.png", 200, 100, 800, 700);
+        backBtn = new Button("/resources/back_click2.png", 200, 100, 900, 700);
     }
 
     @Override
-    public MouseListener genMouseListener() {
+      public MouseAdapter genMouseAdapter() {
         return new MouseAdapter() {
             public boolean isOnBtn(MouseEvent e, Button btn) {
                 if (e.getX() >= btn.getX()

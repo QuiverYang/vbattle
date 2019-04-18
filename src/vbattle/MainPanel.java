@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import scene.IntroScene;
 import scene.LoadGameScene;
-import scene.StageScene;
+//import scene.StageScene;
 
 /**
  *
@@ -51,7 +51,7 @@ public class MainPanel extends JPanel {
             }
         };
 
-        changeCurrentScene(genSceneById(STAGE_SCENE));
+        changeCurrentScene(genSceneById(MENU_SCENE));
 
         Timer t1 = new Timer(25, new ActionListener() {
             @Override
@@ -88,8 +88,8 @@ public class MainPanel extends JPanel {
                 return new LoadGameScene(gsChangeListener);
 //            case LOAD_GAME_SCENE:
 //                return LoadGameScene(gsChangeListener);
-            case STAGE_SCENE: 
-                return new StageScene(gsChangeListener);
+//            case STAGE_SCENE: 
+//                return new StageScene(gsChangeListener);
             
         }
         return null;

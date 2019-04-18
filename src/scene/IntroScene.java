@@ -31,7 +31,7 @@ public class IntroScene extends Scene{
     }
 
     @Override
-    public MouseListener genMouseListener() {
+    public MouseAdapter genMouseListener() {
         return new MouseAdapter(){
             
             public boolean isOnBtn(MouseEvent e, Button btn) {

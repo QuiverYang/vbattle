@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 public class Stuff {
     private int x0,y0,imgWidth,imgHeight,x1,y1;//起始座標,圖片尺寸,物件範圍(起始座標+圖片尺寸)
     private BufferedImage img;//載入圖片
-    private int hp,atk,lv,exp;//物件HP,ATK,LV,EXP
+    private int hp,atk,lv,exp,mp;//物件HP,ATK,LV,EXP
     private String txtpath;//參數txt路徑
     private String imgpath;//圖片路徑...存入參數txt檔
     private int hpRate,atkRate,hpBase,atkBase;//基礎參數...存入參數txt檔
@@ -70,6 +70,15 @@ public class Stuff {
     public int getX1() {
         return x1;
     }
+
+    public int getMp() {
+        return mp;
+    }
+
+    public void setMp(int mp) {
+        this.mp = mp;
+    }
+    
     public void setX1(int x1) {
         this.x1 = x1;
     }

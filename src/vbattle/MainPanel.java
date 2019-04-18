@@ -14,6 +14,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import scene.IntroScene;
+import scene.LoadGameScene;
 
 /**
  *
@@ -78,8 +79,8 @@ public class MainPanel extends JPanel{
                 return new IntroScene(gsChangeListener);
 //            case NEW_GAME_SCENE:
 //                return new NewGameScene(gsChangeListener);
-//            case LOAD_GAME_SCENE:
-//                return LoadGameScene(gsChangeListener);
+            case LOAD_GAME_SCENE:
+                return new LoadGameScene(gsChangeListener);
         }
         return null;
     }

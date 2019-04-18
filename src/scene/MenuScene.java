@@ -83,6 +83,10 @@ public class MenuScene extends Scene {
                 if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, introBtn)) {
                      gsChangeListener.changeScene(MainPanel.INTRO_SCENE);
                 }
+                
+                if(e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, loadBtn)){
+                    gsChangeListener.changeScene(MainPanel.LOAD_GAME_SCENE);
+                }
             }
             
             

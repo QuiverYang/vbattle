@@ -33,7 +33,6 @@ public class IntroScene extends Scene{
     @Override
     public MouseListener genMouseListener() {
         return new MouseAdapter(){
-            
             public boolean isOnBtn(MouseEvent e, Button btn) {
                 if (e.getX() >= btn.getX()
                         && e.getX() <= btn.getX() + btn.getImgWidth() && e.getY() >= btn.getY() && e.getY() <= btn.getY() + btn.getImgHeight()) {

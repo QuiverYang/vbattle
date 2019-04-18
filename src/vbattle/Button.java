@@ -59,11 +59,12 @@ public class Button {
     }
 
     public int getY() {
+        
         return this.y;
     }
 
     public void paint(Graphics g) {
-      g.drawImage(buttonImg, x, y, x+200, y+100, 2142*imgState, 0, 2142*(imgState+1), 972, null);
+      g.drawImage(buttonImg, x, y, x+this.getImgWidth(), y+this.getImgHeight(), buttonImg.getWidth()/2*imgState, 0, buttonImg.getWidth()/2*(imgState+1), buttonImg.getHeight(), null);
         
 //        g.drawImage(buttonImg, x, y, this.width, this.height, null);
     }

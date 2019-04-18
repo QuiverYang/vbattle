@@ -1,5 +1,6 @@
 package vbattle;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,6 +15,7 @@ public class Stuff {
     private String imgpath;//圖片路徑...存入參數txt檔
     private int hpRate,atkRate,hpBase,atkBase;//基礎參數...存入參數txt檔
     private String test;//測試
+    private boolean clickState;
     
     public Stuff(int x0,int y0,int imgWidth,int imgHeight,String txtpath) throws IOException{
         //設定建構子參數
@@ -151,7 +153,23 @@ public class Stuff {
     public void setTest(String test) {
         this.test = test;
     }
+
+    public boolean isClickState() {
+        return clickState;
+    }
+
+    public void setClickState(boolean clickState) {
+        this.clickState = clickState;
+    }
+    
     //內建GETTER SETTER
+    
+    public void setCoordinate(int x,int y){
+        this.x0 = x - imgWidth/2;
+        this.y0 = y - imgHeight/2;
+        this.x1 = x0 + imgWidth;
+        this.y1 = y0 + imgHeight;
+    }
     
     public void lvup(){
         
@@ -168,5 +186,9 @@ public class Stuff {
         this.atkRate+"\n"+
         this.hpBase+"\n"+
         this.atkBase);
+    }
+    
+    public void paint(Graphics g){
+        g.drawImage(this.img, x0, y0, x1, y1,32,32,64,64, null);
     }
 }

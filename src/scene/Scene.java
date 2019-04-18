@@ -6,6 +6,7 @@
 package scene;
 
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseListener;
 import vbattle.MainPanel.GameStatusChangeListener;
 
@@ -21,7 +22,7 @@ public abstract class Scene {
         this.gsChangeListener = gsChangeListener;
     }
     
-    abstract public MouseListener genMouseListener();
+    abstract public MouseAdapter genMouseAdapter();
     abstract public void paint(Graphics g);
     abstract public void logicEvent();
     

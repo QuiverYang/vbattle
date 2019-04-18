@@ -6,7 +6,7 @@
 package vbattle;
 
 import scene.Scene;
-import scene.MenuScene;
+import scene.*;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,6 +32,9 @@ public class MainPanel extends JPanel {
     public static final int INTRO_SCENE = 1;
     public static final int NEW_GAME_SCENE = 2;
     public static final int LOAD_GAME_SCENE = 3;
+
+    public static final int STORE_SCENE = 5;
+
     public static final int STAGE_SCENE = 4;
 
     public interface GameStatusChangeListener {
@@ -82,6 +85,8 @@ public class MainPanel extends JPanel {
                 return new MenuScene(gsChangeListener);
             case INTRO_SCENE:
                 return new IntroScene(gsChangeListener);
+            case STORE_SCENE:
+                return new StoreScene(gsChangeListener);
 //            case NEW_GAME_SCENE:
 //                return new NewGameScene(gsChangeListener);
             case LOAD_GAME_SCENE:

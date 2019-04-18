@@ -17,6 +17,7 @@ public class VBattle {
         
         jf.setTitle("test");
         jf.setSize(Resource.SCREEN_WIDTH,Resource.SCREEN_HEIGHT);
+        jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         MainPanel mainPanel = new MainPanel();
         jf.add(mainPanel);
         jf.setVisible(true);

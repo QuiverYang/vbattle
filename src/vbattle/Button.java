@@ -45,7 +45,7 @@ public class Button {
     public int getImgHeight() {
         return this.height;
     }
-
+    
     public void setX(int x) {
         this.x = x;
     }

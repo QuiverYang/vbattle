@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import scene.IntroScene;
 
 /**
  *
@@ -69,7 +70,7 @@ public class MainPanel extends JPanel{
             case MENU_SCENE:
                 return new MenuScene(gsChangeListener);
             case INTRO_SCENE:
-                return new MenuScene(gsChangeListener);
+                return new IntroScene(gsChangeListener);
         }
         return null;
     }

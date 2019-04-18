@@ -15,44 +15,26 @@ import vbattle.Button;
 import vbattle.ImgResource;
 import vbattle.MainPanel;
 import vbattle.MainPanel.GameStatusChangeListener;
+import vbattle.Resource;
 
 /**
  *
  * @author anny
  */
-public class MenuScene extends Scene{
+public class MenuScene extends Scene {
 
-    private BufferedImage img;
+    private BufferedImage background;
     private ImgResource rc;
     private Button introBtn;
     private Button loadBtn;
     private Button newGameBtn;
-    private boolean clickState;
-    private BufferedImage introImg;
-
-     
-     
 
     public MenuScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
-        
-        clickState = false;
         rc = ImgResource.getInstance();
-        introImg =  rc.tryGetImage("/resources/BlueSky.png");
-        introBtn = new Button("/resources/1ILL.jpg", 200, 100);
-        
-//        loadBtn = new Button("/resources/1ILL.jpg", 5, 100, );
-        introBtn.setX(100);
-        introBtn.setY(600);
-        
-        newGameBtn = new Button("/resources/1ILL.jpg", 200, 100);
-        newGameBtn.setX(500);
-        newGameBtn.setY(600);
-        
-        loadBtn =  new Button("/resources/1ILL.jpg", 200, 100);
-        loadBtn.setX(900);
-        loadBtn.setY(600);
-        
+        introBtn = new Button("/resources/help_click.png", 200, 100, (int) (Resource.SCREEN_WIDTH * 0.083f), (int) (Resource.SCREEN_HEIGHT * 0.667f));  //遊戲說明按鈕
+        newGameBtn = new Button("/resources/newGame_click.png", 200, 100, (int) (Resource.SCREEN_WIDTH * 0.417f), (int) (Resource.SCREEN_HEIGHT * 0.667f));  //新遊戲按鈕
+        loadBtn = new Button("/resources/loading_click.png", 200, 100, (int) (Resource.SCREEN_WIDTH * 0.75), (int) (Resource.SCREEN_HEIGHT * 0.667f));  //載入遊戲按鈕
 
     }
 
@@ -61,27 +43,50 @@ public class MenuScene extends Scene{
         introBtn.paint(g);
         newGameBtn.paint(g);
         loadBtn.paint(g);
-        if(this.introBtn.getClickState()){
-            System.out.println("ccc");
-            g.drawImage(this.introImg, 500, 500, 200, 200, null);
-           
-        }
-    }
-    
-    public boolean getClickState(){
-        return this.clickState;
     }
 
     @Override
     public MouseListener genMouseListener() {
-        return new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){
-                gsChangeListener.changeScene(MainPanel.MENU_SCENE);
+        return new MouseAdapter() {
+
+            public boolean isOnBtn(MouseEvent e, Button btn) {
+                if (e.getX() >= btn.getX()
+                        && e.getX() <= btn.getX() + btn.getImgWidth() && e.getY() >= btn.getY() && e.getY() <= btn.getY() + btn.getImgHeight()) {
+                    return true;
+                }
+                return false;
             }
+
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, introBtn)) {
+                    introBtn.setImgState(1);
+                }
+                if(e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, newGameBtn)){
+                    newGameBtn.setImgState(1);
+                }
+                if(e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, loadBtn)){
+                    loadBtn.setImgState(1);
+                }
+            }
+            
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if(e.getButton() == MouseEvent.BUTTON1 ){
+                    newGameBtn.setImgState(0);
+                    loadBtn.setImgState(0);
+                    introBtn.setImgState(0);
+                }
+                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, introBtn)) {
+                     gsChangeListener.changeScene(MainPanel.INTRO_SCENE);
+                }
+                
+            }
+            
+
         };
     }
-
 
     @Override
     public void logicEvent() {

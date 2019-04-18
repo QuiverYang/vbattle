@@ -6,7 +6,6 @@
 package scene;
 
 import java.awt.Graphics;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -28,6 +27,9 @@ public class MenuScene extends Scene {
     private Button introBtn;
     private Button loadBtn;
     private Button newGameBtn;
+
+    private boolean clickState;
+    private BufferedImage introImg;
 
     public MenuScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);

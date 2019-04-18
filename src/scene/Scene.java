@@ -6,7 +6,6 @@
 package scene;
 
 import java.awt.Graphics;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import vbattle.MainPanel.GameStatusChangeListener;
 
@@ -15,8 +14,9 @@ import vbattle.MainPanel.GameStatusChangeListener;
  * @author menglinyang
  */
 public abstract class Scene {
+    //介面
     GameStatusChangeListener gsChangeListener;
-    
+    //建構子裡放一個介面 可以讓介面回傳點擊事件後需要轉場至下一個畫面的資訊
     public Scene(GameStatusChangeListener gsChangeListener){
         this.gsChangeListener = gsChangeListener;
     }

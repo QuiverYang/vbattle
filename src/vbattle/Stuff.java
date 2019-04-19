@@ -13,9 +13,10 @@ public class Stuff {
     private int hp,atk,lv,exp,mp;//物件HP,ATK,LV,EXP
     private String txtpath;//參數txt路徑
     private String imgpath;//圖片路徑...存入參數txt檔
-    private int hpRate,atkRate,hpBase,atkBase;//基礎參數...存入參數txt檔
+    private int hpRate,atkRate,hpBase,atkBase,speed;//基礎參數...存入參數txt檔
     private String test;//測試
     private boolean clickState;
+    private int belong;
     
     public Stuff(int x0,int y0,int imgWidth,int imgHeight,String txtpath) throws IOException{
         //設定建構子參數
@@ -25,6 +26,7 @@ public class Stuff {
         this.imgHeight = imgHeight;
         this.x1 = x0 + imgWidth;
         this.y1 = y0 + imgHeight;
+        this.txtpath = txtpath;
         //設定建構子參數
         //讀取參數txt檔
         BufferedReader br = new BufferedReader(new FileReader("src/"+txtpath+".txt"));
@@ -170,7 +172,18 @@ public class Stuff {
     public void setClickState(boolean clickState) {
         this.clickState = clickState;
     }
-    
+    public int getSpeed() {
+        return speed;
+    }
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+    public int getBelong() {
+        return belong;
+    }
+    public void setBelong(int belong) {
+        this.belong = belong;
+    }
     //內建GETTER SETTER
     
     public void setCoordinate(int x,int y){
@@ -184,7 +197,17 @@ public class Stuff {
         
     }
     public void move(){
-        
+        int way = 0;
+        switch(this.belong){
+            case 0:
+                way = 1;
+                break;
+            case 1:
+                way = -1;
+                break;
+        }
+        this.x0 +=  way;
+        this.x1 = this.x0 + this.imgWidth;
     }
     public void attack(){
         
@@ -198,6 +221,6 @@ public class Stuff {
     }
     
     public void paint(Graphics g){
-        g.drawImage(this.img, x0, y0, x1, y1,32,32,64,64, null);
+        g.drawImage(this.img, x0, y0, x1, y1,0,64,32,96, null);
     }
 }

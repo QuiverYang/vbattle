@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
+import java.io.IOException;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import scene.IntroScene;

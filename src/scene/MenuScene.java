@@ -47,10 +47,9 @@ public class MenuScene extends Scene {
     public MenuScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
         rc = ImgResource.getInstance();
-        introBtn = new Button("/resources/help_click.png", 200, 100, (int) (Resource.SCREEN_WIDTH * 0.083f), (int) (Resource.SCREEN_HEIGHT * 0.667f));  //遊戲說明按鈕
-        newGameBtn = new Button("/resources/newGame_click.png", 200, 100, (int) (Resource.SCREEN_WIDTH * 0.417f), (int) (Resource.SCREEN_HEIGHT * 0.667f));  //新遊戲按鈕
-        loadBtn = new Button("/resources/loading_click.png", 200, 100, (int) (Resource.SCREEN_WIDTH * 0.75), (int) (Resource.SCREEN_HEIGHT * 0.667f));  //載入遊戲按鈕
-        enterPlayerNameBtn = new Button("/resources/clickBtn.png", 200, 100, 500, 550);
+        introBtn = new Button("/resources/help_click.png", Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12, Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT / 9 * 6);  //遊戲說明按鈕
+        newGameBtn = new Button("/resources/newGame_click.png", Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12, Resource.SCREEN_WIDTH / 12 * 5, Resource.SCREEN_HEIGHT / 9 * 6);  //新遊戲按鈕
+        loadBtn = new Button("/resources/loading_click.png", Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12, Resource.SCREEN_WIDTH / 12 * 9, (int) Resource.SCREEN_HEIGHT / 9 * 6);  //載入遊戲按鈕
 
         typeCheck = newGameCheck = false;
         countChar = 0;
@@ -67,36 +66,27 @@ public class MenuScene extends Scene {
         Font font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 25);
         g.setFont(font);
         g.setColor(new Color(0, 0, 0));
-        
+
         FontMetrics fm = g.getFontMetrics();
         //顯示玩家名稱窗口
         if (newGameCheck == true) {
-            g.setColor(Color.BLUE);
-            g.fillRect(400, 350, 400, 350);
+            g.setColor(Color.BLACK);
+            g.fillRect(Resource.SCREEN_WIDTH / 12 * 4, (int) (Resource.SCREEN_HEIGHT * 0.278f), Resource.SCREEN_WIDTH / 12 * 4, (int) (Resource.SCREEN_HEIGHT * 0.389f));
 
             g.setColor(Color.WHITE);
-            g.fillRect(450, 450, 300, 50);
+            g.fillRect((int) (Resource.SCREEN_WIDTH * 0.375f), (int) (Resource.SCREEN_HEIGHT * 0.389f), Resource.SCREEN_WIDTH / 12 * 3, (int) (Resource.SCREEN_HEIGHT * 0.055f));
             enterPlayerNameBtn.paint(g);
-            int sw1 = fm.stringWidth("ENTER");
-            int sa1 = fm.getAscent();
-            g.setColor(Color.BLACK);
-            g.drawString("ENTER", enterPlayerNameBtn.getX() + enterPlayerNameBtn.getImgWidth() / 2 - sw1 / 2 +5, enterPlayerNameBtn.getY() + enterPlayerNameBtn.getImgHeight() / 2 - sa1 / 2+40 );
+
         }
-        
-        
+
         int sw = fm.stringWidth(playerName);
         int sa = fm.getAscent();
-        g.drawString(playerName, 450 + 300 / 2 - sw / 2 + 5, 450 + 50 / 2 - sa / 2 + 30);
-        
+        g.drawString(playerName, (int) (Resource.SCREEN_WIDTH * 0.375f) + Resource.SCREEN_WIDTH / 12 * 3 / 2 - sw / 2 + (int) (Resource.SCREEN_WIDTH * 5 / 1200), (int) (Resource.SCREEN_HEIGHT / 2) + Resource.SCREEN_HEIGHT * 50 / 900 / 2 - sa / 2 - Resource.SCREEN_HEIGHT * 60 / 900);
+
         if (typeCheck) {
-            System.out.println("type");
             playerName = playerName + typeName;
             typeCheck = false;
         }
-
-        
-
-        
 
     }
 
@@ -116,15 +106,19 @@ public class MenuScene extends Scene {
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, introBtn)) {
                     introBtn.setImgState(1);
+                    introBtn.setClickState(true);
                 }
                 if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, newGameBtn)) {
                     newGameBtn.setImgState(1);
+                    newGameBtn.setClickState(true);
                 }
                 if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, loadBtn)) {
                     loadBtn.setImgState(1);
+                    loadBtn.setClickState(true);
                 }
                 if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, enterPlayerNameBtn)) {
                     enterPlayerNameBtn.setImgState(1);
+                    enterPlayerNameBtn.setClickState(true);
                 }
             }
 
@@ -135,24 +129,33 @@ public class MenuScene extends Scene {
                     loadBtn.setImgState(0);
                     introBtn.setImgState(0);
                 }
-                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, introBtn)) {
+                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, introBtn) && introBtn.getClickState()) {
                     introBtn.setImgState(0);
+                    introBtn.setClickState(false);
                     gsChangeListener.changeScene(MainPanel.INTRO_SCENE);
                 }
-                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, newGameBtn)) {
+                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, newGameBtn) && newGameBtn.getClickState()) {
+                    enterPlayerNameBtn = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9, Resource.SCREEN_WIDTH / 12 * 5, Resource.SCREEN_HEIGHT / 2);
+                    enterPlayerNameBtn.setLabel("ENTER");
                     newGameBtn.setImgState(0);
+                    newGameBtn.setClickState(false);
                     newGameCheck = true;
                 }
 
-                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, loadBtn)) {
+                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, loadBtn) && loadBtn.getClickState()) {
+                   loadBtn.setClickState(false);
                     gsChangeListener.changeScene(MainPanel.LOAD_GAME_SCENE);
                 }
 
-                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, enterPlayerNameBtn)) {
+                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, enterPlayerNameBtn) && enterPlayerNameBtn.getClickState()) {
                     enterPlayerNameBtn.setImgState(0);
-                    Player player = Player.getPlayerInstane();
-                    player.setPlayerName(playerName);
-                    gsChangeListener.changeScene(MainPanel.STORE_SCENE);
+                    if (countChar > 0) {
+                        Player player = Player.getPlayerInstane();
+                        player.setPlayerName(playerName);
+                        enterPlayerNameBtn.setClickState(false);
+                        gsChangeListener.changeScene(MainPanel.STORE_SCENE);
+                    }
+
                 }
             }
 
@@ -184,7 +187,7 @@ public class MenuScene extends Scene {
 
     @Override
     public void logicEvent() {
-//        System.out.println("Menu logicEvent");
+
     }
 
 }

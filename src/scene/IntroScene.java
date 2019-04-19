@@ -31,7 +31,7 @@ public class IntroScene extends Scene {
         super(gsChangeListener);
         rc = ImgResource.getInstance();
         introImg = rc.tryGetImage("/resources/intro1.jpg");  //遊戲說明圖片 
-        backBtn = new Button("/resources/back_click2.png", 200, 100, 900, 700);  //退回按鈕
+        backBtn = new Button("/resources/back_click2.png", 900, 700, 200, 100);  //退回按鈕
 
         introY = 0;
     }

@@ -110,16 +110,17 @@ public class Button {
     //for img with 2 types
     public void paint(Graphics g) {
         g.drawImage(buttonImg, x, y, x+this.getImgWidth(), y+this.getImgHeight(), buttonImg.getWidth()/2*imgState, 0, buttonImg.getWidth()/2*(imgState+1), buttonImg.getHeight(), null);
-        
+//        g.drawOval(x, y, 5, 5);
+//        g.drawOval(x+this.getImgWidth(), y+this.getImgHeight(), 5, 5);
         //畫出按鈕label
         if(label !=null){
-            Font fontBit = Fontes.getBitFont(buttonImg.getWidth()/50);
+            Font fontBit = Fontes.getBitFont(buttonImg.getWidth()/40);//40為調整字體的大小參數 越小表示字體越大
             g.setColor(new Color(0,0,0));
             g.setFont(fontBit);
             FontMetrics fm = g.getFontMetrics();
             int sw = fm.stringWidth(label);
             int sa = fm.getAscent();
-            g.drawString(label, x+width/2-sw/2-imgState*3+3, y+height/2-sa/2+25+imgState*5);
+            g.drawString(label, x+width/2-sw/2-imgState*3+3, y+height/2-sa/2+height/3+imgState*5);
         }
         
     }

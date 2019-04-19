@@ -59,7 +59,7 @@ public class StoreScene extends Scene{
     
     public StoreScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
-        cost = 100;
+        cost = 0;
         this.itemBtnXcenter = (int)(Resource.SCREEN_WIDTH*0.2f)+this.funcBtnWidthUnit/2+padding + this.itemBtnWidthUnit/2;
         this.itemBtnYcenter = (int)(Resource.SCREEN_HEIGHT*0.333f);
         player = Player.getPlayerInstane();
@@ -88,11 +88,16 @@ public class StoreScene extends Scene{
         
         this.functionBtns[this.BUY_BTN] = new Button("/resources/clickBtn.png",  funcBtnWidthUnit*2, funcBtnWidthUnit,padding,Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-120); //120是視窗本身吃掉的高度
         this.functionBtns[this.BUY_BTN].setLabel("BUY");
-        
         this.functionBtns[this.BUY_BTN].setCallback(new Callback() {
             @Override
             public void doSomthing() {
-                player.increaseInventory(itemBtns[0].getIntData());
+                for(int i = 0; i < itemBtns.length;i++){
+                    if(itemBtns[i].isIsClicked()){
+                        cost += itemBtns[i].getIntData();
+                        //把被買的選項暫時選為false等扣完錢後再重新設定為true
+                        itemBtns[i].setIsClicked(false);
+                    }
+                }
             }
         });
         
@@ -122,20 +127,23 @@ public class StoreScene extends Scene{
             this.itemBtnSizeFactor[i] = 1;
         }
         this.itemBtnSizeFactor[1] = 2;
+        //設定第0個商品位置
         this.itemBtns[0] = new Button(this.itemBtnIconPaths[0],itemBtnWidthUnit*itemBtnSizeFactor[0],itemBtnWidthUnit*itemBtnSizeFactor[0],
                 itemBtnXcenter-itemBtnWidthUnit/2,itemBtnYcenter-itemBtnWidthUnit/2);
         for(int i = 1; i < this.itemBtns.length;i++){
                 this.itemBtns[i] = new Button(this.itemBtnIconPaths[i],itemBtnWidthUnit*itemBtnSizeFactor[i],itemBtnWidthUnit*itemBtnSizeFactor[i],
                 this.itemBtns[i-1].getX()+this.itemBtns[i-1].getImgWidth()+padding*3,itemBtnYcenter-itemBtnWidthUnit*itemBtnSizeFactor[i]/2);
-            
         }
-        
+        //設定初始商品為第1項為顯示
+        this.itemBtns[1].setIsClicked(true);
+        //clickState為是否在被選擇的圖片上（放大的那張）
+        this.itemBtns[1].setClickState(true);
         //設定物品價格
-        this.itemBtns[0].setIntData(100);
-        this.itemBtns[0].setIntData(100);
-        this.itemBtns[0].setIntData(100);
-        this.itemBtns[0].setIntData(100);
-        this.itemBtns[0].setIntData(100);
+        this.itemBtns[ITEM_ATTCK].setIntData(100);
+        this.itemBtns[ITEM_LEVEL].setIntData(200);
+        this.itemBtns[ITEM_FOOD].setIntData(300);
+        this.itemBtns[ITEM_STOCK].setIntData(400);
+        this.itemBtns[ITEM_ENTERTAINMENT].setIntData(500);
         
 
     }
@@ -181,11 +189,12 @@ public class StoreScene extends Scene{
                 if(e.getButton() == MouseEvent.BUTTON1){
                     for(int i = 0; i < functionBtns.length; i++){
                         functionBtns[i].setImgState(0);
-                        functionBtns[i].setClickState(false);
-                        if(isOnBtn(e,functionBtns[i])){
+                        functionBtns[i].setIsClicked(false);
+                        if(isOnBtn(e,functionBtns[i])&&functionBtns[i].getClickState()){
+                            functionBtns[i].setClickState(false);
                             functionBtns[i].setIsClicked(true);
-                            
                         }
+                            functionBtns[i].setClickState(false);
                         
                     }
                 }
@@ -226,9 +235,9 @@ public class StoreScene extends Scene{
         }
         //畫選單
         for(Button btn:itemBtns){
-            if(btn.isIsShown()){
+//            if(btn.isIsShown()){
                 btn.paint2(g);
-            }
+//            }
         }
         
         //畫出player金錢
@@ -239,8 +248,20 @@ public class StoreScene extends Scene{
         g.setColor(new Color(0,0,0));
         FontMetrics fm = g.getFontMetrics();
         if(cost != 0){
-            player.increaseInventory(-1);
-            cost--;
+            int decreseSpeed = -10;//每針扣除錢的速度
+            cost+=decreseSpeed;
+            player.increaseInventory(decreseSpeed);
+            if(cost==0){
+                for(int i = 0; i < itemBtns.length;i++){
+                    if(itemBtns[i].getClickState()){
+                        itemBtns[i].setIsClicked(true);
+                    }
+                }
+                for(int i = 0; i < functionBtns.length; i++){
+                        functionBtns[i].setIsClicked(false);
+                }
+                
+            }
         }
         
         String msg = this.player.getInventory()+"";
@@ -253,10 +274,13 @@ public class StoreScene extends Scene{
 
     @Override
     public void logicEvent() {
-
-        if(functionBtns[BACK_BTN].isIsClicked()){
-           functionBtns[BACK_BTN].action();
+        for(int i = 0; i < functionBtns.length; i++){
+            if(functionBtns[i].isIsClicked()){
+                System.out.println("func clicked");
+                functionBtns[i].action();
+            }
         }
+        
 
     }
 

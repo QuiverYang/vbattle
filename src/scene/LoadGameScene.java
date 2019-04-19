@@ -7,6 +7,7 @@ package scene;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
@@ -17,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLabel;
 import vbattle.Button;
+import vbattle.Fontes;
 import vbattle.MainPanel;
 import vbattle.Player;
 import vbattle.Resource;
@@ -34,7 +36,9 @@ public class LoadGameScene extends Scene {
     private String path;
     private Button backBtn;
 
-    public LoadGameScene(MainPanel.GameStatusChangeListener gsChangeListener) {
+    private String[] playerNameList;
+
+    public LoadGameScene(MainPanel.GameStatusChangeListener gsChangeListener) throws IOException {
         super(gsChangeListener);
 
         player = Player.getPlayerInstane();
@@ -44,14 +48,16 @@ public class LoadGameScene extends Scene {
         playerBtn[1] = new Button("/resources/clickBtn.png", 300, 100, 200, 350);
         playerBtn[2] = new Button("/resources/clickBtn.png", 300, 100, 200, 500);
         playerBtn[3] = new Button("/resources/clickBtn.png", 300, 100, 650, 200);
-        playerBtn[4] = new Button("/resources/clickBtn.png", 300, 100, 650,350);
-        playerBtn[5] = new Button("/resources/clickBtn.png", 300, 100, 650,500);
-        
-        backBtn = new Button("/resources/back_click2.png", 200, 100, 900, 700);
+        playerBtn[4] = new Button("/resources/clickBtn.png", 300, 100, 650, 350);
+        playerBtn[5] = new Button("/resources/clickBtn.png", 300, 100, 650, 500);
+
+        backBtn = new Button("/resources/return_click.png", 100, 100, 950, 650);
+        player.loadPlayerList(path);
+        this.playerNameList = player.getPlayerList();
     }
 
     @Override
-      public MouseAdapter genMouseAdapter() {
+    public MouseAdapter genMouseAdapter() {
         return new MouseAdapter() {
             public boolean isOnBtn(MouseEvent e, Button btn) {
                 if (e.getX() >= btn.getX()
@@ -68,7 +74,7 @@ public class LoadGameScene extends Scene {
                         playerBtn[i].setImgState(1);
                     }
                 }
-                if(e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, backBtn)){
+                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, backBtn)) {
                     backBtn.setImgState(1);
                 }
             }
@@ -81,24 +87,23 @@ public class LoadGameScene extends Scene {
                         backBtn.setImgState(0);
                     }
                 }
-                    
-                    for (int i = 0; i < PLAYER_NUM; i++) {
-                        if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, playerBtn[i])) {
-                            try {
-                                player.load("Playertest", i);
-                                
-                            } catch (IOException ex) {
-                                System.out.println("player not found!");
 
-                            }
+                for (int i = 0; i < PLAYER_NUM; i++) {
+                    if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, playerBtn[i])) {
+                        try {
+                            player.load("Playertest", i);
+                            gsChangeListener.changeScene(MainPanel.STORE_SCENE);
+                        } catch (IOException ex) {
+                            System.out.println("player not found!");
+
                         }
                     }
-                    
-                    if(e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, backBtn)){
-                         gsChangeListener.changeScene(MainPanel.MENU_SCENE);
-                    }
+                }
 
-                
+                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, backBtn)) {
+                    gsChangeListener.changeScene(MainPanel.MENU_SCENE);
+                }
+
             }
 
         };
@@ -110,11 +115,25 @@ public class LoadGameScene extends Scene {
             playerBtn[i].paint(g);
         }
         backBtn.paint(g);
+        
+        Font font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 20);
+        g.setFont(font);
+        g.setColor(new Color(0, 0, 0));
+        for (int i = 0; i < PLAYER_NUM; i++) {
+            FontMetrics fm = g.getFontMetrics();
+            if (playerNameList[i] == null) {
+                playerNameList[i] = "";
+            }
+            int sw = fm.stringWidth(playerNameList[i]);
+            int sa = fm.getAscent();
+            g.drawString(playerNameList[i], playerBtn[i].getX() + playerBtn[i].getImgWidth() / 2 - sw / 2+5, playerBtn[i].getY() + playerBtn[i].getImgHeight() / 2 - sa / 2+40);
+        }
+
     }
 
     @Override
     public void logicEvent() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+      
     }
 
 }

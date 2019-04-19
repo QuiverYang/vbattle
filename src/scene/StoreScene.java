@@ -61,7 +61,7 @@ public class StoreScene extends Scene{
     }
     
     @Override
-    public MouseAdapter genMouseListener() {
+    public MouseAdapter genMouseAdapter() {
         return new MouseAdapter() {
 
             public boolean isOnBtn(MouseEvent e, Button btn) {
@@ -139,6 +139,7 @@ public class StoreScene extends Scene{
     public void logicEvent() {
         
     }
+
     
     
 }

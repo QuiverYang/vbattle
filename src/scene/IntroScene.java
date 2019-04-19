@@ -5,6 +5,7 @@
  */
 package scene;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,21 +19,26 @@ import vbattle.MainPanel;
  *
  * @author anny
  */
-public class IntroScene extends Scene{
+public class IntroScene extends Scene {
+
     private BufferedImage introImg;
+    private BufferedImage gradientImg;
     private ImgResource rc;
     private Button backBtn;
-    
-    public IntroScene(MainPanel.GameStatusChangeListener gsChangeListener){
+    private int introY;
+
+    public IntroScene(MainPanel.GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
         rc = ImgResource.getInstance();
-        introImg = rc.tryGetImage("/resources/BlueSky.png");  //遊戲說明圖片 
+        introImg = rc.tryGetImage("/resources/intro1.jpg");  //遊戲說明圖片 
         backBtn = new Button("/resources/back_click2.png", 200, 100, 900, 700);  //退回按鈕
+
+        introY = 0;
     }
 
     @Override
     public MouseAdapter genMouseAdapter() {
-        return new MouseAdapter(){
+        return new MouseAdapter() {
             public boolean isOnBtn(MouseEvent e, Button btn) {
                 if (e.getX() >= btn.getX()
                         && e.getX() <= btn.getX() + btn.getImgWidth() && e.getY() >= btn.getY() && e.getY() <= btn.getY() + btn.getImgHeight()) {
@@ -40,37 +46,41 @@ public class IntroScene extends Scene{
                 }
                 return false;
             }
-            
-             @Override
+
+            @Override
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, backBtn)) {
                     backBtn.setImgState(1);
                 }
             }
-            
+
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, backBtn)) {
                     backBtn.setImgState(0);
-                     gsChangeListener.changeScene(MainPanel.MENU_SCENE);
+                    gsChangeListener.changeScene(MainPanel.MENU_SCENE);
                 }
-                if(e.getButton() == MouseEvent.BUTTON1 ){
+                if (e.getButton() == MouseEvent.BUTTON1) {
                     backBtn.setImgState(0);
                 }
-                
+
             }
         };
     }
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(introImg, 0, 0, null);
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, 1200, 300);
+        g.drawImage(introImg, 0, introY+300, null);
         backBtn.paint(g);
+
     }
 
     @Override
     public void logicEvent() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        introY -= 1;
+
     }
-    
+
 }

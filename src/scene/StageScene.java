@@ -1,8 +1,17 @@
+<<<<<<< HEAD
 
+=======
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+>>>>>>> parent of e0ab3cd... anny
 package scene;
 
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
+<<<<<<< HEAD
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -11,11 +20,14 @@ import javax.imageio.ImageIO;
 import vbattle.MainPanel.GameStatusChangeListener;
 import vbattle.Resource;
 import vbattle.Stuff;
+=======
+>>>>>>> parent of e0ab3cd... anny
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import vbattle.ImgResource;
 import vbattle.MainPanel;
 
+<<<<<<< HEAD
 
 
 public class StageScene extends Scene{
@@ -34,17 +46,29 @@ public class StageScene extends Scene{
     private boolean[] iconable = new boolean[5];
     //icon屬性
 
+=======
+/**
+ *
+ * @author anny
+ */
+public class StageScene extends Scene{
+>>>>>>> parent of e0ab3cd... anny
     private BufferedImage characterImg;
     private ImgResource rc;
     
     
+<<<<<<< HEAD
     public StageScene(MainPanel.GameStatusChangeListener gsChangeListener) {
+=======
+    public StageScene(MainPanel.GameStatusChangeListener gsChangeListener) throws IOException {
+>>>>>>> parent of e0ab3cd... anny
         super(gsChangeListener);
         rc = ImgResource.getInstance();
         
         characterImg = rc.tryGetImage("/resources/tinyCharacters.png");
         
         
+<<<<<<< HEAD
         for (int i = 0; i < 5; i++) {
             try {
                 icon[i] = ImageIO.read(getClass().getResource("/Animal.png"));
@@ -116,10 +140,18 @@ public class StageScene extends Scene{
             }
         };
 
+=======
+    }
+
+    @Override
+    public MouseAdapter genMouseAdapter() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+>>>>>>> parent of e0ab3cd... anny
     }
 
     @Override
     public void paint(Graphics g) {
+<<<<<<< HEAD
         for (int i = 0; i < 5; i++) {
             g.drawImage(icon[i], iconX[i], iconY[i],iconX[i]+100,iconY[i]+100,0,64,32,96,null);
         }
@@ -132,6 +164,11 @@ public class StageScene extends Scene{
             drag.paint(g);
     }
     
+=======
+        
+    }
+
+>>>>>>> parent of e0ab3cd... anny
     @Override
     public void logicEvent() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

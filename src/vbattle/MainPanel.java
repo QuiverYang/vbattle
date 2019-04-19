@@ -5,21 +5,17 @@
  */
 package vbattle;
 
+import java.awt.Color;
 import scene.Scene;
 import scene.*;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import scene.IntroScene;
 import scene.LoadGameScene;
-import scene.StageScene;
 
 /**
  *
@@ -53,8 +49,10 @@ public class MainPanel extends JPanel {
                 changeCurrentScene(genSceneById(sceneId));
             }
         };
+        
+        this.setBackground(Color.red);
 
-        changeCurrentScene(genSceneById(STAGE_SCENE));
+        changeCurrentScene(genSceneById(MENU_SCENE));
 
         Timer t1 = new Timer(25, new ActionListener() {
             @Override
@@ -70,6 +68,7 @@ public class MainPanel extends JPanel {
     private void changeCurrentScene(Scene scene) {
         if (currentScene != null) {
             this.removeMouseMotionListener(mouseAdapter);
+            this.removeMouseListener(mouseAdapter);
         }
         currentScene = scene;
         mouseAdapter = scene.genMouseAdapter();
@@ -91,10 +90,8 @@ public class MainPanel extends JPanel {
 //                return new NewGameScene(gsChangeListener);
             case LOAD_GAME_SCENE:
                 return new LoadGameScene(gsChangeListener);
-//            case LOAD_GAME_SCENE:
-//                return LoadGameScene(gsChangeListener);
-            case STAGE_SCENE: 
-                return new StageScene(gsChangeListener);
+//            case STAGE_SCENE: 
+//                return new StageScene(gsChangeListener);
             
         }
         return null;

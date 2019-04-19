@@ -51,7 +51,7 @@ public class LoadGameScene extends Scene {
     }
 
     @Override
-    public MouseListener genMouseListener() {
+    public MouseAdapter genMouseAdapter() {
         return new MouseAdapter() {
             public boolean isOnBtn(MouseEvent e, Button btn) {
                 if (e.getX() >= btn.getX()

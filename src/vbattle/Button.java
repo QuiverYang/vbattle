@@ -5,6 +5,9 @@
  */
 package vbattle;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -23,8 +26,23 @@ public class Button {
     private int x;
     private int y;
     private int imgState;
-
+    private boolean isShown;
+    private String label;
     private boolean clickState;
+    private boolean isClicked;
+    private int intData;
+    private Callback callback;
+    public interface Callback{
+        void doSomthing();
+    }
+    
+    public static boolean isOnBtn(MouseEvent e, Button btn) {
+        if (e.getX() >= btn.getX()
+                && e.getX() <= btn.getX() + btn.getImgWidth() && e.getY() >= btn.getY() && e.getY() <= btn.getY() + btn.getImgHeight()) {
+            return true;
+        }
+        return false;
+    }
 
     public Button(String iconName, int width, int height, int x, int y) {
         rc = ImgResource.getInstance();
@@ -38,8 +56,34 @@ public class Button {
         clickState = false;
     }
 
+    public Callback getCallback() {
+        return callback;
+    }
+
+    public void setCallback(Callback callback) {
+        this.callback = callback;
+    }
+
+    public int getIntData() {
+        return intData;
+    }
+
+    public void setIntData(int Data) {
+        this.intData = Data;
+    }
+    
+    
+
     public int getImgWidth() {
         return this.width;
+    }
+    
+    public boolean isIsShown() {
+        return isShown;
+    }
+
+    public void setIsShown(boolean isShown) {
+        this.isShown = isShown;
     }
 
     public int getImgHeight() {
@@ -62,11 +106,27 @@ public class Button {
         
         return this.y;
     }
-
+    
+    //for img with 2 types
     public void paint(Graphics g) {
-      g.drawImage(buttonImg, x, y, x+this.getImgWidth(), y+this.getImgHeight(), buttonImg.getWidth()/2*imgState, 0, buttonImg.getWidth()/2*(imgState+1), buttonImg.getHeight(), null);
+        g.drawImage(buttonImg, x, y, x+this.getImgWidth(), y+this.getImgHeight(), buttonImg.getWidth()/2*imgState, 0, buttonImg.getWidth()/2*(imgState+1), buttonImg.getHeight(), null);
         
-//        g.drawImage(buttonImg, x, y, this.width, this.height, null);
+        //畫出按鈕label
+        if(label !=null){
+            Font fontBit = Fontes.getBitFont(buttonImg.getWidth()/50);
+            g.setColor(new Color(0,0,0));
+            g.setFont(fontBit);
+            FontMetrics fm = g.getFontMetrics();
+            int sw = fm.stringWidth(label);
+            int sa = fm.getAscent();
+            g.drawString(label, x+width/2-sw/2-imgState*3+3, y+height/2-sa/2+25+imgState*5);
+        }
+        
+    }
+    //for img with only one type
+    public void paint2(Graphics g) {
+      g.drawImage(buttonImg, x, y, this.width, this.height, null);
+        
     }
     
     public void setImgState(int x){
@@ -79,6 +139,26 @@ public class Button {
 
     public boolean getClickState() {
         return this.clickState;
+    }
+
+    public boolean isIsClicked() {
+        return isClicked;
+    }
+
+    public void setIsClicked(boolean isClicked) {
+        this.isClicked = isClicked;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+    
+    public void action(){
+        callback.doSomthing();
     }
 
 }

@@ -5,9 +5,12 @@ import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Player {
     private int inventory,stage;
+    private int hp,mp; //體力 快樂度
+    private ArrayList<FinancialProduct> fp;
     private int unlock[] = new int[5];//資源存量,破關進度,解鎖腳色
     private String savePath;
     private static Player player;
@@ -54,6 +57,10 @@ public class Player {
     
     public void setPlayerName(String name){
         this.playerName = name;
+    }
+    
+    public void increaseInventory(int money){
+        this.inventory+=money;
     }
     
     

@@ -97,7 +97,7 @@ public class MenuScene extends Scene {
 
     @Override
     public void logicEvent() {
-        System.out.println("Menu logicEvent");
+//        System.out.println("Menu logicEvent");
     }
 
 }

@@ -15,6 +15,7 @@ public class Player {
     private String savePath;
     private static Player player;
     private String playerName;
+    private String[] playerNameList;
     //GETTER SETTER
     
     public static Player getPlayerInstane(){
@@ -51,7 +52,7 @@ public class Player {
         for (int i = 0; i < unlock.length; i++) {
             this.unlock[i] = 0;
         }
-        
+        playerNameList = new String[6];
         savePath = "Playertest";
     }
     
@@ -61,6 +62,9 @@ public class Player {
     
     public void increaseInventory(int money){
         this.inventory+=money;
+    }
+    public String getPlayerName(){
+        return this.playerName;
     }
     
     
@@ -96,11 +100,31 @@ public class Player {
         br.close();
     }
     
+    public void loadPlayerList(String path)throws IOException{
+        int i=0;
+        BufferedReader br = new BufferedReader(new FileReader("src/"+path+".txt"));
+        while(br.ready()){
+            String tmp[] = br.readLine().split(",");
+            playerNameList[i++] = tmp[0];
+        }
+    }
+    
+    public String[] getPlayerList(){
+        return this.playerNameList;
+    }
+    
     public void test(){
+        System.out.println(this.playerName);
         System.out.println(String.valueOf(this.inventory));
         System.out.println(this.stage);
         for (int i = 0; i < unlock.length; i++) {
             System.out.println(this.unlock[i]);
+        }
+    }
+    
+    public void printPlayerList(){
+        for(int i=0; i<6; i++){
+             System.out.println(playerNameList[i]);
         }
     }
 }

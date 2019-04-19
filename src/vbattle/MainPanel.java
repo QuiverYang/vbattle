@@ -11,11 +11,14 @@ import scene.*;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import scene.IntroScene;
 import scene.LoadGameScene;
+//import scene.StageScene;
 
 /**
  *
@@ -32,6 +35,8 @@ public class MainPanel extends JPanel {
     public static final int STORE_SCENE = 5;
 
     public static final int STAGE_SCENE = 4;
+
+    private boolean newGameCheck;
 
     public interface GameStatusChangeListener {
 
@@ -70,10 +75,20 @@ public class MainPanel extends JPanel {
             this.removeMouseMotionListener(mouseAdapter);
             this.removeMouseListener(mouseAdapter);
         }
+
         currentScene = scene;
         mouseAdapter = scene.genMouseAdapter();
+
         this.addMouseListener(mouseAdapter);
         this.addMouseMotionListener(mouseAdapter);
+        System.out.println(MenuScene.newGameCheck);
+        
+        if (MenuScene.newGameCheck==false) {
+            System.out.println(MenuScene.newGameCheck);
+            this.addKeyListener(MenuScene.genKeyAdapter());
+            this.setFocusable(true);
+        }
+
     }
 
     private Scene genSceneById(int id) {
@@ -88,11 +103,19 @@ public class MainPanel extends JPanel {
                 return new StoreScene(gsChangeListener);
 //            case NEW_GAME_SCENE:
 //                return new NewGameScene(gsChangeListener);
-            case LOAD_GAME_SCENE:
-                return new LoadGameScene(gsChangeListener);
+            case LOAD_GAME_SCENE: {
+                try {
+                    return new LoadGameScene(gsChangeListener);
+                } catch (IOException ex) {
+                    ex.getStackTrace();
+                }
+//            case LOAD_GAME_SCENE:
+//                return LoadGameScene(gsChangeListener);
 //            case STAGE_SCENE: 
 //                return new StageScene(gsChangeListener);
-            
+
+            }
+
         }
         return null;
     }

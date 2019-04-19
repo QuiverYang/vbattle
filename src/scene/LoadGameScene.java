@@ -44,14 +44,14 @@ public class LoadGameScene extends Scene {
         player = Player.getPlayerInstane();
 
         path = "Playertest";
-        playerBtn[0] = new Button("/resources/clickBtn.png", 300, 100, 200, 200);
-        playerBtn[1] = new Button("/resources/clickBtn.png", 300, 100, 200, 350);
-        playerBtn[2] = new Button("/resources/clickBtn.png", 300, 100, 200, 500);
-        playerBtn[3] = new Button("/resources/clickBtn.png", 300, 100, 650, 200);
-        playerBtn[4] = new Button("/resources/clickBtn.png", 300, 100, 650, 350);
-        playerBtn[5] = new Button("/resources/clickBtn.png", 300, 100, 650, 500);
+        playerBtn[0] = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH / 12*3, Resource.SCREEN_HEIGHT/12, Resource.SCREEN_WIDTH /12*2, Resource.SCREEN_HEIGHT/9*2);
+        playerBtn[1] = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH / 12*3, Resource.SCREEN_HEIGHT/12, Resource.SCREEN_WIDTH /12*2, Resource.SCREEN_HEIGHT*350/900);
+        playerBtn[2] = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH / 12*3, Resource.SCREEN_HEIGHT/12, Resource.SCREEN_WIDTH /12*2, Resource.SCREEN_HEIGHT/9*5);
+        playerBtn[3] = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH / 12*3, Resource.SCREEN_HEIGHT/12, Resource.SCREEN_WIDTH *650/1200, Resource.SCREEN_HEIGHT/9*2);
+        playerBtn[4] = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH / 12*3, Resource.SCREEN_HEIGHT/12, Resource.SCREEN_WIDTH *650/1200, Resource.SCREEN_HEIGHT*350/900);
+        playerBtn[5] = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH / 12*3, Resource.SCREEN_HEIGHT/12, Resource.SCREEN_WIDTH *650/1200, Resource.SCREEN_HEIGHT/9*5);
 
-        backBtn = new Button("/resources/return_click.png", 100, 100, 950, 650);
+        backBtn = new Button("/resources/return_click.png", Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT/9, Resource.SCREEN_WIDTH *950/1200, Resource.SCREEN_HEIGHT*650/900);
         player.loadPlayerList(path);
         this.playerNameList = player.getPlayerList();
     }
@@ -71,10 +71,12 @@ public class LoadGameScene extends Scene {
             public void mousePressed(MouseEvent e) {
                 for (int i = 0; i < PLAYER_NUM; i++) {
                     if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, playerBtn[i])) {
+                        playerBtn[i].setClickState(true);
                         playerBtn[i].setImgState(1);
                     }
                 }
                 if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, backBtn)) {
+                    backBtn.setClickState(true);
                     backBtn.setImgState(1);
                 }
             }
@@ -82,16 +84,17 @@ public class LoadGameScene extends Scene {
             @Override
             public void mouseReleased(MouseEvent e) {
                 for (int i = 0; i < PLAYER_NUM; i++) {
-                    if (e.getButton() == MouseEvent.BUTTON1) {
+                    if (e.getButton() == MouseEvent.BUTTON1 ) {
                         playerBtn[i].setImgState(0);
                         backBtn.setImgState(0);
                     }
                 }
 
                 for (int i = 0; i < PLAYER_NUM; i++) {
-                    if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, playerBtn[i])) {
+                    if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, playerBtn[i]) && playerBtn[i].getClickState()) {
                         try {
                             player.load("Playertest", i);
+                            playerBtn[i].setClickState(false);
                             gsChangeListener.changeScene(MainPanel.STORE_SCENE);
                         } catch (IOException ex) {
                             System.out.println("player not found!");
@@ -100,7 +103,8 @@ public class LoadGameScene extends Scene {
                     }
                 }
 
-                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, backBtn)) {
+                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, backBtn) && backBtn.getClickState()) {
+                    backBtn.setClickState(false);
                     gsChangeListener.changeScene(MainPanel.MENU_SCENE);
                 }
 
@@ -123,10 +127,11 @@ public class LoadGameScene extends Scene {
             FontMetrics fm = g.getFontMetrics();
             if (playerNameList[i] == null) {
                 playerNameList[i] = "";
+                playerBtn[i].setLabel("");
             }
             int sw = fm.stringWidth(playerNameList[i]);
             int sa = fm.getAscent();
-            g.drawString(playerNameList[i], playerBtn[i].getX() + playerBtn[i].getImgWidth() / 2 - sw / 2+5, playerBtn[i].getY() + playerBtn[i].getImgHeight() / 2 - sa / 2+40);
+             playerBtn[i].setLabel(playerNameList[i]);
         }
 
     }

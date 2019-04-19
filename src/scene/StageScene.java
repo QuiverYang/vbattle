@@ -1,23 +1,23 @@
+
 package scene;
 
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import vbattle.Button;
 import vbattle.MainPanel.GameStatusChangeListener;
 import vbattle.Resource;
 import vbattle.Stuff;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import vbattle.ImgResource;
+import vbattle.MainPanel;
 
-/**
- *
- * @author USER
- */
+
+
 public class StageScene extends Scene{
     private BufferedImage bg;
     private int amount;
@@ -34,8 +34,17 @@ public class StageScene extends Scene{
     private boolean[] iconable = new boolean[5];
     //icon屬性
 
-    public StageScene(GameStatusChangeListener gsChangeListener) {
+    private BufferedImage characterImg;
+    private ImgResource rc;
+    
+    
+    public StageScene(MainPanel.GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
+        rc = ImgResource.getInstance();
+        
+        characterImg = rc.tryGetImage("/resources/tinyCharacters.png");
+        
+        
         for (int i = 0; i < 5; i++) {
             try {
                 icon[i] = ImageIO.read(getClass().getResource("/Animal.png"));
@@ -48,9 +57,8 @@ public class StageScene extends Scene{
             }
             
         }
-            
-//                this.player[i] = new Stuff((int) (Resource.SCREEN_WIDTH * (0.1f * i)+200), (int) (Resource.SCREEN_HEIGHT * 0.7f), 100, 100, "test");
     }
+    
 
     @Override
     public MouseAdapter genMouseAdapter() {
@@ -107,6 +115,7 @@ public class StageScene extends Scene{
                 
             }
         };
+
     }
 
     @Override
@@ -128,5 +137,4 @@ public class StageScene extends Scene{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-
 }

@@ -11,7 +11,7 @@ import javax.swing.Timer;
 public class VBattle {
 
     public static void main(String[] args) throws IOException {
-        final JFrame jf = new JFrame();
+        final JFrameResizing jf = new JFrameResizing();
 //        Stuff s = new Stuff(0, 0, 96, 96, "test"); //測試
 //        s.print(); //測試
         

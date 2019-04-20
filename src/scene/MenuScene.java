@@ -47,10 +47,10 @@ public class MenuScene extends Scene {
     public MenuScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
         rc = ImgResource.getInstance();
-        introBtn = new Button("/resources/help_click.png", 200, 100, (int) (Resource.SCREEN_WIDTH * 0.083f), (int) (Resource.SCREEN_HEIGHT * 0.667f));  //遊戲說明按鈕
-        newGameBtn = new Button("/resources/newGame_click.png", 200, 100, (int) (Resource.SCREEN_WIDTH * 0.417f), (int) (Resource.SCREEN_HEIGHT * 0.667f));  //新遊戲按鈕
-        loadBtn = new Button("/resources/loading_click.png", 200, 100, (int) (Resource.SCREEN_WIDTH * 0.75), (int) (Resource.SCREEN_HEIGHT * 0.667f));  //載入遊戲按鈕
-        enterPlayerNameBtn = new Button("/resources/clickBtn.png", 200, 100, 500, 550);
+        introBtn = new Button("/resources/help_click.png",(int) (Resource.SCREEN_WIDTH * 0.083f), (int) (Resource.SCREEN_HEIGHT * 0.667f),200,100);  //遊戲說明按鈕
+        newGameBtn = new Button("/resources/newGame_click.png",(int) (Resource.SCREEN_WIDTH * 0.417f), (int) (Resource.SCREEN_HEIGHT * 0.667f),200,100);  //新遊戲按鈕
+        loadBtn = new Button("/resources/loading_click.png",(int) (Resource.SCREEN_WIDTH * 0.75), (int) (Resource.SCREEN_HEIGHT * 0.667f),200,100);  //載入遊戲按鈕
+        enterPlayerNameBtn = new Button("/resources/clickBtn.png", 500, 550,200,100);
 
         typeCheck = newGameCheck = false;
         countChar = 0;

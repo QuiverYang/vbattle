@@ -44,7 +44,7 @@ public class Button {
         return false;
     }
 
-    public Button(String iconName, int width, int height, int x, int y) {
+    public Button(String iconName, int x, int y, int width, int height) {
         rc = ImgResource.getInstance();
         buttonImg = rc.tryGetImage(iconName);
         this.height = height;
@@ -52,7 +52,6 @@ public class Button {
         this.x = x;
         this.y = y;
         imgState = 0;
-
         clickState = false;
     }
 
@@ -109,6 +108,8 @@ public class Button {
     
     //for img with 2 types
     public void paint(Graphics g) {
+        
+        
         g.drawImage(buttonImg, x, y, x+this.getImgWidth(), y+this.getImgHeight(), buttonImg.getWidth()/2*imgState, 0, buttonImg.getWidth()/2*(imgState+1), buttonImg.getHeight(), null);
 //        g.drawOval(x, y, 5, 5);
 //        g.drawOval(x+this.getImgWidth(), y+this.getImgHeight(), 5, 5);

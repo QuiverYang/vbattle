@@ -44,14 +44,14 @@ public class LoadGameScene extends Scene {
         player = Player.getPlayerInstane();
 
         path = "Playertest";
-        playerBtn[0] = new Button("/resources/clickBtn.png", 300, 100, 200, 200);
-        playerBtn[1] = new Button("/resources/clickBtn.png", 300, 100, 200, 350);
-        playerBtn[2] = new Button("/resources/clickBtn.png", 300, 100, 200, 500);
-        playerBtn[3] = new Button("/resources/clickBtn.png", 300, 100, 650, 200);
-        playerBtn[4] = new Button("/resources/clickBtn.png", 300, 100, 650, 350);
-        playerBtn[5] = new Button("/resources/clickBtn.png", 300, 100, 650, 500);
+        playerBtn[0] = new Button("/resources/clickBtn.png", 200, 200, 300, 100);
+        playerBtn[1] = new Button("/resources/clickBtn.png", 200, 350, 300, 100);
+        playerBtn[2] = new Button("/resources/clickBtn.png", 200, 500, 300, 100);
+        playerBtn[3] = new Button("/resources/clickBtn.png", 650, 200, 300, 100);
+        playerBtn[4] = new Button("/resources/clickBtn.png", 650, 350, 300, 100);
+        playerBtn[5] = new Button("/resources/clickBtn.png", 650, 500, 300, 100);
 
-        backBtn = new Button("/resources/return_click.png", 100, 100, 950, 650);
+        backBtn = new Button("/resources/return_click.png", 950, 650, 100, 100);
         player.loadPlayerList(path);
         this.playerNameList = player.getPlayerList();
     }

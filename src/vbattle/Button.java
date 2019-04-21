@@ -127,7 +127,7 @@ public class Button {
     }
     //for img with only one type
     public void paint2(Graphics g) {
-      g.drawImage(buttonImg, x, y, this.width, this.height, null);
+        g.drawImage(buttonImg, x, y, x+this.width, y+this.height,0,0,buttonImg.getWidth(),buttonImg.getHeight(), null);
         
     }
     
@@ -143,7 +143,7 @@ public class Button {
         return this.clickState;
     }
 
-    public boolean isIsClicked() {
+    public boolean isClicked() {
         return isClicked;
     }
 
@@ -157,6 +157,29 @@ public class Button {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+    
+    public void reset(int x, int y, int width, int height){
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
     }
     
     public void action(){

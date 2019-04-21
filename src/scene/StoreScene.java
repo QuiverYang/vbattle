@@ -11,11 +11,8 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import vbattle.Button;
 import vbattle.Button.Callback;
 import vbattle.Fontes;
@@ -51,8 +48,8 @@ public class StoreScene extends Scene{
     private final int ITEM_ENTERTAINMENT_PRICE = 500;
     
     
-    private final int funcBtnWidthUnit = 100;//functionBtn的一個單位大小
-    private final int itemBtnWidthUnit = 150;//itemBtn的一個單位大小
+    private int funcBtnWidthUnit = Resource.SCREEN_WIDTH/12;//functionBtn的一個單位大小
+    private int itemBtnWidthUnit = Resource.SCREEN_WIDTH/8;//itemBtn的一個單位大小
     private final int padding = 20;//與邊框距離
     private int itemBtnXcenter;//選單圖片中心x座標
     private int rightBtnYcenter;//選單圖片中心y座標
@@ -77,6 +74,20 @@ public class StoreScene extends Scene{
         for(int i = 0; i < 3; i++){
             this.itemBtnsIsShown[i] = true;
         }
+        this.initParameters();
+        
+        player = Player.getPlayerInstane();
+        
+        //測試player所擁有金額
+        player.setInventory(10000);
+        
+        rc = ImgResource.getInstance();
+        this.initFunctionBtns();
+        this.initItemBtns();
+
+    }
+    
+    private void initParameters(){
         this.itemBtnXcenter = Resource.SCREEN_WIDTH/2;
         this.rightBtnYcenter = (int)(Resource.SCREEN_HEIGHT*0.333f);
         x0 = itemBtnXcenter-itemBtnWidthUnit*2-2*padding;
@@ -91,16 +102,6 @@ public class StoreScene extends Scene{
         y2 = y0;
         w2 = w0;
         h2 = h0;
-        
-        player = Player.getPlayerInstane();
-        
-        //測試player所擁有金額
-        player.setInventory(10000);
-        
-        rc = ImgResource.getInstance();
-        this.initFunctionBtns();
-        this.initItemBtns();
-
     }
     
     private void initFunctionBtns(){
@@ -301,8 +302,6 @@ public class StoreScene extends Scene{
         
         //畫出player金錢
         Font fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH/20);
-        
-        Font fontDia = new Font("DialogInput", Font.BOLD, Resource.SCREEN_WIDTH/20);
         g.setFont(fontBit);
         g.setColor(new Color(0,0,0));
         FontMetrics fm = g.getFontMetrics();
@@ -341,7 +340,32 @@ public class StoreScene extends Scene{
 //                }
             }
         }
-        
-
+        this.resize();
     } 
+    private void resize(){
+        
+        funcBtnWidthUnit = Resource.SCREEN_WIDTH/12;//functionBtn的一個單位大小     
+        itemBtnWidthUnit = Resource.SCREEN_WIDTH/8;//itemBtn的一個單位大小 
+        this.initParameters();
+        
+        this.functionBtns[this.BACK_BTN].reset(padding,padding,
+                funcBtnWidthUnit, funcBtnWidthUnit);
+        this.functionBtns[this.BUY_BTN].reset(padding,Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.133f),
+                funcBtnWidthUnit*2, funcBtnWidthUnit);
+        this.functionBtns[this.LEFT_BTN].reset((int) (Resource.SCREEN_WIDTH * 0.1f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
+                funcBtnWidthUnit/2, funcBtnWidthUnit);
+        this.functionBtns[this.RIGHT_BTN].reset((int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, (int) (Resource.SCREEN_HEIGHT * 0.333f)-funcBtnWidthUnit/2,
+                funcBtnWidthUnit/2, funcBtnWidthUnit);
+        this.functionBtns[this.START_BTN].reset(Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.133f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
+                funcBtnWidthUnit*2, funcBtnWidthUnit);
+        
+        this.itemBtns[0].reset(x0,y0,w0,h0);
+        this.itemBtns[1].reset(x1,y1,w1,h1);
+        this.itemBtns[2].reset(x2,y2,w2,h2);
+        for(int i = 3; i < this.itemBtns.length;i++){
+            this.itemBtns[i].reset(x0,y0,w0,h0);
+        }
+        
+        
+    }
 }

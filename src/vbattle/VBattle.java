@@ -26,6 +26,8 @@ public class VBattle {
 
             @Override
             public void actionPerformed(ActionEvent ae) {
+                Resource.setSCREEN_HEIGHT(jf.getHeight());
+                Resource.setSCREEN_WIDTH(jf.getWidth());
                 jf.repaint();
             }
         }){

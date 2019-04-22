@@ -81,7 +81,10 @@ public class StoreScene extends Scene{
         player = Player.getPlayerInstane();
         
         //測試player所擁有金額
-        player.setInventory(10000);
+        player.setInventory(20000);
+        player.setCash(6000);
+        player.setHp(100);
+        player.setMp(70);
         
         rc = ImgResource.getInstance();
         this.initFunctionBtns();
@@ -92,7 +95,7 @@ public class StoreScene extends Scene{
     private void initParameters(){
         fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH/20);
         this.itemBtnXcenter = Resource.SCREEN_WIDTH/2;
-        this.rightBtnYcenter = (int)(Resource.SCREEN_HEIGHT*0.333f);
+        this.rightBtnYcenter = (int)(Resource.SCREEN_HEIGHT*0.4f);
         this.itemsPrice = new int[itemsNum];
         x0 = itemBtnXcenter-itemBtnWidthUnit*2-2*padding;
         y0 = rightBtnYcenter-itemBtnWidthUnit/2;
@@ -124,7 +127,7 @@ public class StoreScene extends Scene{
     
     private void initFunctionBtns(){
         //button建構子特殊 Button(String iconName, int width, int height, int x, int y)
-        backgroundImg = rc.tryGetImage("/resources/storeBg.png");  //store background 圖片
+        backgroundImg = rc.tryGetImage("/resources/storebg.png");  //store background 圖片
         //初始化並放置functionBtns 位置
         this.functionBtns = new Button[5];
         this.functionBtns[this.BACK_BTN] = new Button("/resources/return_click.png",padding,padding,
@@ -140,7 +143,7 @@ public class StoreScene extends Scene{
                 }
             }
         });
-        this.functionBtns[this.BUY_BTN] = new Button("/resources/clickBtn.png",padding,Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.133f),
+        this.functionBtns[this.BUY_BTN] = new Button("/resources/clickBtn.png",padding,Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.15f),
                 funcBtnWidthUnit*2, funcBtnWidthUnit);//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
         this.functionBtns[this.BUY_BTN].setLabel("BUY");
         this.functionBtns[this.BUY_BTN].setCallback(new Callback() {
@@ -170,7 +173,7 @@ public class StoreScene extends Scene{
                     itemBtns[1].changeIcon(itemBtnIconPaths[counter]);
                     itemBtns[2].changeIcon(itemBtnIconPaths[counter+1]);
                 }
-                if(counter == itemsPrice.length-2){
+                else if(counter == itemsPrice.length-2){
                     counter++;
                     System.out.println("到最後一個選項了");
                     itemBtns[0].changeIcon(itemBtnIconPaths[counter-1]);
@@ -181,7 +184,7 @@ public class StoreScene extends Scene{
             }
             
         });
-        this.functionBtns[this.RIGHT_BTN] = new Button("/resources/clickBtn.png", (int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, (int) (Resource.SCREEN_HEIGHT * 0.333f)-funcBtnWidthUnit/2,
+        this.functionBtns[this.RIGHT_BTN] = new Button("/resources/clickBtn.png", (int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
                 funcBtnWidthUnit/2, funcBtnWidthUnit);
         this.functionBtns[this.RIGHT_BTN].setLabel(">");
         this.functionBtns[this.RIGHT_BTN].setCallback(new Callback(){
@@ -198,7 +201,7 @@ public class StoreScene extends Scene{
                     itemBtns[1].changeIcon(itemBtnIconPaths[counter]);
                     itemBtns[2].changeIcon(itemBtnIconPaths[counter+1]);
                 }
-                if(counter == 1){
+                else if(counter == 1){
                     counter--;
                     System.out.println("到第一個選項了");
                     itemBtns[0].setIsShown(false);
@@ -209,7 +212,7 @@ public class StoreScene extends Scene{
             
         });
 
-        this.functionBtns[this.START_BTN] = new Button("/resources/clickBtn.png",Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.133f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
+        this.functionBtns[this.START_BTN] = new Button("/resources/clickBtn.png",Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.15f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
                 funcBtnWidthUnit*2, funcBtnWidthUnit);
         this.functionBtns[this.START_BTN].setLabel("START");
         this.functionBtns[this.START_BTN].setCallback(new Callback() {
@@ -290,10 +293,7 @@ public class StoreScene extends Scene{
     @Override
     public void paint(Graphics g) {
         //畫背景
-        for(int i = 0; i < Resource.SCREEN_WIDTH/10;i++){
-            
-            g.drawImage(backgroundImg,i*10,0,null);
-        }
+        g.drawImage(backgroundImg, 0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT-20,0,0,backgroundImg.getWidth(),backgroundImg.getHeight(), null);//-20是mac視窗的按鈕列高度
         //畫功能按鍵
         for(Button btn:functionBtns){
             btn.paint(g);
@@ -307,12 +307,23 @@ public class StoreScene extends Scene{
         
         //畫出player金錢
         g.setFont(fontBit);
-        g.setColor(new Color(0,0,0));
+        g.setColor(new Color(255,255,255));
         FontMetrics fm = g.getFontMetrics();
-        String msg = this.player.getInventory()+"";
-        int sw = fm.stringWidth(msg);
+        String asset = this.player.getInventory()+"";
+        int sw = fm.stringWidth(asset);
         int sa = fm.getAscent();
-        g.drawString(msg, Resource.SCREEN_WIDTH-sw-20, sa);
+        g.drawString(asset, Resource.SCREEN_WIDTH-sw, (int)(Resource.SCREEN_HEIGHT*0.94));
+        
+        String cash = this.player.getCash()+"";
+        int sw2 = fm.stringWidth(cash);
+        g.drawString(cash, Resource.SCREEN_WIDTH/2-sw, Resource.SCREEN_HEIGHT/13);
+        
+        String pHp = this.player.getHp()+"";
+        g.drawString(pHp, Resource.SCREEN_WIDTH-sw, Resource.SCREEN_HEIGHT/13);
+        String mHp = this.player.getMp()+"";
+        g.drawString(mHp, Resource.SCREEN_WIDTH-sw, Resource.SCREEN_HEIGHT/6);
+        
+        
         
     }
     
@@ -328,7 +339,7 @@ public class StoreScene extends Scene{
         if(cost != 0){
             int decreseSpeed = -10;//每針扣除錢的速度
             cost+=decreseSpeed;
-            player.increaseInventory(decreseSpeed);
+            player.increaseCash(decreseSpeed);
             if(cost==0){
                 for(int i = 0; i < itemBtns.length;i++){
                     if(itemBtns[i].getClickState()){
@@ -351,13 +362,13 @@ public class StoreScene extends Scene{
         
         this.functionBtns[this.BACK_BTN].reset(padding,padding,
                 funcBtnWidthUnit, funcBtnWidthUnit);
-        this.functionBtns[this.BUY_BTN].reset(padding,Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.133f),
+        this.functionBtns[this.BUY_BTN].reset(padding,Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.15f),
                 funcBtnWidthUnit*2, funcBtnWidthUnit);
         this.functionBtns[this.LEFT_BTN].reset((int) (Resource.SCREEN_WIDTH * 0.1f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
                 funcBtnWidthUnit/2, funcBtnWidthUnit);
-        this.functionBtns[this.RIGHT_BTN].reset((int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, (int) (Resource.SCREEN_HEIGHT * 0.333f)-funcBtnWidthUnit/2,
+        this.functionBtns[this.RIGHT_BTN].reset((int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
                 funcBtnWidthUnit/2, funcBtnWidthUnit);
-        this.functionBtns[this.START_BTN].reset(Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.133f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
+        this.functionBtns[this.START_BTN].reset(Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.15f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
                 funcBtnWidthUnit*2, funcBtnWidthUnit);
         for(Button btn : functionBtns){
             btn.setLabelSize(btn.getWidth());

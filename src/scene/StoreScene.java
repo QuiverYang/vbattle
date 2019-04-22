@@ -55,7 +55,8 @@ public class StoreScene extends Scene{
     private int rightBtnYcenter;//選單圖片中心y座標
     private boolean[] itemBtnsIsShown;//用來放大選單圖片
     private String[] itemBtnIconPaths;
-    private int itemBtnNum=5;
+    private int itemsNum=5;
+    private int[] itemsPrice;
     
     private Button[] functionBtns;
     private Button[] itemBtns ;
@@ -63,13 +64,14 @@ public class StoreScene extends Scene{
     private int cost;//每個物品價值多少錢所要扣除player inventory的金額
     private int x0,y0,w0,h0,x1,y1,h1,w1,x2,y2,h2,w2;
     private int counter;
+    Font fontBit;
     
 
     
     public StoreScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
         cost = 0;
-        this.itemBtns = new Button[itemBtnNum];
+        this.itemBtns = new Button[3];
         this.itemBtnsIsShown = new boolean[this.itemBtns.length];
         for(int i = 0; i < 3; i++){
             this.itemBtnsIsShown[i] = true;
@@ -88,8 +90,10 @@ public class StoreScene extends Scene{
     }
     
     private void initParameters(){
+        fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH/20);
         this.itemBtnXcenter = Resource.SCREEN_WIDTH/2;
         this.rightBtnYcenter = (int)(Resource.SCREEN_HEIGHT*0.333f);
+        this.itemsPrice = new int[itemsNum];
         x0 = itemBtnXcenter-itemBtnWidthUnit*2-2*padding;
         y0 = rightBtnYcenter-itemBtnWidthUnit/2;
         w0 = itemBtnWidthUnit;
@@ -102,6 +106,20 @@ public class StoreScene extends Scene{
         y2 = y0;
         w2 = w0;
         h2 = h0;
+        //設定物品價格
+        itemsPrice[ITEM_ATTCK] = ITEM_ATTCK_PRICE;
+        itemsPrice[ITEM_LEVEL] = ITEM_LEVEL_PRICE;
+        itemsPrice[ITEM_FOOD] = ITEM_FOOD_PRICE;
+        itemsPrice[ITEM_STOCK] = ITEM_STOCK_PRICE;
+        itemsPrice[ITEM_ENTERTAINMENT] = ITEM_ENTERTAINMENT_PRICE;
+        
+        //設定物品tiembtnIcon圖片
+        this.itemBtnIconPaths = new String[itemsNum];
+        this.itemBtnIconPaths[0] = "/resources/atk_up.png";
+        this.itemBtnIconPaths[1] = "/resources/BlueSky.png";
+        this.itemBtnIconPaths[2] = "/resources/Animal.png";
+        this.itemBtnIconPaths[3] = "/resources/atk_up.png";
+        this.itemBtnIconPaths[4] = "/resources/BlueSky.png";
     }
     
     private void initFunctionBtns(){
@@ -128,15 +146,10 @@ public class StoreScene extends Scene{
         this.functionBtns[this.BUY_BTN].setCallback(new Callback() {
             @Override
             public void doSomthing() {
-                for(int i = 0; i < itemBtns.length;i++){
-                    if(itemBtns[i].isClicked()){
-                        cost += itemBtns[i].getIntData();
-                        //把被買的選項暫時選為false等扣完錢後再重新設定為true
-                        itemBtns[i].setIsClicked(false);
-                        itemBtns[i].setClickState(true);
-                    }
-                    
-                }
+                cost += itemsPrice[counter];
+                    //把被買的選項暫時選為false等扣完錢後再重新設定為true
+//                    itemBtns[1].setIsClicked(false);
+//                    itemBtns[1].setClickState(true);
             }
         });
         this.functionBtns[this.LEFT_BTN] = new Button("/resources/clickBtn.png", (int) (Resource.SCREEN_WIDTH * 0.1f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
@@ -147,20 +160,24 @@ public class StoreScene extends Scene{
 
             @Override
             public void doSomthing() {
-                
-                if(counter <= itemBtns.length-2){
-                    if(counter !=0){
-                        itemBtns[counter-1].setIsShown(false);
+                if(counter < itemsPrice.length-2){
+                    for (Button itemBtn : itemBtns) {
+                        itemBtn.setIsShown(true);
                     }
-                    itemBtns[counter].reset(x0, y0, w0, h0);
-                    itemBtns[counter+1].reset(x1, y1, w1, h1);
-                    if(counter < itemBtns.length-2){
-                        itemBtns[counter+2].reset(x2, y2, w2, h2);
-                        itemBtns[counter+2].setIsShown(true);
-                    }
-                    itemBtns[counter].setIsClicked(false);
-                    itemBtns[++counter].setIsClicked(true);
+                    counter++;
+                    System.out.println("left"+counter);
+                    itemBtns[0].changeIcon(itemBtnIconPaths[counter-1]);
+                    itemBtns[1].changeIcon(itemBtnIconPaths[counter]);
+                    itemBtns[2].changeIcon(itemBtnIconPaths[counter+1]);
                 }
+                if(counter == itemsPrice.length-2){
+                    counter++;
+                    System.out.println("到最後一個選項了");
+                    itemBtns[0].changeIcon(itemBtnIconPaths[counter-1]);
+                    itemBtns[1].changeIcon(itemBtnIconPaths[counter]);
+                    itemBtns[2].setIsShown(false);
+                }
+                
             }
             
         });
@@ -171,18 +188,22 @@ public class StoreScene extends Scene{
 
             @Override
             public void doSomthing() {
-                if(counter >= 1){
-                    if(counter != itemBtns.length-1){
-                        itemBtns[counter+1].setIsShown(false);
+                if(counter > 1){
+                    for (Button itemBtn : itemBtns) {
+                        itemBtn.setIsShown(true);
                     }
-                    itemBtns[counter].reset(x2, y2, w2, h2);
-                    itemBtns[counter-1].reset(x1, y1, w1, h1);
-                    if(counter > 1){
-                        itemBtns[counter-2].reset(x0, y0, w0, h0);
-                        itemBtns[counter-2].setIsShown(true);
-                    }
-                    itemBtns[counter].setIsClicked(false);
-                    itemBtns[--counter].setIsClicked(true);
+                    counter--;
+                    System.out.println("right" + counter);
+                    itemBtns[0].changeIcon(itemBtnIconPaths[counter-1]);
+                    itemBtns[1].changeIcon(itemBtnIconPaths[counter]);
+                    itemBtns[2].changeIcon(itemBtnIconPaths[counter+1]);
+                }
+                if(counter == 1){
+                    counter--;
+                    System.out.println("到第一個選項了");
+                    itemBtns[0].setIsShown(false);
+                    itemBtns[1].changeIcon(itemBtnIconPaths[counter]);
+                    itemBtns[2].changeIcon(itemBtnIconPaths[counter+1]);
                 }
             }
             
@@ -206,36 +227,20 @@ public class StoreScene extends Scene{
     }
     
     private void initItemBtns(){
-        //設定物品tiembtnIcon圖片
-        this.itemBtnIconPaths = new String[itemBtnNum];
-        this.itemBtnIconPaths[0] = "/resources/atk_up.png";
-        this.itemBtnIconPaths[1] = "/resources/BlueSky.png";
-        this.itemBtnIconPaths[2] = "/resources/Animal.png";
-        this.itemBtnIconPaths[3] = "/resources/atk_up.png";
-        this.itemBtnIconPaths[4] = "/resources/atk_up.png";
         
-        //初始化並放置itemBtns 位置
+        
         
         //設定第0個商品位置
-        
         this.itemBtns[0] = new Button(this.itemBtnIconPaths[0],x0,y0,w0,h0);
         this.itemBtns[1] = new Button(this.itemBtnIconPaths[1],x1,y1,w1,h1);
         this.itemBtns[2] = new Button(this.itemBtnIconPaths[2],x2,y2,w2,h2);
-        for(int i = 3; i < this.itemBtns.length;i++){
-            this.itemBtns[i] = new Button(this.itemBtnIconPaths[i],x0,y0,w0,h0);
-        }
-        //設定初始商品為第0-2項為顯示
-        for(int i = 0; i < 3; i++){
-            this.itemBtns[i].setIsShown(true);
+        for (Button itemBtn : itemBtns) {
+            itemBtn.setIsShown(true);
         }
         //clickState為是否在被選擇的圖片上（放大的那張）
         this.itemBtns[1].setIsClicked(true);
-        //設定物品價格
-        this.itemBtns[ITEM_ATTCK].setIntData(ITEM_ATTCK_PRICE);
-        this.itemBtns[ITEM_LEVEL].setIntData(ITEM_LEVEL_PRICE);
-        this.itemBtns[ITEM_FOOD].setIntData(ITEM_FOOD_PRICE);
-        this.itemBtns[ITEM_STOCK].setIntData(ITEM_STOCK_PRICE);
-        this.itemBtns[ITEM_ENTERTAINMENT].setIntData(ITEM_ENTERTAINMENT_PRICE);
+        
+        
     }
     
     
@@ -301,12 +306,9 @@ public class StoreScene extends Scene{
         }
         
         //畫出player金錢
-        Font fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH/20);
         g.setFont(fontBit);
         g.setColor(new Color(0,0,0));
         FontMetrics fm = g.getFontMetrics();
-        
-        
         String msg = this.player.getInventory()+"";
         int sw = fm.stringWidth(msg);
         int sa = fm.getAscent();
@@ -318,8 +320,7 @@ public class StoreScene extends Scene{
     public void logicEvent() {
         for(int i = 0; i < functionBtns.length; i++){
             if(functionBtns[i].isClicked()){
-                System.out.println("func clicked");
-                System.out.println("cost:"+cost);
+                System.out.println("logicEvent clicked");
                 functionBtns[i].action();
                 functionBtns[i].setIsClicked(false);
             }
@@ -358,13 +359,18 @@ public class StoreScene extends Scene{
                 funcBtnWidthUnit/2, funcBtnWidthUnit);
         this.functionBtns[this.START_BTN].reset(Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.133f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
                 funcBtnWidthUnit*2, funcBtnWidthUnit);
-        
+        for(Button btn : functionBtns){
+            btn.setLabelSize(btn.getWidth());
+        }
+        this.functionBtns[this.LEFT_BTN].setLabelSize(functionBtns[LEFT_BTN].getWidth()*4);
+        this.functionBtns[this.RIGHT_BTN].setLabelSize(functionBtns[RIGHT_BTN].getWidth()*4);
         this.itemBtns[0].reset(x0,y0,w0,h0);
         this.itemBtns[1].reset(x1,y1,w1,h1);
         this.itemBtns[2].reset(x2,y2,w2,h2);
-        for(int i = 3; i < this.itemBtns.length;i++){
-            this.itemBtns[i].reset(x0,y0,w0,h0);
-        }
+//        for(int i = 3; i < this.itemBtns.length;i++){
+//            this.itemBtns[i].reset(x0,y0,w0,h0);
+//        }
+        
         
         
     }

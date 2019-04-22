@@ -44,7 +44,7 @@ public class Button {
         return false;
     }
 
-    public Button(String iconName, int width, int height, int x, int y) {
+    public Button(String iconName, int x, int y, int width, int height) {
         rc = ImgResource.getInstance();
         buttonImg = rc.tryGetImage(iconName);
         this.height = height;

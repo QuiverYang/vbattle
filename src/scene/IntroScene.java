@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import vbattle.Button;
 import vbattle.ImgResource;
 import vbattle.MainPanel;
+import vbattle.Resource;
 
 /**
  *
@@ -31,9 +32,9 @@ public class IntroScene extends Scene {
         super(gsChangeListener);
         rc = ImgResource.getInstance();
         introImg = rc.tryGetImage("/resources/intro1.jpg");  //遊戲說明圖片 
-        backBtn = new Button("/resources/back_click2.png", 900, 700, 200, 100);  //退回按鈕
+        backBtn = new Button("/resources/back_click2.png", Resource.SCREEN_WIDTH/12*9 , Resource.SCREEN_HEIGHT /9*7, Resource.SCREEN_WIDTH /12*2, Resource.SCREEN_HEIGHT /9);  //退回按鈕
 
-        introY = 0;
+        this.introY = 0;
     }
 
     @Override
@@ -71,16 +72,15 @@ public class IntroScene extends Scene {
     @Override
     public void paint(Graphics g) {
         g.setColor(Color.BLACK);
-        g.fillRect(0, 0, 1200, 300);
-        g.drawImage(introImg, 0, introY+300, null);
+        g.fillRect(0, 0, 1200, 900);
+        g.drawImage(introImg, 0, this.introY+300, null);
         backBtn.paint(g);
 
     }
 
     @Override
     public void logicEvent() {
-        introY -= 1;
-
+        this.introY -= 1;
     }
 
 }

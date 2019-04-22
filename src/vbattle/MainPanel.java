@@ -62,7 +62,7 @@ public class MainPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (currentScene != null) {
-//                    currentScene.logicEvent();
+                    currentScene.logicEvent();
                 }
             }
         });
@@ -115,8 +115,8 @@ public class MainPanel extends JPanel {
 //                return new StageScene(gsChangeListener);
 
             }
-            case STAGE_SCENE:
-                return new StageScene(gsChangeListener);
+//            case STAGE_SCENE:
+//                return new StageScene(gsChangeListener);
 
         }
         return null;

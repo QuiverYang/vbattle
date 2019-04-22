@@ -13,7 +13,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import vbattle.Button;
 import vbattle.Fontes;
@@ -185,16 +184,12 @@ public class MenuScene extends Scene {
     @Override
     public void logicEvent() {
 // 以下是更新按鈕位置相對於螢幕大小        
-//        introBtn = new Button("/resources/help_click.png",,,200,100);  //遊戲說明按鈕
-//        newGameBtn = new Button("/resources/newGame_click.png",, ,200,100);  //新遊戲按鈕
-//        loadBtn = new Button("/resources/loading_click.png",(int) (Resource.SCREEN_WIDTH * 0.75), (int) (Resource.SCREEN_HEIGHT * 0.667f),200,100);  //載入遊戲按鈕
-        
-//        introBtn.setX((int) (Resource.SCREEN_WIDTH * 0.083f));
-//        introBtn.setY( (int) (Resource.SCREEN_HEIGHT * 0.667f));
-//        newGameBtn.setX((int) (Resource.SCREEN_WIDTH * 0.417f));
-//        newGameBtn.setY((int) (Resource.SCREEN_HEIGHT * 0.667f));
-//        loadBtn.setX((int) (Resource.SCREEN_WIDTH * 0.75f)); 
-//        loadBtn.setY((int)(Resource.SCREEN_HEIGHT * 0.667f));
+        introBtn.setX((int) (Resource.SCREEN_WIDTH * 0.083f));
+        introBtn.setY( (int) (Resource.SCREEN_HEIGHT * 0.667f));
+        newGameBtn.setX((int) (Resource.SCREEN_WIDTH * 0.417f));
+        newGameBtn.setY((int) (Resource.SCREEN_HEIGHT * 0.667f));
+        loadBtn.setX((int) (Resource.SCREEN_WIDTH * 0.75f)); 
+        loadBtn.setY((int)(Resource.SCREEN_HEIGHT * 0.667f));
 
     }
 

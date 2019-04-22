@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Player {
     private int inventory,stage;
-    private int hp,mp; //體力 快樂度
+    private int hp,mp,cash; //體力 快樂度
     private ArrayList<FinancialProduct> fp;
     private int unlock[] = new int[5];//資源存量,破關進度,解鎖腳色
     private String savePath;
@@ -24,6 +24,31 @@ public class Player {
         }
             return player;
     }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public int getMp() {
+        return mp;
+    }
+
+    public void setMp(int mp) {
+        this.mp = mp;
+    }
+
+    public int getCash() {
+        return cash;
+    }
+
+    public void setCash(int cash) {
+        this.cash = cash;
+    }
+    
 
     public int getInventory() {
         return inventory;
@@ -62,6 +87,9 @@ public class Player {
     
     public void increaseInventory(int money){
         this.inventory+=money;
+    }
+    public void increaseCash(int money){
+        this.cash+=money;
     }
     public String getPlayerName(){
         return this.playerName;

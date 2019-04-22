@@ -11,15 +11,13 @@ import scene.*;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.io.IOException;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import scene.IntroScene;
 import scene.LoadGameScene;
-//import scene.StageScene;
+import scene.StageScene;
 
 /**
  *
@@ -64,7 +62,7 @@ public class MainPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (currentScene != null) {
-                    currentScene.logicEvent();
+//                    currentScene.logicEvent();
                 }
             }
         });
@@ -110,12 +108,15 @@ public class MainPanel extends JPanel {
                 } catch (IOException ex) {
                     ex.getStackTrace();
                 }
+            
 //            case LOAD_GAME_SCENE:
 //                return LoadGameScene(gsChangeListener);
 //            case STAGE_SCENE: 
 //                return new StageScene(gsChangeListener);
 
             }
+            case STAGE_SCENE:
+                return new StageScene(gsChangeListener);
 
         }
         return null;

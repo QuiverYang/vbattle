@@ -48,9 +48,9 @@ public class MenuScene extends Scene {
         rc = ImgResource.getInstance();
         background = rc.tryGetImage("/resources/mainBackground1.png");
 
-        introBtn = new Button("/resources/help_click.png", Resource.SCREEN_WIDTH / 12, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9);  //遊戲說明按鈕
-        newGameBtn = new Button("/resources/newGame_click.png", Resource.SCREEN_WIDTH / 12 * 5, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
-        loadBtn = new Button("/resources/loading_click.png", Resource.SCREEN_WIDTH / 12 * 9, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
+        introBtn = new Button("/resources/help_click.png");  //遊戲說明按鈕
+        newGameBtn = new Button("/resources/newGame_click.png");
+        loadBtn = new Button("/resources/loading_click.png");
 
 
         typeCheck = newGameCheck = false;
@@ -60,7 +60,7 @@ public class MenuScene extends Scene {
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(this.background, 0, 0, null);
+        g.drawImage(this.background, 0, 0,Resource.SCREEN_WIDTH,Resource.SCREEN_HEIGHT,0,0,background.getWidth(),background.getHeight(), null);
         introBtn.paint(g);
         newGameBtn.paint(g);
         loadBtn.paint(g);
@@ -199,13 +199,11 @@ public class MenuScene extends Scene {
     @Override
     public void logicEvent() {
 // 以下是更新按鈕位置相對於螢幕大小        
-        introBtn.setX((int) (Resource.SCREEN_WIDTH * 0.083f));
-        introBtn.setY( (int) (Resource.SCREEN_HEIGHT * 0.667f));
-        newGameBtn.setX((int) (Resource.SCREEN_WIDTH * 0.417f));
-        newGameBtn.setY((int) (Resource.SCREEN_HEIGHT * 0.667f));
-        loadBtn.setX((int) (Resource.SCREEN_WIDTH * 0.75f)); 
-        loadBtn.setY((int)(Resource.SCREEN_HEIGHT * 0.667f));
+        introBtn.reset(Resource.SCREEN_WIDTH / 12, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);  //遊戲說明按鈕
+        newGameBtn.reset(Resource.SCREEN_WIDTH / 12 * 5, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
+        loadBtn.reset(Resource.SCREEN_WIDTH / 12 * 9, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
 
     }
+    
 
 }

@@ -32,7 +32,7 @@ public class IntroScene extends Scene {
         super(gsChangeListener);
         rc = ImgResource.getInstance();
         introImg = rc.tryGetImage("/resources/intro1.jpg");  //遊戲說明圖片 
-        backBtn = new Button("/resources/back_click2.png", Resource.SCREEN_WIDTH/12*9 , Resource.SCREEN_HEIGHT /9*7, Resource.SCREEN_WIDTH /12*2, Resource.SCREEN_HEIGHT /9);  //退回按鈕
+        backBtn = new Button("/resources/return1.png",  (int)(Resource.SCREEN_WIDTH *0.842f), (int)(Resource.SCREEN_HEIGHT *0.778f), Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT / 9);//退回按鈕
 
         this.introY = 0;
     }
@@ -73,7 +73,8 @@ public class IntroScene extends Scene {
     public void paint(Graphics g) {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, 1200, 900);
-        g.drawImage(introImg, 0, this.introY+300, null);
+        
+        g.drawImage(introImg, 0, this.introY+300, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT+this.introY+300, 0, 0, introImg.getWidth(), introImg.getHeight()-600, null);
         backBtn.paint(g);
 
     }
@@ -81,6 +82,9 @@ public class IntroScene extends Scene {
     @Override
     public void logicEvent() {
         this.introY -= 1;
+        this.backBtn.reset( (int)(Resource.SCREEN_WIDTH *0.842f), (int)(Resource.SCREEN_HEIGHT *0.778f), Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT / 9);
+        
+
     }
 
 }

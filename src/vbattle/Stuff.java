@@ -8,18 +8,18 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 public class Stuff {
+    //初始屬性
     private int x0,y0,imgWidth,imgHeight,x1,y1;//起始座標,圖片尺寸,物件範圍(起始座標+圖片尺寸)
     private BufferedImage img;//載入圖片
-    private int hp,atk,lv,exp,mp;//物件HP,ATK,LV,EXP
+    private int maxHp,maxMp,atk,lv,exp;//物件HP,ATK,LV,EXP
     private String txtpath;//參數txt路徑
     private String imgpath;//圖片路徑...存入參數txt檔
     private int hpRate,atkRate,hpBase,atkBase,speed;//基礎參數...存入參數txt檔
-    private String test;//測試
-    private boolean clickState;
-    private int belong;
+    private int type; // 判斷正反角 (1-->我方角 , -1-->敵方)
     
-    private int type; // 判斷正反角 (1-->我方角 , 2-->敵方)
-    private int maxHp;
+    //變動屬性
+    private boolean clickState;
+    private int hp,mp;
     private int cd; //角色cd時間
     
     public Stuff(int type,int x0,int y0,int imgWidth,int imgHeight,String txtpath) throws IOException{
@@ -36,7 +36,6 @@ public class Stuff {
         //讀取參數txt檔
         BufferedReader br = new BufferedReader(new FileReader("src/"+txtpath+".txt"));
         String status[] = br.readLine().split(",");
-        this.test = status[0];//測試
         this.img = ImageIO.read(getClass().getResource(status[0]));
         this.hpRate = Integer.parseInt(status[1]);
         this.atkRate = Integer.parseInt(status[2]);
@@ -47,9 +46,8 @@ public class Stuff {
         //讀取參數txt檔
         //初始化腳色
         this.lv = 1;
-        this.maxHp = hpRate * lv + this.hpBase;
+        this.maxHp = this.hp = hpRate * lv + this.hpBase;
         this.atk = atkRate * lv + this.atkBase;
-        this.hp = this.maxHp;
         //初始化腳色
     }
     //內建GETTER SETTER
@@ -172,12 +170,6 @@ public class Stuff {
     public void setAtkBase(int atkBase) {
         this.atkBase = atkBase;
     }
-    public String getTest() {
-        return test;
-    }
-    public void setTest(String test) {
-        this.test = test;
-    }
 
     public boolean isClickState() {
         return clickState;
@@ -191,12 +183,6 @@ public class Stuff {
     }
     public void setSpeed(int speed) {
         this.speed = speed;
-    }
-    public int getBelong() {
-        return belong;
-    }
-    public void setBelong(int belong) {
-        this.belong = belong;
     }
     //內建GETTER SETTER
     
@@ -214,31 +200,18 @@ public class Stuff {
     public void lvup(){
         
     }
-    public void move(){
-        int way = 0;
-        switch(this.belong){
-            case 0:
-                way = 1;
-                break;
-            case 1:
-                way = -1;
-                break;
-        }
-        this.x0 +=  way;
-        this.x1 = this.x0 + this.imgWidth;
-    }
     public void attack(Stuff stuff){
         
     }
     public void print(){ //測試
-        System.out.println(this.test+"\n"+
-        this.hpRate+"\n"+
-        this.atkRate+"\n"+
-        this.hpBase+"\n"+
-        this.atkBase);
+//        System.out.println(this.test+"\n"+
+//        this.hpRate+"\n"+
+//        this.atkRate+"\n"+
+//        this.hpBase+"\n"+
+//        this.atkBase);
     }
     
     public void paint(Graphics g){
-        g.drawImage(this.img, x0, y0, x1, y1,0,64,32,96, null);
+//        g.drawImage(this.img, x0, y0, x1, y1,0,64,32,96, null);
     }
 }

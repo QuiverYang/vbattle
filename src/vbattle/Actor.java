@@ -32,6 +32,11 @@ public class Actor extends Stuff {
     private ImgResource rc;
     private int actionState;  // 1-->走路 2-->攻擊 3-->後退 (紀錄角色目前狀態)
 
+    private boolean dieState;
+    private BufferedImage dieImg;
+    
+    private int ghostY;
+    
     public Actor(int type, int x0, int y0, int imgWidth, int imgHeight, int actorIndex, String txtpath) throws IOException {
         super(type, x0, y0, imgWidth, imgHeight, txtpath);
         this.imgIndex = new int[]{0, 1, 2, 1};
@@ -42,7 +47,10 @@ public class Actor extends Stuff {
         countTime = new int[5];
 
         rc = ImgResource.getInstance();
-
+        
+        dieState=false;
+        dieImg = rc.tryGetImage("/resources/ghost.png");
+        ghostY=0;
     }
     
     //移動
@@ -62,6 +70,15 @@ public class Actor extends Stuff {
         }
     }
     
+    public void die(){
+        ghostY +=5;
+        if(this.index==5){
+            index=0;
+        }
+        this.index++;
+        this.dieState = true;
+    }
+    
     //控制delay時間
     public boolean cycle(int n, int index) {
         this.countTime[index]++;
@@ -72,17 +89,32 @@ public class Actor extends Stuff {
         return false;
     }
     
+    public void setIndex(int i){
+        this.index = i;
+    }
+    
+    public int getIndex(){
+        return this.index;
+    }
+    
     @Override
     public void attack(Stuff stuff) {
-        while (index < 5) {
-                index++;
-                this.setActionState(2);
-        }
-        if (index >= 5) {
+        if(index==4){
+            stuff.setHp(stuff.getHp() - this.getAtk());
+            this.setAtkSucess(true);
+            
+        }else if(index ==6){
             index = 3;
         }
-        stuff.setHp(stuff.getHp() - this.getAtk());
-        this.setAtkSucess(true);
+        
+//        while (index < 5) {
+//                index++;
+//                this.setActionState(2);
+//        }
+//        if (index >= 5) {
+//            index = 3;
+//        }
+        
 
     }
 
@@ -164,11 +196,13 @@ public class Actor extends Stuff {
 
         if (this.actionState == 1) {
             g.drawImage(img, this.getX0(), this.getY0(), this.getX0() + 64, this.getY0() + 64, this.index * 32, actorIndex * 32, (this.index + 1) * 32, (actorIndex + 1) * 32, null);
-        } else if (this.actionState == 2 && this.cycle(4, 1)) {
-            System.out.println("index" + index);
+        } else if (this.actionState == 2 ) {
+            System.out.println("index:" + index);
             g.drawImage(img, this.getX0(), this.getY0(), this.getX0() + 64, this.getY0() + 64, index * 32, actorIndex * 32, ((index) + 1) * 32, (actorIndex + 1) * 32, null);
-        } else {
+        } else if(this.actionState ==3){
             g.drawImage(img, this.getX0(), this.getY0(), this.getX0() + 64, this.getY0() + 64, 0 * 32, actorIndex * 32, (0 + 1) * 32, (actorIndex + 1) * 32, null);
+        }else if(this.dieState){
+            g.drawImage(this.dieImg, this.getX0(), this.getY0()-this.ghostY, this.getX0()+this.dieImg.getWidth()/5, this.getY0()+this.dieImg.getHeight()-this.ghostY, this.index*this.getImgWidth()/5, 0, (this.index+1)*this.dieImg.getWidth()/5, this.dieImg.getHeight(), null);
         }
 
     }

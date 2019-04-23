@@ -129,7 +129,7 @@ public class LoadGameScene extends Scene {
 
 //        g.setColor(Color.WHITE);
 //        g.fillRect(Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT/9+50, Resource.SCREEN_WIDTH / 12*10, (int)(Resource.SCREEN_HEIGHT/9*4.7));
-        Font font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 20);
+        Font font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 10);
         g.setFont(font);
         g.setColor(Color.white);
         FontMetrics fm = g.getFontMetrics();

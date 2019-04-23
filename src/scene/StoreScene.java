@@ -263,20 +263,12 @@ public class StoreScene extends Scene{
     @Override
     public MouseAdapter genMouseAdapter() {
         return new MouseAdapter() {
-
-            public boolean isOnBtn(MouseEvent e, Button btn) {
-                if (e.getX() >= btn.getX()
-                        && e.getX() <= btn.getX() + btn.getImgWidth() && e.getY() >= btn.getY() && e.getY() <= btn.getY() + btn.getImgHeight()) {
-                    return true;
-                }
-                return false;
-            }
             
             @Override
             public void mousePressed(MouseEvent e) {
                 if(e.getButton() == MouseEvent.BUTTON1){
                     for(int i = 0; i < functionBtns.length; i++){
-                        if(isOnBtn(e,functionBtns[i])){
+                        if(Button.isOnBtn(e,functionBtns[i])){
                             functionBtns[i].setClickState(true);
                             functionBtns[i].setImgState(1);
                         }
@@ -291,7 +283,7 @@ public class StoreScene extends Scene{
                     for(int i = 0; i < functionBtns.length; i++){
                         functionBtns[i].setImgState(0);
                         functionBtns[i].setIsClicked(false);
-                        if(isOnBtn(e,functionBtns[i])&&functionBtns[i].getClickState()){
+                        if(Button.isOnBtn(e,functionBtns[i])&&functionBtns[i].getClickState()){
                             functionBtns[i].setClickState(false);
                             functionBtns[i].setIsClicked(true);
                         }

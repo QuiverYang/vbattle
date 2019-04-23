@@ -88,10 +88,10 @@ public class StoreScene extends Scene{
         player = Player.getPlayerInstane();
         
         //測試player所擁有金額
-        player.setInventory(20000);
-        player.setCash(6000);
-        player.setHp(100);
-        player.setMp(70);
+//        player.setInventory(20000);
+//        player.setCash(6000);
+//        player.setHp(100);
+//        player.setMp(70);
         
         rc = ImgResource.getInstance();
         this.initFunctionBtns();

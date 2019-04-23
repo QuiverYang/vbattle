@@ -18,8 +18,13 @@ public class Stuff {
     private boolean clickState;
     private int belong;
     
-    public Stuff(int x0,int y0,int imgWidth,int imgHeight,String txtpath) throws IOException{
+    private int type; // 判斷正反角 (1-->我方角 , 2-->敵方)
+    private int maxHp;
+    private int cd; //角色cd時間
+    
+    public Stuff(int type,int x0,int y0,int imgWidth,int imgHeight,String txtpath) throws IOException{
         //設定建構子參數
+        this.type = type;
         this.x0 = x0;
         this.y0 = y0;
         this.imgWidth = imgWidth;
@@ -37,16 +42,25 @@ public class Stuff {
         this.atkRate = Integer.parseInt(status[2]);
         this.hpBase = Integer.parseInt(status[3]);
         this.atkBase = Integer.parseInt(status[4]);
+        this.cd = Integer.parseInt(status[5]);
         br.close();
         //讀取參數txt檔
         //初始化腳色
         this.lv = 1;
-        this.hp = hpRate * lv + this.hpBase;
+        this.maxHp = hpRate * lv + this.hpBase;
         this.atk = atkRate * lv + this.atkBase;
+        this.hp = this.maxHp;
         //初始化腳色
     }
     //內建GETTER SETTER
-
+    
+    public int getType(){
+        return this.type;
+    }
+    public void setType(int type){
+        this.type = type;
+    }
+    
     public int getX0() {
         return x0;
     }
@@ -193,6 +207,10 @@ public class Stuff {
         this.y1 = y0 + imgHeight;
     }
     
+    public float getHpPercent(){
+         return (float)this.hp/(float)this.maxHp;
+     }
+    
     public void lvup(){
         
     }
@@ -209,7 +227,7 @@ public class Stuff {
         this.x0 +=  way;
         this.x1 = this.x0 + this.imgWidth;
     }
-    public void attack(){
+    public void attack(Stuff stuff){
         
     }
     public void print(){ //測試

@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import vbattle.Button;
 import vbattle.Fontes;
+import vbattle.ImgResource;
 import vbattle.MainPanel;
 import vbattle.Player;
 import vbattle.Resource;
@@ -36,8 +37,10 @@ public class LoadGameScene extends Scene {
     private Button[] playerBtn = new Button[PLAYER_NUM];
     private String path;
     private Button backBtn;
-
+    private ImgResource rc;
     private String[] playerNameList;
+
+    private BufferedImage background;
 
     public LoadGameScene(MainPanel.GameStatusChangeListener gsChangeListener) throws IOException {
         super(gsChangeListener);
@@ -46,16 +49,19 @@ public class LoadGameScene extends Scene {
 
         path = "Playertest";
 
-        playerBtn[0] = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9 * 2, Resource.SCREEN_WIDTH / 12 * 3, Resource.SCREEN_HEIGHT / 12);
-        playerBtn[1] = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT * 350 / 900, Resource.SCREEN_WIDTH / 12 * 3, Resource.SCREEN_HEIGHT / 12);
-        playerBtn[2] = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9 * 5, Resource.SCREEN_WIDTH / 12 * 3, Resource.SCREEN_HEIGHT / 12);
-        playerBtn[3] = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH * 650 / 1200, Resource.SCREEN_HEIGHT / 9 * 2, Resource.SCREEN_WIDTH / 12 * 3, Resource.SCREEN_HEIGHT / 12);
-        playerBtn[4] = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH * 650 / 1200, Resource.SCREEN_HEIGHT * 350 / 900, Resource.SCREEN_WIDTH / 12 * 3, Resource.SCREEN_HEIGHT / 12);
-        playerBtn[5] = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH * 650 / 1200, Resource.SCREEN_HEIGHT / 9 * 5, Resource.SCREEN_WIDTH / 12 * 3, Resource.SCREEN_HEIGHT / 12);
+        playerBtn[0] = new Button("/resources/clickBtn1.png", (int) (Resource.SCREEN_WIDTH * 0.125f), (int) (Resource.SCREEN_HEIGHT * 0.278f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_HEIGHT / 12 * 2);
+        playerBtn[1] = new Button("/resources/clickBtn1.png", (int) (Resource.SCREEN_WIDTH * 0.125f), (int) (Resource.SCREEN_HEIGHT * 0.444f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_HEIGHT / 12 * 2);
+        playerBtn[2] = new Button("/resources/clickBtn1.png", (int) (Resource.SCREEN_WIDTH * 0.125f), (int) (Resource.SCREEN_HEIGHT * 0.611f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_HEIGHT / 12 * 2);
+        playerBtn[3] = new Button("/resources/clickBtn1.png", (int) (Resource.SCREEN_WIDTH * 0.5f), (int) (Resource.SCREEN_HEIGHT * 0.278f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_HEIGHT / 12 * 2);
+        playerBtn[4] = new Button("/resources/clickBtn1.png", (int) (Resource.SCREEN_WIDTH * 0.5f), (int) (Resource.SCREEN_HEIGHT * 0.444f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_HEIGHT / 12 * 2);
+        playerBtn[5] = new Button("/resources/clickBtn1.png", (int) (Resource.SCREEN_WIDTH * 0.5f), (int) (Resource.SCREEN_HEIGHT * 0.611f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_HEIGHT / 12 * 2);
 
-        backBtn = new Button("/resources/return_click.png", Resource.SCREEN_WIDTH * 950 / 1200, Resource.SCREEN_HEIGHT * 650 / 900, Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT / 9);
+        backBtn = new Button("/resources/return1.png", (int) (Resource.SCREEN_WIDTH * 0.842f), (int) (Resource.SCREEN_HEIGHT * 0.778f), Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT / 9);
         player.loadPlayerList(path);
         this.playerNameList = player.getPlayerList();
+
+        rc = ImgResource.getInstance();
+        background = rc.tryGetImage("/resources/loading_bg.png");
     }
 
     @Override
@@ -117,20 +123,20 @@ public class LoadGameScene extends Scene {
 
     @Override
     public void paint(Graphics g) {
-        g.setColor(Color.LIGHT_GRAY);
-        g.fillRect(0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT);
-        
+        g.drawImage(background, 0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT, 0, 0, this.background.getWidth(), this.background.getHeight(), null);
+//        g.setColor(Color.LIGHT_GRAY);
+//        g.fillRect(0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT);
+
 //        g.setColor(Color.WHITE);
 //        g.fillRect(Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT/9+50, Resource.SCREEN_WIDTH / 12*10, (int)(Resource.SCREEN_HEIGHT/9*4.7));
-
         Font font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 20);
         g.setFont(font);
         g.setColor(Color.white);
         FontMetrics fm = g.getFontMetrics();
-        int sw1 = fm.stringWidth("LOAD  GAME");
-        int sa1 = fm.getAscent();
-        g.drawString("LOAD GAME",Resource.SCREEN_WIDTH/2 - sw1/2, (int) (Resource.SCREEN_HEIGHT /9));
-        
+//        int sw1 = fm.stringWidth("LOAD  GAME");
+//        int sa1 = fm.getAscent();
+//        g.drawString("LOAD GAME",Resource.SCREEN_WIDTH/2 - sw1/2, (int) (Resource.SCREEN_HEIGHT /9));
+
         for (int i = 0; i < PLAYER_NUM; i++) {
             playerBtn[i].paint(g);
         }
@@ -151,7 +157,13 @@ public class LoadGameScene extends Scene {
 
     @Override
     public void logicEvent() {
-
+        this.backBtn.reset((int) (Resource.SCREEN_WIDTH * 0.842f), (int) (Resource.SCREEN_HEIGHT * 0.778f), Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT / 9);
+        playerBtn[0].reset((int) (Resource.SCREEN_WIDTH * 0.125f), (int) (Resource.SCREEN_HEIGHT * 0.278f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_HEIGHT / 12 * 2);
+        playerBtn[1].reset((int) (Resource.SCREEN_WIDTH * 0.125f), (int) (Resource.SCREEN_HEIGHT * 0.444f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_HEIGHT / 12 * 2);
+        playerBtn[2].reset((int) (Resource.SCREEN_WIDTH * 0.125f), (int) (Resource.SCREEN_HEIGHT * 0.611f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_HEIGHT / 12 * 2);
+        playerBtn[3].reset((int) (Resource.SCREEN_WIDTH * 0.5f), (int) (Resource.SCREEN_HEIGHT * 0.278f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_HEIGHT / 12 * 2);
+        playerBtn[4].reset((int) (Resource.SCREEN_WIDTH * 0.5f), (int) (Resource.SCREEN_HEIGHT * 0.444f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_HEIGHT / 12 * 2);
+        playerBtn[5].reset((int) (Resource.SCREEN_WIDTH * 0.5f), (int) (Resource.SCREEN_HEIGHT * 0.611f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_HEIGHT / 12 * 2);
     }
 
 }

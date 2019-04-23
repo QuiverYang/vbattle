@@ -168,9 +168,9 @@ public class Button {
     }
 
     public void setClickState(boolean a) {
-        if(a==true){
-            this.clickSound.play();
-        }
+//        if(a==true){
+//            this.clickSound.play();
+//        }
         this.clickState = a;
     }
 

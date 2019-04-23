@@ -34,7 +34,6 @@ public class Button {
     private boolean isClicked;
     private int intData;
     private Callback callback;
-    AudioClip clickSound;
     
     public interface Callback{
         void doSomthing();
@@ -68,17 +67,17 @@ public class Button {
         clickState = false;
         labelSize = width;
         
-        try{
-            clickSound = Applet.newAudioClip(getClass().getResource("/resources/Cursor2.wav"));
-        }catch(Exception ex){
-            ex.getStackTrace();
-        }
+//        try{
+//            clickSound = Applet.newAudioClip(getClass().getResource("/resources/Cursor2.wav"));
+//        }catch(Exception ex){
+//            ex.getStackTrace();
+//        }
         
     }
     
-    public AudioClip getSound(){
-        return this.clickSound;
-    } 
+//    public AudioClip getSound(){
+//        return this.clickSound;
+//    } 
     
 
     public Callback getCallback() {

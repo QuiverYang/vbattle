@@ -34,20 +34,14 @@ public class StageScene extends Scene{
     private Actor actor2;
     int countAtk;
     
-    private BufferedImage ghost;
-    private ImgResource rc;
-    private int ghIndex;
     
-
+    
     public StageScene(MainPanel.GameStatusChangeListener gsChangeListener) throws IOException{
         super(gsChangeListener);
         actor1 = new Actor(1, 100, 500, 64, 64, 0, "actor1");  //int type(1:我方角 or 2:敵人) , int x0, int y0, int imgWidth, int imgHeight, int actorIndex(角色圖片), String txtpath(角色資訊)
         actor2 = new Actor(2, 800, 500, 64, 64, 3, "actor2");
         countAtk =0;
         
-        rc = ImgResource.getInstance();
-        ghost = rc.tryGetImage("/resources/ghost.png");
-        ghIndex= 0;
     }
 
     @Override
@@ -55,10 +49,6 @@ public class StageScene extends Scene{
         return new MouseAdapter() {
            
         };
-    }
-    
-    public void ghostMove(){
-        
     }
 
     @Override
@@ -71,12 +61,9 @@ public class StageScene extends Scene{
     @Override
     public void logicEvent() {
         //任一角色沒命就停止
-        if (actor1.getHp() <= 0 ) {
+        if (actor1.getHp() <= 0 || actor2.getHp() <= 0) {
             System.out.println("die");
-            actor1.die();
-        }
-        if(actor2.getHp( )<=0){
-            actor2.die();
+            return;
         }
         
         actor1.cdCheck(60); //確認cd時間到 cdCheck就為true

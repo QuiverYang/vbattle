@@ -148,8 +148,8 @@ public class LoadGameScene extends Scene {
                 playerNameList[i] = "";
                 playerBtn[i].setLabel("");
             }
-            int sw = fm.stringWidth(playerNameList[i]);
-            int sa = fm.getAscent();
+//            int sw = fm.stringWidth(playerNameList[i]);
+//            int sa = fm.getAscent();
             playerBtn[i].setLabel(playerNameList[i]);
         }
 
@@ -164,6 +164,9 @@ public class LoadGameScene extends Scene {
         playerBtn[3].reset((int) (Resource.SCREEN_WIDTH * 0.5f), (int) (Resource.SCREEN_HEIGHT * 0.278f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_HEIGHT / 12 * 2);
         playerBtn[4].reset((int) (Resource.SCREEN_WIDTH * 0.5f), (int) (Resource.SCREEN_HEIGHT * 0.444f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_HEIGHT / 12 * 2);
         playerBtn[5].reset((int) (Resource.SCREEN_WIDTH * 0.5f), (int) (Resource.SCREEN_HEIGHT * 0.611f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_HEIGHT / 12 * 2);
+        for(int i =0; i < playerBtn.length; i++){
+            playerBtn[i].setLabelSize((int)(playerBtn[i].getWidth()/1.5));
+        }
     }
 
 }

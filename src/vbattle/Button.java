@@ -47,6 +47,11 @@ public class Button {
     public void changeIcon(String iconName){
         buttonImg = rc.tryGetImage(iconName);
     }
+    
+    public Button(String iconName){
+        rc = ImgResource.getInstance();
+        buttonImg = rc.tryGetImage(iconName);
+    }
 
     public Button(String iconName, int x, int y, int width, int height) {
         rc = ImgResource.getInstance();

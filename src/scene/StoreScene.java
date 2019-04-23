@@ -5,6 +5,8 @@
  */
 package scene;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -36,16 +38,23 @@ public class StoreScene extends Scene{
     private final int LEFT_BTN = 2;
     private final int RIGHT_BTN = 3;
     private final int START_BTN = 4;
-    private final int ITEM_ATTCK = 0;
-    private final int ITEM_LEVEL = 1;
-    private final int ITEM_FOOD = 2;
-    private final int ITEM_STOCK = 3;
-    private final int ITEM_ENTERTAINMENT = 4;
-    private final int ITEM_ATTCK_PRICE = 100;
-    private final int ITEM_LEVEL_PRICE = 200;
-    private final int ITEM_FOOD_PRICE = 300;
-    private final int ITEM_STOCK_PRICE = 400;
-    private final int ITEM_ENTERTAINMENT_PRICE = 500;
+    
+    private int itemsNum=5;
+    
+    private final int ITEM_HAMBURGER = 0;
+    private final int ITEM_NOODLE = 1;
+    private final int ITEM_CHIKEN = 2;
+    private final int ITEM_TV = 3;
+    private final int ITEM_TRAVEL = 4;
+    
+    private int[] itemsPrice;
+    private final int ITEM_HAMBURGER_PRICE = 100;
+    private final int ITEM_NOODLE_PRICE = 200;
+    private final int ITEM_CHIKEN_PRICE = 300;
+    private final int ITEM_TV_PRICE = 400;
+    private final int ITEM_TRAVEL_PRICE = 500;
+    
+    private String[] itemsInro;
     
     
     private int funcBtnWidthUnit = Resource.SCREEN_WIDTH/12;//functionBtn的一個單位大小
@@ -55,13 +64,11 @@ public class StoreScene extends Scene{
     private int rightBtnYcenter;//選單圖片中心y座標
     private boolean[] itemBtnsIsShown;//用來放大選單圖片
     private String[] itemBtnIconPaths;
-    private int itemsNum=5;
-    private int[] itemsPrice;
     
     private Button[] functionBtns;
     private Button[] itemBtns ;
     private Player player;
-    private int cost;//每個物品價值多少錢所要扣除player inventory的金額
+    private int costCash;//每個物品價值多少錢所要扣除player inventory的金額
     private int x0,y0,w0,h0,x1,y1,h1,w1,x2,y2,h2,w2;
     private int counter;
     Font fontBit;
@@ -70,7 +77,7 @@ public class StoreScene extends Scene{
     
     public StoreScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
-        cost = 0;
+        costCash = 0;
         this.itemBtns = new Button[3];
         this.itemBtnsIsShown = new boolean[this.itemBtns.length];
         for(int i = 0; i < 3; i++){
@@ -96,7 +103,6 @@ public class StoreScene extends Scene{
         fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH/20);
         this.itemBtnXcenter = Resource.SCREEN_WIDTH/2;
         this.rightBtnYcenter = (int)(Resource.SCREEN_HEIGHT*0.4f);
-        this.itemsPrice = new int[itemsNum];
         x0 = itemBtnXcenter-itemBtnWidthUnit*2-2*padding;
         y0 = rightBtnYcenter-itemBtnWidthUnit/2;
         w0 = itemBtnWidthUnit;
@@ -109,20 +115,33 @@ public class StoreScene extends Scene{
         y2 = y0;
         w2 = w0;
         h2 = h0;
+        
         //設定物品價格
-        itemsPrice[ITEM_ATTCK] = ITEM_ATTCK_PRICE;
-        itemsPrice[ITEM_LEVEL] = ITEM_LEVEL_PRICE;
-        itemsPrice[ITEM_FOOD] = ITEM_FOOD_PRICE;
-        itemsPrice[ITEM_STOCK] = ITEM_STOCK_PRICE;
-        itemsPrice[ITEM_ENTERTAINMENT] = ITEM_ENTERTAINMENT_PRICE;
+        this.itemsPrice = new int[itemsNum];
+        itemsPrice[ITEM_HAMBURGER] = ITEM_HAMBURGER_PRICE;
+        itemsPrice[ITEM_NOODLE] = ITEM_NOODLE_PRICE;
+        itemsPrice[ITEM_CHIKEN] = ITEM_CHIKEN_PRICE;
+        itemsPrice[ITEM_TV] = ITEM_TV_PRICE;
+        itemsPrice[ITEM_TRAVEL] = ITEM_TRAVEL_PRICE;
         
         //設定物品tiembtnIcon圖片
         this.itemBtnIconPaths = new String[itemsNum];
-        this.itemBtnIconPaths[0] = "/resources/atk_up.png";
-        this.itemBtnIconPaths[1] = "/resources/BlueSky.png";
-        this.itemBtnIconPaths[2] = "/resources/Animal.png";
-        this.itemBtnIconPaths[3] = "/resources/atk_up.png";
-        this.itemBtnIconPaths[4] = "/resources/BlueSky.png";
+        this.itemBtnIconPaths[ITEM_HAMBURGER] = "/resources/hamburger.jpg";
+        this.itemBtnIconPaths[ITEM_NOODLE] = "/resources/noodle.jpg";
+        this.itemBtnIconPaths[ITEM_CHIKEN] = "/resources/chiken.jpg";
+        this.itemBtnIconPaths[ITEM_TV] = "/resources/tv.jpg";
+        this.itemBtnIconPaths[ITEM_TRAVEL] = "/resources/travel.jpg";
+        
+        //設定物品產品介紹
+        this.itemsInro = new String[itemsNum];
+        this.itemsInro[ITEM_HAMBURGER] = "漢堡:HP+20,MP+10";
+        this.itemsInro[ITEM_NOODLE] = "麵食:HP+30";
+        this.itemsInro[ITEM_CHIKEN] = "雞腿:HP+40";
+        this.itemsInro[ITEM_TV] = "電視:MP+20";
+        this.itemsInro[ITEM_TRAVEL] = "旅遊:MP+30";
+        
+        //設定物品mp
+        
     }
     
     private void initFunctionBtns(){
@@ -130,8 +149,7 @@ public class StoreScene extends Scene{
         backgroundImg = rc.tryGetImage("/resources/storebg.png");  //store background 圖片
         //初始化並放置functionBtns 位置
         this.functionBtns = new Button[5];
-        this.functionBtns[this.BACK_BTN] = new Button("/resources/return_click.png",padding,padding,
-                funcBtnWidthUnit, funcBtnWidthUnit);
+        this.functionBtns[this.BACK_BTN] = new Button("/resources/return_blue.png");
         this.functionBtns[this.BACK_BTN].setCallback(new Callback() {
             @Override
             public void doSomthing() {
@@ -143,20 +161,17 @@ public class StoreScene extends Scene{
                 }
             }
         });
-        this.functionBtns[this.BUY_BTN] = new Button("/resources/clickBtn.png",padding,Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.15f),
-                funcBtnWidthUnit*2, funcBtnWidthUnit);//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
+        this.functionBtns[this.BUY_BTN] = new Button("/resources/clickBtn_blue.png");//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
         this.functionBtns[this.BUY_BTN].setLabel("BUY");
         this.functionBtns[this.BUY_BTN].setCallback(new Callback() {
             @Override
             public void doSomthing() {
-                cost += itemsPrice[counter];
-                    //把被買的選項暫時選為false等扣完錢後再重新設定為true
-//                    itemBtns[1].setIsClicked(false);
-//                    itemBtns[1].setClickState(true);
+                costCash += itemsPrice[counter];
+                
+                 
             }
         });
-        this.functionBtns[this.LEFT_BTN] = new Button("/resources/clickBtn.png", (int) (Resource.SCREEN_WIDTH * 0.1f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
-                funcBtnWidthUnit/2, funcBtnWidthUnit);  
+        this.functionBtns[this.LEFT_BTN] = new Button("/resources/clickBtn_blue.png");  
         this.functionBtns[this.LEFT_BTN].setLabel("<");
         counter = 1;
         this.functionBtns[this.LEFT_BTN].setCallback(new Callback(){
@@ -184,8 +199,7 @@ public class StoreScene extends Scene{
             }
             
         });
-        this.functionBtns[this.RIGHT_BTN] = new Button("/resources/clickBtn.png", (int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
-                funcBtnWidthUnit/2, funcBtnWidthUnit);
+        this.functionBtns[this.RIGHT_BTN] = new Button("/resources/clickBtn_blue.png");
         this.functionBtns[this.RIGHT_BTN].setLabel(">");
         this.functionBtns[this.RIGHT_BTN].setCallback(new Callback(){
 
@@ -212,8 +226,7 @@ public class StoreScene extends Scene{
             
         });
 
-        this.functionBtns[this.START_BTN] = new Button("/resources/clickBtn.png",Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.15f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
-                funcBtnWidthUnit*2, funcBtnWidthUnit);
+        this.functionBtns[this.START_BTN] = new Button("/resources/clickBtn_blue.png");
         this.functionBtns[this.START_BTN].setLabel("START");
         this.functionBtns[this.START_BTN].setCallback(new Callback() {
             @Override
@@ -234,9 +247,9 @@ public class StoreScene extends Scene{
         
         
         //設定第0個商品位置
-        this.itemBtns[0] = new Button(this.itemBtnIconPaths[0],x0,y0,w0,h0);
-        this.itemBtns[1] = new Button(this.itemBtnIconPaths[1],x1,y1,w1,h1);
-        this.itemBtns[2] = new Button(this.itemBtnIconPaths[2],x2,y2,w2,h2);
+        this.itemBtns[0] = new Button(this.itemBtnIconPaths[0]);
+        this.itemBtns[1] = new Button(this.itemBtnIconPaths[1]);
+        this.itemBtns[2] = new Button(this.itemBtnIconPaths[2]);
         for (Button itemBtn : itemBtns) {
             itemBtn.setIsShown(true);
         }
@@ -312,11 +325,11 @@ public class StoreScene extends Scene{
         String asset = this.player.getInventory()+"";
         int sw = fm.stringWidth(asset);
         int sa = fm.getAscent();
-        g.drawString(asset, Resource.SCREEN_WIDTH-sw, (int)(Resource.SCREEN_HEIGHT*0.94));
+        g.drawString(asset, (int)(Resource.SCREEN_WIDTH*0.9)-sw, (int)(Resource.SCREEN_HEIGHT*0.9));
         
         String cash = this.player.getCash()+"";
         int sw2 = fm.stringWidth(cash);
-        g.drawString(cash, Resource.SCREEN_WIDTH/2-sw, Resource.SCREEN_HEIGHT/13);
+        g.drawString(cash, (int)(Resource.SCREEN_WIDTH*0.45)-sw, (int)(Resource.SCREEN_HEIGHT*0.9));
         
         String pHp = this.player.getHp()+"";
         g.drawString(pHp, Resource.SCREEN_WIDTH-sw, Resource.SCREEN_HEIGHT/13);
@@ -336,20 +349,18 @@ public class StoreScene extends Scene{
                 functionBtns[i].setIsClicked(false);
             }
         }
-        if(cost != 0){
+        //處理扣錢
+        if(costCash != 0){
             int decreseSpeed = -10;//每針扣除錢的速度
-            cost+=decreseSpeed;
+            costCash+=decreseSpeed;
             player.increaseCash(decreseSpeed);
-            if(cost==0){
+            if(costCash==0){
                 for(int i = 0; i < itemBtns.length;i++){
                     if(itemBtns[i].getClickState()){
                         itemBtns[i].setIsClicked(true);
                         itemBtns[i].setClickState(false);
                     }
                 }
-//                for(int i = 0; i < functionBtns.length; i++){
-//                    functionBtns[i].setIsClicked(false);
-//                }
             }
         }
         this.resize();

@@ -5,6 +5,8 @@
  */
 package vbattle;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -32,6 +34,8 @@ public class Button {
     private boolean isClicked;
     private int intData;
     private Callback callback;
+    AudioClip clickSound;
+    
     public interface Callback{
         void doSomthing();
     }
@@ -47,6 +51,16 @@ public class Button {
     public void changeIcon(String iconName){
         buttonImg = rc.tryGetImage(iconName);
     }
+    
+    public Button(String iconName){
+        rc = ImgResource.getInstance();
+        buttonImg = rc.tryGetImage(iconName);
+        try{
+            clickSound = Applet.newAudioClip(getClass().getResource("/resources/Cursor2.wav"));
+        }catch(Exception ex){
+            ex.getStackTrace();
+        }
+    }
 
     public Button(String iconName, int x, int y, int width, int height) {
         rc = ImgResource.getInstance();
@@ -58,7 +72,19 @@ public class Button {
         imgState = 0;
         clickState = false;
         labelSize = width;
+        
+        try{
+            clickSound = Applet.newAudioClip(getClass().getResource("/resources/Cursor2.wav"));
+        }catch(Exception ex){
+            ex.getStackTrace();
+        }
+        
     }
+    
+    public AudioClip getSound(){
+        return this.clickSound;
+    } 
+    
 
     public Callback getCallback() {
         return callback;
@@ -147,6 +173,9 @@ public class Button {
     }
 
     public void setClickState(boolean a) {
+        if(a==true){
+            this.clickSound.play();
+        }
         this.clickState = a;
     }
 

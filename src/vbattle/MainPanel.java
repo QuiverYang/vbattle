@@ -5,6 +5,8 @@
  */
 package vbattle;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Color;
 import scene.Scene;
 import scene.*;
@@ -36,7 +38,7 @@ public class MainPanel extends JPanel {
     public static final int STORE_SCENE = 5;
 
     public static final int STAGE_SCENE = 4;
-
+    
     private boolean newGameCheck;
 
     public interface GameStatusChangeListener {
@@ -58,7 +60,7 @@ public class MainPanel extends JPanel {
         
         this.setBackground(Color.red);
 
-        changeCurrentScene(genSceneById(STAGE_SCENE));
+        changeCurrentScene(genSceneById(MENU_SCENE));
 
         Timer t1 = new Timer(25, new ActionListener() {
             @Override

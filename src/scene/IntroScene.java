@@ -52,12 +52,13 @@ public class IntroScene extends Scene {
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, backBtn)) {
                     backBtn.setImgState(1);
+                    backBtn.setClickState(true);
                 }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, backBtn)) {
+                if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, backBtn)&& backBtn.getClickState()) {
                     backBtn.setImgState(0);
                     gsChangeListener.changeScene(MainPanel.MENU_SCENE);
                 }

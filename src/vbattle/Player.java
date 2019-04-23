@@ -101,6 +101,8 @@ public class Player {
 //    }
     
     public void save()throws IOException{  //存檔方法
+        //(playerName,inventory,stage,onlock0,onlock1,onlock2,onlock3,onlock4,hp,mp,cash)
+        //(0         ,1        ,2    ,3      ,4      ,5      ,6      ,7      ,8 ,9 ,10)
         BufferedWriter bw = new BufferedWriter(new FileWriter("src/"+savePath+".txt"));
         bw.write(playerName+",");
         bw.write(String.valueOf(this.inventory));
@@ -108,6 +110,9 @@ public class Player {
         for (int i = 0; i < 5; i++) {
             bw.write(String.valueOf(","+this.unlock[i]));
         }
+        bw.write(","+hp);
+        bw.write(","+mp);
+        bw.write(","+cash);
         bw.newLine();
         bw.flush();
         bw.close();
@@ -125,6 +130,9 @@ public class Player {
         for (int i = 0; i < unlock.length; i++) {
             this.unlock[i] = Integer.parseInt(status[i+3]);
         }
+        this.hp = Integer.parseInt(status[8]);
+        this.mp = Integer.parseInt(status[9]);
+        this.cash = Integer.parseInt(status[10]);
         br.close();
     }
     

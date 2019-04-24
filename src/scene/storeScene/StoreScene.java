@@ -69,8 +69,10 @@ public class StoreScene extends Scene{
     private String[] itemBtnIconPaths;
     private Button[] functionBtns;
     private Button[] itemBtns ;
+    private Product[] productOnScreen;
     private Player player;
     private int costCash;//每個物品價值多少錢所要扣除player inventory的金額
+    private int hpUp,mpUp,valueUp;//每個物品所提升的hp mp inventory's value;
     private int x0,y0,w0,h0,x1,y1,h1,w1,x2,y2,h2,w2;
     private int counter;
     Font fontBit;
@@ -80,7 +82,8 @@ public class StoreScene extends Scene{
     public StoreScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
         costCash = 0;
-        this.itemBtns = new Button[3];
+//        this.itemBtns = new Button[3];
+        this.productOnScreen = new Product[3];
         this.initParameters();
         
         player = Player.getPlayerInstane();
@@ -200,6 +203,7 @@ public class StoreScene extends Scene{
             @Override
             public void doSomthing() {
                 costCash += itemsPrice[counter];
+                costCash += productOnScreen[counter].getPrice();
                 
                  
             }
@@ -212,21 +216,30 @@ public class StoreScene extends Scene{
             @Override
             public void doSomthing() {
                 if(counter < itemsPrice.length-2){
-                    for (Button itemBtn : itemBtns) {
-                        itemBtn.setIsShown(true);
+//                    for (Button itemBtn : itemBtns) {
+//                        itemBtn.setIsShown(true);
+//                    }
+                    for(Product p : productOnScreen){
+                        p.setIsShown(true);
                     }
                     counter++;
                     System.out.println("left"+counter);
-                    itemBtns[0].changeIcon(itemBtnIconPaths[counter-1]);
-                    itemBtns[1].changeIcon(itemBtnIconPaths[counter]);
-                    itemBtns[2].changeIcon(itemBtnIconPaths[counter+1]);
+//                    itemBtns[0].changeIcon(itemBtnIconPaths[counter-1]);
+//                    itemBtns[1].changeIcon(itemBtnIconPaths[counter]);
+//                    itemBtns[2].changeIcon(itemBtnIconPaths[counter+1]);
+                    productOnScreen[0] = products[counter-1];
+                    productOnScreen[1] = products[counter];
+                    productOnScreen[2] = products[counter+1];
                 }
                 else if(counter == itemsPrice.length-2){
                     counter++;
                     System.out.println("到最後一個選項了");
-                    itemBtns[0].changeIcon(itemBtnIconPaths[counter-1]);
-                    itemBtns[1].changeIcon(itemBtnIconPaths[counter]);
-                    itemBtns[2].setIsShown(false);
+//                    itemBtns[0].changeIcon(itemBtnIconPaths[counter-1]);
+//                    itemBtns[1].changeIcon(itemBtnIconPaths[counter]);
+                    productOnScreen[0] = products[counter-1];
+                    productOnScreen[1] = products[counter];
+//                    itemBtns[2].setIsShown(false);
+                    productOnScreen[2].setIsShown(false);
                 }
                 
             }
@@ -239,21 +252,30 @@ public class StoreScene extends Scene{
             @Override
             public void doSomthing() {
                 if(counter > 1){
-                    for (Button itemBtn : itemBtns) {
-                        itemBtn.setIsShown(true);
+//                    for (Button itemBtn : itemBtns) {
+//                        itemBtn.setIsShown(true);
+//                    }
+                    for(Product p : productOnScreen){
+                        p.setIsShown(true);
                     }
                     counter--;
                     System.out.println("right" + counter);
-                    itemBtns[0].changeIcon(itemBtnIconPaths[counter-1]);
-                    itemBtns[1].changeIcon(itemBtnIconPaths[counter]);
-                    itemBtns[2].changeIcon(itemBtnIconPaths[counter+1]);
+//                    itemBtns[0].changeIcon(itemBtnIconPaths[counter-1]);
+//                    itemBtns[1].changeIcon(itemBtnIconPaths[counter]);
+//                    itemBtns[2].changeIcon(itemBtnIconPaths[counter+1]);
+                    productOnScreen[0] = products[counter-1];
+                    productOnScreen[1] = products[counter];
+                    productOnScreen[2] = products[counter+1];
                 }
                 else if(counter == 1){
                     counter--;
                     System.out.println("到第一個選項了");
-                    itemBtns[0].setIsShown(false);
-                    itemBtns[1].changeIcon(itemBtnIconPaths[counter]);
-                    itemBtns[2].changeIcon(itemBtnIconPaths[counter+1]);
+                    productOnScreen[2] = products[counter+1];
+                    productOnScreen[1] = products[counter];
+                    productOnScreen[0].setIsShown(false);
+//                    itemBtns[0].setIsShown(false);
+//                    itemBtns[1].changeIcon(itemBtnIconPaths[counter]);
+//                    itemBtns[2].changeIcon(itemBtnIconPaths[counter+1]);
                 }
             }
             
@@ -279,16 +301,18 @@ public class StoreScene extends Scene{
         
         
         
-        //設定第0個商品位置
-        this.itemBtns[0] = new Button(this.itemBtnIconPaths[0]);
-        this.itemBtns[1] = new Button(this.itemBtnIconPaths[1]);
-        this.itemBtns[2] = new Button(this.itemBtnIconPaths[2]);
-        for (Button itemBtn : itemBtns) {
-            itemBtn.setIsShown(true);
-        }
-        //clickState為是否在被選擇的圖片上（放大的那張）
-        this.itemBtns[1].setIsClicked(true);
-        
+//        //設定第0個商品位置
+//        this.itemBtns[0] = new Button(this.itemBtnIconPaths[0]);
+//        this.itemBtns[1] = new Button(this.itemBtnIconPaths[1]);
+//        this.itemBtns[2] = new Button(this.itemBtnIconPaths[2]);
+//        for (Button itemBtn : itemBtns) {
+//            itemBtn.setIsShown(true);
+//        }
+//        //clickState為是否在被選擇的圖片上（放大的那張）
+//        this.itemBtns[1].setIsClicked(true);
+        this.productOnScreen[0] = products[0];
+        this.productOnScreen[1] = products[1];
+        this.productOnScreen[2] = products[2];
         
     }
     
@@ -337,9 +361,14 @@ public class StoreScene extends Scene{
             btn.paintBtn(g);
         }
         //畫選單
-        for(Button btn:itemBtns){
-            if(btn.isIsShown()){
-                btn.paint(g);
+//        for(Button btn:itemBtns){
+//            if(btn.isIsShown()){
+//                btn.paint(g);
+//            }
+//        }
+        for(Product p:productOnScreen){
+            if(p.isIsShown()){
+                p.paint(g);
             }
         }
         
@@ -415,14 +444,14 @@ public class StoreScene extends Scene{
         this.functionBtns[this.RIGHT_BTN].setLabelSize(functionBtns[RIGHT_BTN].getWidth()*4);
         
         
-        this.itemBtns[0].reset(x0,y0,w0,h0);
-        this.itemBtns[1].reset(x1,y1,w1,h1);
-        this.itemBtns[2].reset(x2,y2,w2,h2);
+//        this.itemBtns[0].reset(x0,y0,w0,h0);
+//        this.itemBtns[1].reset(x1,y1,w1,h1);
+//        this.itemBtns[2].reset(x2,y2,w2,h2);
 //        for(int i = 3; i < this.itemBtns.length;i++){
 //            this.itemBtns[i].reset(x0,y0,w0,h0);
 //        }
-        
-        
-        
+        this.productOnScreen[0].reset(x0, y0, w0, h0);
+        this.productOnScreen[1].reset(x1,y1,w1,h1);
+        this.productOnScreen[2].reset(x2,y2,w2,h2);
     }
 }

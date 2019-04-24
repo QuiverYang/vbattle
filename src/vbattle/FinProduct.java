@@ -11,6 +11,7 @@ package vbattle;
  */
 public class FinProduct extends Product{
     
+    public static int STOCK_PRICE = 100;
     private double risk;
     private int value;
     private double profit;

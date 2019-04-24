@@ -113,6 +113,7 @@ public class Player {
         bw.write(","+hp);
         bw.write(","+mp);
         bw.write(","+cash);
+        
         bw.newLine();
         bw.flush();
         bw.close();

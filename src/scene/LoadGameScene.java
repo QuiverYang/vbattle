@@ -138,9 +138,9 @@ public class LoadGameScene extends Scene {
 //        g.drawString("LOAD GAME",Resource.SCREEN_WIDTH/2 - sw1/2, (int) (Resource.SCREEN_HEIGHT /9));
 
         for (int i = 0; i < PLAYER_NUM; i++) {
-            playerBtn[i].paint(g);
+            playerBtn[i].paintBtn(g);
         }
-        backBtn.paint(g);
+        backBtn.paintBtn(g);
 
         for (int i = 0; i < PLAYER_NUM; i++) {
 

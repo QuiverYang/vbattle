@@ -1,5 +1,6 @@
 package scene;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class StageScene extends Scene{
         super(gsChangeListener);
         actor1 = new Actor(1, 100, battleAreaY[1] , 128, 128, 0, "actor1");  //int type(1:我方角 or 2:敵人) , int x0, int y0, int imgWidth, int imgHeight, int actorIndex(角色圖片), String txtpath(角色資訊)
         actor2 = new Actor(-1, 800, battleAreaY[1] , 128, 128, 3, "actor2");
+        
     }
 
     @Override
@@ -27,9 +29,15 @@ public class StageScene extends Scene{
            
         };
     }
+    
+    public void ghostMove(){
+        
+    }
 
     @Override
     public void paint(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, 1200, 900);
         actor1.paint(g);
         actor2.paint(g);
     }
@@ -51,7 +59,6 @@ public class StageScene extends Scene{
     
     public void eventlistener(){
         //任一角色沒命就停止
-//        System.out.println(actor1.getHp());
         if(actor1.getHp() <= 0 || actor2.getHp() <= 0){
             System.out.println("die");
             return;
@@ -67,7 +74,7 @@ public class StageScene extends Scene{
             tmpattckmethod(actor1,actor2);
             
         }
-      
+        
         
         //敵方角
         if (actor2.collisionCheck(actor1) == false) {

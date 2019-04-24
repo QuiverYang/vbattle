@@ -93,14 +93,13 @@ public class Actor extends Stuff {
     }
     @Override
     public void paint(Graphics g) {
-        //HP
+        
         if (this.getHp() >= 0) {
             g.setColor(Color.red);
             g.fillRect(this.getX0() + this.getImgWidth() / 2 - ((int) (this.getImgWidth() * this.getHpPercent()) - 10) / 2, this.getY0() - 5, (int) (this.getImgWidth() * this.getHpPercent()) - 10, 5);
         }
-        //角色圖片
             g.drawImage(super.getImg(),getX0(),getY0(),getX0()+getImgWidth(),getY0()+getImgHeight(),(int)frame*32,actorIndex*32, ((int)frame + 1)*32, (actorIndex+1)*32,null);
- 
     }
+
 }
 

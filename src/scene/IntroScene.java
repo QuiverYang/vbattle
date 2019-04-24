@@ -76,7 +76,7 @@ public class IntroScene extends Scene {
         g.fillRect(0, 0, 1200, 900);
         
         g.drawImage(introImg, 0, this.introY+300, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT+this.introY+300, 0, 0, introImg.getWidth(), introImg.getHeight()-600, null);
-        backBtn.paint(g);
+        backBtn.paintBtn(g);
 
     }
 

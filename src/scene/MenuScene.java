@@ -64,9 +64,9 @@ public class MenuScene extends Scene {
     @Override
     public void paint(Graphics g) {
         g.drawImage(this.background, 0, 0,Resource.SCREEN_WIDTH,Resource.SCREEN_HEIGHT,0,0,background.getWidth(),background.getHeight(), null);
-        introBtn.paint(g);
-        newGameBtn.paint(g);
-        loadBtn.paint(g);
+        introBtn.paintBtn(g);
+        newGameBtn.paintBtn(g);
+        loadBtn.paintBtn(g);
 
         //顯示玩家輸入的字元
         Font font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 25);
@@ -83,7 +83,7 @@ public class MenuScene extends Scene {
 
             g.setColor(Color.WHITE);
             g.fillRect((int) (Resource.SCREEN_WIDTH * 0.375f), (int) (Resource.SCREEN_HEIGHT * 0.389f)+20, Resource.SCREEN_WIDTH / 12 * 3, (int) (Resource.SCREEN_HEIGHT * 0.055f));
-            enterPlayerNameBtn.paint(g);
+            enterPlayerNameBtn.paintBtn(g);
             
             g.setColor(Color.BLACK);
             int sw = fm.stringWidth("ENTER YOUR NAME");
@@ -109,14 +109,7 @@ public class MenuScene extends Scene {
     public MouseAdapter genMouseAdapter() {
         return new MouseAdapter() {
 
-//            public boolean isOnBtn(MouseEvent e, Button btn) {
-//                if (e.getX() >= btn.getX()
-//                        && e.getX() <= btn.getX() + btn.getImgWidth() && e.getY() >= btn.getY() && e.getY() <= btn.getY() + btn.getImgHeight()) {
-//                    return true;
-//                }
-//                return false;
             
-
             @Override
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, introBtn)) {
@@ -165,6 +158,7 @@ public class MenuScene extends Scene {
                     if (countChar > 0) {
                         Player player = Player.getPlayerInstane();
                         player.setPlayerName(playerName);
+                        
                         enterPlayerNameBtn.setClickState(false);
                         gsChangeListener.changeScene(MainPanel.STORE_SCENE);
                     }

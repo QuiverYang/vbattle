@@ -1,31 +1,10 @@
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package scene;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
-
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import vbattle.MainPanel.GameStatusChangeListener;
-import vbattle.Resource;
-import vbattle.Stuff;
-
-
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import vbattle.Actor;
-import vbattle.Button;
-import vbattle.ImgResource;
 import vbattle.MainPanel;
 
 
@@ -33,22 +12,15 @@ import vbattle.MainPanel;
 public class StageScene extends Scene{
     private Actor actor1;
     private Actor actor2;
-    int countAtk;
-    
-    private BufferedImage ghost;
-    private ImgResource rc;
-    private int ghIndex;
-    
+    private int timeCount = 0; //倍數計時器：初始化
+    private int eventTime = 2; // eventListener時間週期：大於0的常數
+    private int battleAreaY[] ={500,400,300};
 
     public StageScene(MainPanel.GameStatusChangeListener gsChangeListener) throws IOException{
         super(gsChangeListener);
-        actor1 = new Actor(1, 100, 500, 64, 64, 0, "actor1");  //int type(1:我方角 or 2:敵人) , int x0, int y0, int imgWidth, int imgHeight, int actorIndex(角色圖片), String txtpath(角色資訊)
-        actor2 = new Actor(2, 800, 500, 64, 64, 3, "actor2");
-        countAtk =0;
+        actor1 = new Actor(1, 100, battleAreaY[1] , 128, 128, 0, "actor1");  //int type(1:我方角 or 2:敵人) , int x0, int y0, int imgWidth, int imgHeight, int actorIndex(角色圖片), String txtpath(角色資訊)
+        actor2 = new Actor(-1, 800, battleAreaY[1] , 128, 128, 3, "actor2");
         
-        rc = ImgResource.getInstance();
-        ghost = rc.tryGetImage("/resources/ghost.png");
-        ghIndex= 0;
     }
 
     @Override
@@ -68,89 +40,58 @@ public class StageScene extends Scene{
         g.fillRect(0, 0, 1200, 900);
         actor1.paint(g);
         actor2.paint(g);
-       
     }
 
     @Override
     public void logicEvent() {
-        //任一角色沒命就停止
+        timeCount ++;//倍數計時器：FPS為底的時間倍數
+        actor1.refreshCd();
+        actor2.refreshCd();
         
-        actor1.cdCheck(60); //確認cd時間到 cdCheck就為true
-        actor2.cdCheck(80);
+        if(timeCount == eventTime){ // 計時器重置：取所有事件的最小公倍數
+            timeCount = 0;
+        }
+        
+        if(timeCount%eventTime == 0 ){
+            eventlistener();
+        }
+    }
+    
+    public void eventlistener(){
+        //任一角色沒命就停止
+        if(actor1.getHp() <= 0 || actor2.getHp() <= 0){
+            System.out.println("die");
+            return;
+        }
         
         //我方角 
-        //如沒有碰撞就向前走
-        if (actor1.getHp() <= 0 ) {
-            System.out.println(actor1.getType()+" "+actor1.getHp());
-            actor1.die();
+        //如沒有碰撞就呼叫走路方法
+        if (actor1.collisionCheck(actor2) == false) {
+            tmpmovemethod(actor1);
         }
-        else {
-            if (actor1.collisionCheck(actor2) == false && actor1.cycle(3, 0)) {
-            actor1.setActionState(1);
-            actor1.move();
-        }
-        
-        
-        //如果碰撞到且cd回復
-        if (actor1.collisionCheck(actor2)  && actor1.getCdCheck()||countAtk!=0) {
-            if(countAtk%6==0){
-                if(countAtk==0){
-                    actor1.setIndex(3);
-                }else{
-                   actor1.setIndex(actor1.getIndex()+1); 
-                }
-                actor1.attack(actor2); 
-            }
-             
-            if(countAtk == 6){
-                countAtk = 0;
-                actor2.setActionState(3); //actor2狀態設為被攻擊
-                actor1.setCdCheck(false);  //cd重跑
-                actor1.setAtkSucess(false); 
-            }else{
-                countAtk++;
-            }
+        //如果碰撞到就呼叫攻擊方法
+        if (actor1.collisionCheck(actor2)) {
+            tmpattckmethod(actor1,actor2);
             
         }
-        if (actor2.getActionState() == 3) {
-            actor2.back();  //Actor2受到攻擊後後退
-        }
-        }
-      
+        
+        
         //敵方角
-         if(actor2.getHp( )<=0){
-             System.out.println(actor2.getType()+" "+actor2.getHp());
-            actor2.die();
-        } else{
-        if (actor2.collisionCheck(actor1) == false && actor2.cycle(3, 0)) {
-            actor2.setActionState(1);
-            actor2.move();
+        if (actor2.collisionCheck(actor1) == false) {
+            tmpmovemethod(actor2);
         }
-        if (actor2.collisionCheck(actor1)  && actor2.getCdCheck()||countAtk!=0) {
-            if(countAtk%6==0){
-                if(countAtk==0){
-                    actor2.setIndex(3);
-                }else{
-                   actor2.setIndex(actor2.getIndex()+1); 
-                }
-                actor2.attack(actor1); 
-            }
-             
-            if(countAtk == 6){
-                countAtk = 0;
-                actor1.setActionState(3); //actor2狀態設為被攻擊
-                actor2.setCdCheck(false);  //cd重跑
-                actor2.setAtkSucess(false); 
-            }else{
-                countAtk++;
-            }
-            
+        if (actor2.collisionCheck(actor1)) {
+            tmpattckmethod(actor2,actor1);
         }
-        if (actor1.getActionState() == 3) {
-            actor1.back();  //Actor2受到攻擊後後退
-        }
-
-         }
+    }
+    
+    public void tmpmovemethod(Actor actor){
+        actor.walk();
+        actor.move();
+    }
+    
+    public void tmpattckmethod(Actor actor1,Actor actor2){
+        actor1.attack(actor2);  
     }
 
 //    private BufferedImage bg;

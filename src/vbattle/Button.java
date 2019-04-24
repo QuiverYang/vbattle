@@ -18,17 +18,11 @@ import java.awt.image.BufferedImage;
  *
  * @author anny
  */
-public class Button {
+public class Button extends ItemOnScreen{
 
-    private int height;
-    private int width;
+
     private int labelSize;
-    private BufferedImage buttonImg;
-    private ImgResource rc;
-    private int x;
-    private int y;
     private int imgState;
-    private boolean isShown;
     private String label;
     private boolean clickState;
     private boolean isClicked;
@@ -49,12 +43,11 @@ public class Button {
     }
     
     public void changeIcon(String iconName){
-        buttonImg = rc.tryGetImage(iconName);
+        img = rc.tryGetImage(iconName);
     }
     
     public Button(String iconName){
-        rc = ImgResource.getInstance();
-        buttonImg = rc.tryGetImage(iconName);
+        super(iconName);
         try{
             clickSound = Applet.newAudioClip(getClass().getResource("/resources/Cursor2.wav"));
         }catch(Exception ex){
@@ -63,12 +56,7 @@ public class Button {
     }
 
     public Button(String iconName, int x, int y, int width, int height) {
-        rc = ImgResource.getInstance();
-        buttonImg = rc.tryGetImage(iconName);
-        this.height = height;
-        this.width = width;
-        this.x = x;
-        this.y = y;
+        super(iconName,x,y,width,height);
         imgState = 0;
         clickState = false;
         labelSize = width;
@@ -113,41 +101,16 @@ public class Button {
     public int getImgWidth() {
         return this.width;
     }
-    
-    public boolean isIsShown() {
-        return isShown;
-    }
-
-    public void setIsShown(boolean isShown) {
-        this.isShown = isShown;
-    }
 
     public int getImgHeight() {
         return this.height;
     }
-    
-    public void setX(int x) {
-        this.x = x;
-    }
 
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public int getX() {
-        return this.x;
-    }
-
-    public int getY() {
-        
-        return this.y;
-    }
-    
     //for img with 2 types
-    public void paint(Graphics g) {
+    public void paintBtn(Graphics g) {
         
         
-        g.drawImage(buttonImg, x, y, x+this.getImgWidth(), y+this.getImgHeight(), buttonImg.getWidth()/2*imgState, 0, buttonImg.getWidth()/2*(imgState+1), buttonImg.getHeight(), null);
+        g.drawImage(img, x, y, x+this.getImgWidth(), y+this.getImgHeight(), img.getWidth()/2*imgState, 0, img.getWidth()/2*(imgState+1), img.getHeight(), null);
 //        g.drawOval(x, y, 5, 5);
 //        g.drawOval(x+this.getImgWidth(), y+this.getImgHeight(), 5, 5);
         //畫出按鈕label
@@ -160,11 +123,6 @@ public class Button {
             int sa = fm.getAscent();
             g.drawString(label, x+width/2-sw/2-imgState*3+3, y+height/2-sa/2+height/3+imgState*5);
         }
-        
-    }
-    //for img with only one type
-    public void paint2(Graphics g) {
-        g.drawImage(buttonImg, x, y, x+this.width, y+this.height,0,0,buttonImg.getWidth(),buttonImg.getHeight(), null);
         
     }
     
@@ -197,29 +155,6 @@ public class Button {
 
     public void setLabel(String label) {
         this.label = label;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-    
-    public void reset(int x, int y, int width, int height){
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
     }
     
     public void action(){

@@ -200,9 +200,6 @@ public class Stuff {
     public void lvup(){
         
     }
-    public void attack(Stuff stuff){
-        
-    }
     public void print(){ //測試
 //        System.out.println(this.test+"\n"+
 //        this.hpRate+"\n"+

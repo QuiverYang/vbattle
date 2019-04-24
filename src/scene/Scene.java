@@ -16,7 +16,7 @@ import vbattle.MainPanel.GameStatusChangeListener;
  */
 public abstract class Scene {
     //介面
-    GameStatusChangeListener gsChangeListener;
+    public GameStatusChangeListener gsChangeListener;
     //建構子裡放一個介面 可以讓介面回傳點擊事件後需要轉場至下一個畫面的資訊
     public Scene(GameStatusChangeListener gsChangeListener){
         this.gsChangeListener = gsChangeListener;

@@ -7,6 +7,7 @@
 
 package scene;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 
@@ -34,14 +35,20 @@ public class StageScene extends Scene{
     private Actor actor2;
     int countAtk;
     
+    private BufferedImage ghost;
+    private ImgResource rc;
+    private int ghIndex;
     
-    
+
     public StageScene(MainPanel.GameStatusChangeListener gsChangeListener) throws IOException{
         super(gsChangeListener);
         actor1 = new Actor(1, 100, 500, 64, 64, 0, "actor1");  //int type(1:我方角 or 2:敵人) , int x0, int y0, int imgWidth, int imgHeight, int actorIndex(角色圖片), String txtpath(角色資訊)
         actor2 = new Actor(2, 800, 500, 64, 64, 3, "actor2");
         countAtk =0;
         
+        rc = ImgResource.getInstance();
+        ghost = rc.tryGetImage("/resources/ghost.png");
+        ghIndex= 0;
     }
 
     @Override
@@ -50,9 +57,15 @@ public class StageScene extends Scene{
            
         };
     }
+    
+    public void ghostMove(){
+        
+    }
 
     @Override
     public void paint(Graphics g) {
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, 1200, 900);
         actor1.paint(g);
         actor2.paint(g);
        
@@ -61,20 +74,22 @@ public class StageScene extends Scene{
     @Override
     public void logicEvent() {
         //任一角色沒命就停止
-        if (actor1.getHp() <= 0 || actor2.getHp() <= 0) {
-            System.out.println("die");
-            return;
-        }
         
         actor1.cdCheck(60); //確認cd時間到 cdCheck就為true
         actor2.cdCheck(80);
         
         //我方角 
         //如沒有碰撞就向前走
-        if (actor1.collisionCheck(actor2) == false && actor1.cycle(3, 0)) {
+        if (actor1.getHp() <= 0 ) {
+            System.out.println(actor1.getType()+" "+actor1.getHp());
+            actor1.die();
+        }
+        else {
+            if (actor1.collisionCheck(actor2) == false && actor1.cycle(3, 0)) {
             actor1.setActionState(1);
             actor1.move();
         }
+        
         
         //如果碰撞到且cd回復
         if (actor1.collisionCheck(actor2)  && actor1.getCdCheck()||countAtk!=0) {
@@ -100,8 +115,13 @@ public class StageScene extends Scene{
         if (actor2.getActionState() == 3) {
             actor2.back();  //Actor2受到攻擊後後退
         }
+        }
       
         //敵方角
+         if(actor2.getHp( )<=0){
+             System.out.println(actor2.getType()+" "+actor2.getHp());
+            actor2.die();
+        } else{
         if (actor2.collisionCheck(actor1) == false && actor2.cycle(3, 0)) {
             actor2.setActionState(1);
             actor2.move();
@@ -130,7 +150,7 @@ public class StageScene extends Scene{
             actor1.back();  //Actor2受到攻擊後後退
         }
 
-        
+         }
     }
 
 //    private BufferedImage bg;

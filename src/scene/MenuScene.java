@@ -165,6 +165,7 @@ public class MenuScene extends Scene {
                     if (countChar > 0) {
                         Player player = Player.getPlayerInstane();
                         player.setPlayerName(playerName);
+                        
                         enterPlayerNameBtn.setClickState(false);
                         gsChangeListener.changeScene(MainPanel.STORE_SCENE);
                     }

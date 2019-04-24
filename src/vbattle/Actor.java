@@ -175,9 +175,9 @@ public class Actor extends Stuff {
     
     public void backMotion() {
         if (this.getType() == 1) {
-            this.setX0(this.getX0() - 60);
+            this.setX0(this.getX0() - 10);
         } else if (this.getType() == 2) {
-            this.setX0(this.getX0() + 60);
+            this.setX0(this.getX0() + 10);
         }
     }
 
@@ -187,22 +187,23 @@ public class Actor extends Stuff {
 
     @Override
     public void paint(Graphics g) {
-
+        
         if (this.getHp() >= 0) {
             g.setColor(Color.red);
             g.fillRect(this.getX0() + this.getImgWidth() / 2 - ((int) (this.getImgWidth() * this.getHpPercent()) - 10) / 2, this.getY0() - 5, (int) (this.getImgWidth() * this.getHpPercent()) - 10, 5);
         }
 //        System.out.println(this.getType() + " :" + this.getHp());
-
-        if (this.actionState == 1) {
+        if(this.dieState){
+            System.out.println("index:" + index);
+            g.drawImage(this.dieImg, this.getX0(), this.getY0()-this.ghostY, this.getX0()+64, this.getY0()+64-this.ghostY, this.index*32, 0, (this.index+1)*32, 32, null);
+        }
+        else if (this.actionState == 1) {
             g.drawImage(img, this.getX0(), this.getY0(), this.getX0() + 64, this.getY0() + 64, this.index * 32, actorIndex * 32, (this.index + 1) * 32, (actorIndex + 1) * 32, null);
         } else if (this.actionState == 2 ) {
             System.out.println("index:" + index);
             g.drawImage(img, this.getX0(), this.getY0(), this.getX0() + 64, this.getY0() + 64, index * 32, actorIndex * 32, ((index) + 1) * 32, (actorIndex + 1) * 32, null);
         } else if(this.actionState ==3){
             g.drawImage(img, this.getX0(), this.getY0(), this.getX0() + 64, this.getY0() + 64, 0 * 32, actorIndex * 32, (0 + 1) * 32, (actorIndex + 1) * 32, null);
-        }else if(this.dieState){
-            g.drawImage(this.dieImg, this.getX0(), this.getY0()-this.ghostY, this.getX0()+this.dieImg.getWidth()/5, this.getY0()+this.dieImg.getHeight()-this.ghostY, this.index*this.getImgWidth()/5, 0, (this.index+1)*this.dieImg.getWidth()/5, this.dieImg.getHeight(), null);
         }
 
     }

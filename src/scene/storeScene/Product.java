@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vbattle;
+package scene.storeScene;
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
+import vbattle.ItemOnScreen;
+
 
 /**
  *

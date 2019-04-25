@@ -1,5 +1,6 @@
 package vbattle;
 
+import scene.storeScene.FinProduct;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 public class Player {
     private int inventory,stage;
     private int hp,mp,cash; //體力 快樂度
-    private ArrayList<Product> fp;
+    private ArrayList<FinProduct> fp;
     private int unlock[] = new int[5];//資源存量,破關進度,解鎖腳色
     private String savePath;
     private static Player player;
@@ -49,6 +50,14 @@ public class Player {
         this.cash = cash;
     }
 
+    public ArrayList<FinProduct> getFp() {
+        return fp;
+    }
+
+    public void setFp(ArrayList<FinProduct> fp) {
+        this.fp = fp;
+    }
+
     public int getInventory() {
         return inventory;
     }
@@ -82,6 +91,7 @@ public class Player {
         }
         playerNameList = new String[6];
         savePath = "Playertest";
+        fp = new ArrayList();
     }
 
     public void setPlayerName(String name) {
@@ -95,6 +105,14 @@ public class Player {
     public void increaseCash(int money) {
         this.cash += money;
     }
+    
+    public void increaseHp(int hpUp){
+        this.hp += hpUp;
+    }
+    
+    public void increaseMp(int mpUp){
+        this.mp += mpUp;
+    }
 
     public String getPlayerName() {
         return this.playerName;
@@ -107,12 +125,13 @@ public class Player {
         //(playerName,inventory,stage,onlock0,onlock1,onlock2,onlock3,onlock4,hp,mp,cash)
         //(0         ,1        ,2    ,3      ,4      ,5      ,6      ,7      ,8 ,9 ,10)
         boolean checkSame = false;
+        
         String[][] info = new String[6][11];
         BufferedReader br = new BufferedReader(new FileReader("src/" + savePath + ".txt"));
         int i=0;
         while(br.ready()){
             String status[] = br.readLine().split(",");
-                for (int j = 0; j < 11; j++) {
+                for (int j = 0; j < status.length; j++) {
                     info[i][j] = status[j];
                 }
                 i++;
@@ -240,6 +259,12 @@ public class Player {
         BufferedReader br = new BufferedReader(new FileReader("src/" + loadPath + ".txt"));
         for (int i = 0; i < index; i++) {
             br.readLine();
+        }
+        ArrayList<String[]> data2 = new ArrayList();
+        
+        while(br.ready())
+        {
+            data2.add(br.readLine().split(","));
         }
         String status[] = br.readLine().split(",");
         this.playerName = status[0];

@@ -39,6 +39,7 @@ public class MainPanel extends JPanel {
     public static final int STORE_SCENE = 5;
 
     public static final int STAGE_SCENE = 4;
+    public static final int SELL_SCENE = 6;
     
     private boolean newGameCheck;
 
@@ -62,7 +63,7 @@ public class MainPanel extends JPanel {
         this.setBackground(Color.red);
 
         changeCurrentScene(genSceneById(MENU_SCENE));
-        changeCurrentScene(genSceneById(STAGE_SCENE));
+//        changeCurrentScene(genSceneById(SELL_SCENE));
 
         Timer t1 = new Timer(25, new ActionListener() {
             @Override

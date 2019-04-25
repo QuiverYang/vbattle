@@ -14,6 +14,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import vbattle.Button;
 import vbattle.Fontes;
 import vbattle.ImgResource;
@@ -42,6 +45,7 @@ public class MenuScene extends Scene {
     private static char typeName;  //當前玩家輸入的字元
     private static String playerName;
     private static int countChar; //玩家名稱字元個數
+    private Player player;
 
     public MenuScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
@@ -52,10 +56,15 @@ public class MenuScene extends Scene {
         newGameBtn = new Button("/resources/newGame_click.png");
         loadBtn = new Button("/resources/loading_click.png");
 //        enterPlayerNameBtn = new Button("/resources/clickBtn.png");
-       enterPlayerNameBtn = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH / 12 * 5, Resource.SCREEN_HEIGHT / 2, Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9);
-       enterPlayerNameBtn.setLabel("ENTER");
+        enterPlayerNameBtn = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH / 12 * 5, Resource.SCREEN_HEIGHT / 2, Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9);
+        enterPlayerNameBtn.setLabel("OK");
 
-
+        player = Player.getPlayerInstane();
+        try {
+            player.loadTotal();
+        } catch (IOException ex) {
+            Logger.getLogger(MenuScene.class.getName()).log(Level.SEVERE, null, ex);
+        }
         typeCheck = newGameCheck = false;
         countChar = 0;
         playerName = "";
@@ -63,7 +72,7 @@ public class MenuScene extends Scene {
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(this.background, 0, 0,Resource.SCREEN_WIDTH,Resource.SCREEN_HEIGHT,0,0,background.getWidth(),background.getHeight(), null);
+        g.drawImage(this.background, 0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT, 0, 0, background.getWidth(), background.getHeight(), null);
         introBtn.paintBtn(g);
         newGameBtn.paintBtn(g);
         loadBtn.paintBtn(g);
@@ -72,36 +81,35 @@ public class MenuScene extends Scene {
         Font font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 25);
         g.setFont(font);
         FontMetrics fm = g.getFontMetrics();
-        
+
         //顯示玩家名稱窗口
         if (newGameCheck) {
             g.setColor(Color.BLACK);
-            g.fillRect(Resource.SCREEN_WIDTH /2-Resource.SCREEN_WIDTH / 12 * 5/2-8, (int) (Resource.SCREEN_HEIGHT * 0.278f)-8, Resource.SCREEN_WIDTH / 12 * 5+16, (int) (Resource.SCREEN_HEIGHT * 0.389f)+16);
-            
+            g.fillRect(Resource.SCREEN_WIDTH / 2 - Resource.SCREEN_WIDTH / 12 * 5 / 2 - 8, (int) (Resource.SCREEN_HEIGHT * 0.278f) - 8, Resource.SCREEN_WIDTH / 12 * 5 + 16, (int) (Resource.SCREEN_HEIGHT * 0.389f) + 16);
+
             g.setColor(new Color(186, 186, 186));
-            g.fillRect(Resource.SCREEN_WIDTH /2-Resource.SCREEN_WIDTH / 12 * 5/2, (int) (Resource.SCREEN_HEIGHT * 0.278f), Resource.SCREEN_WIDTH / 12 * 5, (int) (Resource.SCREEN_HEIGHT * 0.389f));
+            g.fillRect(Resource.SCREEN_WIDTH / 2 - Resource.SCREEN_WIDTH / 12 * 5 / 2, (int) (Resource.SCREEN_HEIGHT * 0.278f), Resource.SCREEN_WIDTH / 12 * 5, (int) (Resource.SCREEN_HEIGHT * 0.389f));
 
             g.setColor(Color.WHITE);
-            g.fillRect((int) (Resource.SCREEN_WIDTH * 0.375f), (int) (Resource.SCREEN_HEIGHT * 0.389f)+20, Resource.SCREEN_WIDTH / 12 * 3, (int) (Resource.SCREEN_HEIGHT * 0.055f));
+            g.fillRect((int) (Resource.SCREEN_WIDTH * 0.375f), (int) (Resource.SCREEN_HEIGHT * 0.389f) + 20, Resource.SCREEN_WIDTH / 12 * 3, (int) (Resource.SCREEN_HEIGHT * 0.055f));
             enterPlayerNameBtn.paintBtn(g);
-            
+
             g.setColor(Color.BLACK);
             int sw = fm.stringWidth("ENTER YOUR NAME");
             int sa = fm.getAscent();
-            g.drawString("ENTER YOUR NAME",(int)(Resource.SCREEN_WIDTH *0.318f) , (int) (Resource.SCREEN_HEIGHT * 0.278f)+(int) (Resource.SCREEN_HEIGHT * 0.389f)-sa/2-(int) (Resource.SCREEN_HEIGHT * 0.278f));
+            g.drawString("ENTER YOUR NAME", (int) (Resource.SCREEN_WIDTH * 0.318f), (int) (Resource.SCREEN_HEIGHT * 0.278f) + (int) (Resource.SCREEN_HEIGHT * 0.389f) - sa / 2 - (int) (Resource.SCREEN_HEIGHT * 0.278f));
 
         }
-        
+
         g.setColor(new Color(0, 0, 0));
         int sw = fm.stringWidth(playerName);
         int sa = fm.getAscent();
-         g.drawString(playerName, (int) (Resource.SCREEN_WIDTH * 0.375f) + Resource.SCREEN_WIDTH / 12 * 3 / 2 - sw / 2 + (int) (Resource.SCREEN_WIDTH * 5 / 1200), (int) (Resource.SCREEN_HEIGHT / 2) + Resource.SCREEN_HEIGHT * 50 / 900 / 2 - sa / 2 - Resource.SCREEN_HEIGHT * 60 / 900+15);
+        g.drawString(playerName, (int) (Resource.SCREEN_WIDTH * 0.375f) + Resource.SCREEN_WIDTH / 12 * 3 / 2 - sw / 2 + (int) (Resource.SCREEN_WIDTH * 5 / 1200), (int) (Resource.SCREEN_HEIGHT / 2) + Resource.SCREEN_HEIGHT * 50 / 900 / 2 - sa / 2 - Resource.SCREEN_HEIGHT * 60 / 900 + 15);
 
         if (typeCheck) {
             playerName = playerName + typeName;
             typeCheck = false;
         }
-
 
     }
 
@@ -109,7 +117,6 @@ public class MenuScene extends Scene {
     public MouseAdapter genMouseAdapter() {
         return new MouseAdapter() {
 
-            
             @Override
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, introBtn)) {
@@ -156,9 +163,10 @@ public class MenuScene extends Scene {
                 if (e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, enterPlayerNameBtn) && enterPlayerNameBtn.getClickState()) {
                     enterPlayerNameBtn.setImgState(0);
                     if (countChar > 0) {
-                        Player player = Player.getPlayerInstane();
                         player.setPlayerName(playerName);
-                        
+                        player.setPlayerIndex(-1); //表示是新玩家
+                        player.defaultPlayer();  //初始化玩家數值
+
                         enterPlayerNameBtn.setClickState(false);
                         gsChangeListener.changeScene(MainPanel.STORE_SCENE);
                     }
@@ -200,6 +208,5 @@ public class MenuScene extends Scene {
         loadBtn.reset(Resource.SCREEN_WIDTH / 12 * 9, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
         enterPlayerNameBtn.reset(Resource.SCREEN_WIDTH / 12 * 5, Resource.SCREEN_HEIGHT / 2, Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9);
     }
-    
 
 }

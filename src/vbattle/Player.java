@@ -8,14 +8,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Player {
-    private int inventory,stage;
-    private int hp,mp,cash; //體力 快樂度
-    private ArrayList<Product> fp;
+
+    private int inventory, stage;
+    private int hp, mp, cash; //體力 快樂度
+    private ArrayList<FinProduct> fp;
     private int unlock[] = new int[5];//資源存量,破關進度,解鎖腳色
     private String savePath;
     private static Player player;
     private String playerName;
     private String[] playerNameList;
+    private ArrayList<String[]> playerInfo; //儲存所有玩家
+    private int playerIndex; //若為 -1 -->新玩家 , 若不等於-1 -->舊玩家於檔案內的行數位置
+    public static boolean loadCheck;
     //GETTER SETTER
 
     public static Player getPlayerInstane() {
@@ -82,6 +86,10 @@ public class Player {
         }
         playerNameList = new String[6];
         savePath = "Playertest";
+        playerIndex = -1;
+        playerInfo = new ArrayList();
+        fp = new ArrayList();
+        loadCheck = false;
     }
 
     public void setPlayerName(String name) {
@@ -100,73 +108,117 @@ public class Player {
         return this.playerName;
     }
 
-//    public Player(String loadPath)throws IOException{ //載入存檔
-//        load(loadPath);
-//    }
     public void save() throws IOException {  //存檔方法
         //(playerName,inventory,stage,onlock0,onlock1,onlock2,onlock3,onlock4,hp,mp,cash)
         //(0         ,1        ,2    ,3      ,4      ,5      ,6      ,7      ,8 ,9 ,10)
-        boolean checkSame = false;
-        String[][] info = new String[6][11];
-        BufferedReader br = new BufferedReader(new FileReader("src/" + savePath + ".txt"));
-        int i=0;
-        while(br.ready()){
-            String status[] = br.readLine().split(",");
-                for (int j = 0; j < 11; j++) {
-                    info[i][j] = status[j];
-                }
-                i++;
-            }
-        
-        for(int j=0; j<i; j++){
-            if (info[j][0].equals(this.playerName)) {
-                checkSame =true;
-                info[j][1] = String.valueOf(this.inventory);
-                info[j][2] = String.valueOf(this.stage);
-                for (int k = 0; k < 5; k++) {
-                    info[j][k + 3] = String.valueOf(this.unlock[k]);
-                }
-                info[j][8] = String.valueOf(this.hp);
-                info[j][9] = String.valueOf(this.mp);
-                info[j][10] = String.valueOf(this.cash);
 
-            }
+        //暫存當前玩家資料
+        int countFp = 11;
+        String[] info = new String[11 + this.fp.size() * 2];
+        info[0] = this.playerName;
+        info[1] = String.valueOf(this.inventory);
+        info[2] = String.valueOf(this.stage);
+        for (int k = 0; k < 5; k++) {
+            info[k + 3] = String.valueOf(this.unlock[k]);
         }
-        
-        
-        
-        
+        info[8] = String.valueOf(this.hp);
+        info[9] = String.valueOf(this.mp);
+        info[10] = String.valueOf(this.cash);
+        for (int i = 0; i < this.fp.size(); i++) {
+            info[i + countFp++] = String.valueOf(this.fp.get(i).getName());  
+            info[i + countFp++] = String.valueOf(this.fp.get(i).getValue());  
+        }
 
+        //判斷是否為新玩家
+        if (this.playerIndex == -1 && this.playerInfo.size() >= 6) { //若為新玩家且當前玩家數>=6，則刪除最舊玩家，新增新玩家
+            this.playerInfo.remove(0);
+            this.playerInfo.add(info);
+        } else if (this.playerIndex == -1 && this.playerInfo.size() < 6) {  //若為新玩家且當前玩家數<6，則存入陣列
+            this.playerInfo.add(info);
+        } else if (this.playerIndex != -1) {
+            this.playerInfo.set(this.playerIndex, info); //若為舊玩家，則修改其資料
+        }
+
+        //存檔
         BufferedWriter bw = new BufferedWriter(new FileWriter("src/" + savePath + ".txt"));
-        for(int j=0; j<i; j++){
-            if(info[j][0]!=null){
-            for(int k=0; k<10; k++){
-                
-                    bw.write(info[j][k]+",");
-                }
-            
-            bw.write(info[j][10]);
-            bw.newLine();
+        for (int i = 0; i < this.playerInfo.size(); i++) {
+            String[] tmp = this.playerInfo.get(i);
+            for (int j = 0; j < tmp.length - 1; j++) {
+                bw.write(tmp[j] + ",");
             }
-            
-        }
-        if(!checkSame){
-            System.out.println(this.playerName);
-            bw.write(this.playerName);
-            bw.write("," + String.valueOf(this.inventory));
-            bw.write("," + String.valueOf(this.stage));
-            for (int j = 0; j < unlock.length; j++) {
-                bw.write(String.valueOf("," + this.unlock[j]));
-            }
-            bw.write("," + hp);
-            bw.write("," + mp);
-            bw.write("," + cash);
+            bw.write(tmp[tmp.length - 2]);
             bw.newLine();
         }
         bw.flush();
         bw.close();
-        br.close();
-        
+
+//        for (int j = 0; j < i; j++) {
+//            if (info[j][0] != null) {
+//                for (int k = 0; k < 10; k++) {
+//
+//                    bw.write(info[j][k] + ",");
+//                }
+//
+//                bw.write(info[j][10]);
+//                bw.newLine();
+//            }
+//
+//        }
+//        String[][] info = new String[6][11];
+//        BufferedReader br = new BufferedReader(new FileReader("src/" + savePath + ".txt"));
+//        int i = 0;
+//        while (br.ready()) {
+//            String status[] = br.readLine().split(",");
+//            for (int j = 0; j < 11; j++) {
+//                info[i][j] = status[j];
+//            }
+//            i++;
+//        }
+//
+//        for (int j = 0; j < i; j++) {
+//            if (info[j][0].equals(this.playerName)) {
+//                checkSame = true;
+//                info[j][1] = String.valueOf(this.inventory);
+//                info[j][2] = String.valueOf(this.stage);
+//                for (int k = 0; k < 5; k++) {
+//                    info[j][k + 3] = String.valueOf(this.unlock[k]);
+//                }
+//                info[j][8] = String.valueOf(this.hp);
+//                info[j][9] = String.valueOf(this.mp);
+//                info[j][10] = String.valueOf(this.cash);
+//
+//            }
+//        }
+//
+//        BufferedWriter bw = new BufferedWriter(new FileWriter("src/" + savePath + ".txt"));
+//        for (int j = 0; j < i; j++) {
+//            if (info[j][0] != null) {
+//                for (int k = 0; k < 10; k++) {
+//
+//                    bw.write(info[j][k] + ",");
+//                }
+//
+//                bw.write(info[j][10]);
+//                bw.newLine();
+//            }
+//
+//        }
+//        if (!checkSame) {
+//            System.out.println(this.playerName);
+//            bw.write(this.playerName);
+//            bw.write("," + String.valueOf(this.inventory));
+//            bw.write("," + String.valueOf(this.stage));
+//            for (int j = 0; j < unlock.length; j++) {
+//                bw.write(String.valueOf("," + this.unlock[j]));
+//            }
+//            bw.write("," + hp);
+//            bw.write("," + mp);
+//            bw.write("," + cash);
+//            bw.newLine();
+//        }
+//        bw.flush();
+//        bw.close();
+//        br.close();
 //        System.out.print("brready" + br.ready());
 //        do {
 //            System.out.println("origin");
@@ -225,23 +277,15 @@ public class Player {
 //        bw.close();
     }
 
-    public int checkEqual(String name) throws IOException {
-        this.loadPlayerList(this.savePath);
-        String[] tmp = this.getPlayerList();
-        for (int i = 0; i < tmp.length; i++) {
-            if (name.equals(tmp[i])) {
-                return i;
-            }
-        }
-        return -1;
+    public void setPlayerIndex(int i) {
+        this.playerIndex = i;
     }
 
-    public void load(String loadPath, int index) throws IOException { //載入方法
-        BufferedReader br = new BufferedReader(new FileReader("src/" + loadPath + ".txt"));
-        for (int i = 0; i < index; i++) {
-            br.readLine();
-        }
-        String status[] = br.readLine().split(",");
+    //設定當前玩家資料
+    public void loadPlayer(int index) throws IOException { //載入方法
+        playerIndex = index;
+        
+        String status[] = playerInfo.get(index);
         this.playerName = status[0];
         this.inventory = Integer.parseInt(status[1]);
         this.stage = Integer.parseInt(status[2]);
@@ -251,24 +295,44 @@ public class Player {
         this.hp = Integer.parseInt(status[8]);
         this.mp = Integer.parseInt(status[9]);
         this.cash = Integer.parseInt(status[10]);
-        br.close();
-    }
-
-    public int loadPlayerList(String path) throws IOException {
-        int i = 0;
-        BufferedReader br = new BufferedReader(new FileReader("src/" + path + ".txt"));
-        while (br.ready()) {
-            if(i==6){
-                return 6;
+        
+        //如果玩家有金融商品
+        if(status.length > 11){
+            int countFp =11; 
+            for(int i=0; i<(status.length-11)/2; i++){
+//                this.fp.add(new FinProduct());
+                this.fp.get(i).setValue(Integer.parseInt(status[countFp++]));
             }
-            String tmp[] = br.readLine().split(",");
-            playerNameList[i++] = tmp[0];
         }
-        return i;
     }
 
+    //初始化玩家數值
+    public void defaultPlayer() {
+        this.hp = 100;
+        this.mp = 50;
+        this.cash = 6000;
+    }
+
+    //儲存所有玩家資料，方便後續作儲存
+    public void loadTotal() throws IOException {
+        if (this.loadCheck == false) {  //確認整個遊戲只有load過一次
+            BufferedReader br = new BufferedReader(new FileReader("src/" + this.savePath + ".txt"));
+            while (br.ready() && this.playerInfo.size() < 6) {
+                playerInfo.add(br.readLine().split(","));
+            }
+            this.loadCheck = true;
+        }
+
+    }
+
+    //回傳所有玩家名字
     public String[] getPlayerList() {
-        return this.playerNameList;
+        String[] NameList = new String[this.playerInfo.size()];
+        for (int i = 0; i < this.playerInfo.size(); i++) {
+            String[] tmp = this.playerInfo.get(i);
+            NameList[i] = tmp[0];
+        }
+        return NameList;
     }
 
     public void test() {
@@ -285,4 +349,5 @@ public class Player {
             System.out.println(playerNameList[i]);
         }
     }
+
 }

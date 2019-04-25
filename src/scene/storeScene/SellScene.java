@@ -5,10 +5,12 @@
  */
 package scene.storeScene;
 
+
 /**
  *
  * @author anny
  */
-public class SellScene {
+public class SellScene{
     
 }
+

@@ -1,1 +1,1 @@
-/Animal.png,10,10,10,10
+/resources/tinyCharacters.png,10,10,10,10

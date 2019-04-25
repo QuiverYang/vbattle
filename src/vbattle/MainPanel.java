@@ -61,7 +61,7 @@ public class MainPanel extends JPanel {
         
         this.setBackground(Color.red);
 
-        changeCurrentScene(genSceneById(MENU_SCENE));
+        changeCurrentScene(genSceneById(STAGE_SCENE));
 //        changeCurrentScene(genSceneById(SELL_SCENE));
 
         Timer t1 = new Timer(25, new ActionListener() {
@@ -123,11 +123,7 @@ public class MainPanel extends JPanel {
             }
             case STAGE_SCENE:
                 {
-                    try {
                         return new StageScene(gsChangeListener);
-                    } catch (IOException ex) {
-                        Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
                 }
          case SELL_SCENE: 
                 return new SellScene(gsChangeListener);   

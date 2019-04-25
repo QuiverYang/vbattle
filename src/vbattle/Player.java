@@ -9,8 +9,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Player {
-    private int inventory,stage;
-    private int hp,mp,cash; //體力 快樂度
+
+    private int inventory, stage;
+    private int hp, mp, cash; //體力 快樂度
     private ArrayList<FinProduct> fp;
     private int unlock[] = new int[5];//資源存量,破關進度,解鎖腳色
     private String savePath;
@@ -20,6 +21,7 @@ public class Player {
     private ArrayList<String[]> playerInfo; //儲存所有玩家
     private int playerIndex; //若為 -1 -->新玩家 , 若不等於-1 -->舊玩家於檔案內的行數位置
     public static boolean loadCheck;
+    private boolean oldPlayerCheck;
     //GETTER SETTER
 
     public static Player getPlayerInstane() {
@@ -112,12 +114,12 @@ public class Player {
     public void increaseCash(int money) {
         this.cash += money;
     }
-    
-    public void increaseHp(int hpUp){
+
+    public void increaseHp(int hpUp) {
         this.hp += hpUp;
     }
-    
-    public void increaseMp(int mpUp){
+
+    public void increaseMp(int mpUp) {
         this.mp += mpUp;
     }
 
@@ -142,8 +144,8 @@ public class Player {
         info[9] = String.valueOf(this.mp);
         info[10] = String.valueOf(this.cash);
         for (int i = 0; i < this.fp.size(); i++) {
-            info[i + countFp++] = String.valueOf(this.fp.get(i).getName());  
-            info[i + countFp++] = String.valueOf(this.fp.get(i).getValue());  
+            info[countFp++] = String.valueOf(this.fp.get(i).getName());
+            info[countFp++] = String.valueOf(this.fp.get(i).getValue());
         }
 
         //判斷是否為新玩家
@@ -163,135 +165,11 @@ public class Player {
             for (int j = 0; j < tmp.length - 1; j++) {
                 bw.write(tmp[j] + ",");
             }
-            bw.write(tmp[tmp.length - 2]);
+            bw.write(tmp[tmp.length - 1]);
             bw.newLine();
         }
         bw.flush();
         bw.close();
-
-//        for (int j = 0; j < i; j++) {
-//            if (info[j][0] != null) {
-//                for (int k = 0; k < 10; k++) {
-//
-//                    bw.write(info[j][k] + ",");
-//                }
-//
-//                bw.write(info[j][10]);
-//                bw.newLine();
-//            }
-//
-//        }
-//        String[][] info = new String[6][11];
-//        BufferedReader br = new BufferedReader(new FileReader("src/" + savePath + ".txt"));
-//        int i = 0;
-//        while (br.ready()) {
-//            String status[] = br.readLine().split(",");
-//            for (int j = 0; j < 11; j++) {
-//                info[i][j] = status[j];
-//            }
-//            i++;
-//        }
-//
-//        for (int j = 0; j < i; j++) {
-//            if (info[j][0].equals(this.playerName)) {
-//                checkSame = true;
-//                info[j][1] = String.valueOf(this.inventory);
-//                info[j][2] = String.valueOf(this.stage);
-//                for (int k = 0; k < 5; k++) {
-//                    info[j][k + 3] = String.valueOf(this.unlock[k]);
-//                }
-//                info[j][8] = String.valueOf(this.hp);
-//                info[j][9] = String.valueOf(this.mp);
-//                info[j][10] = String.valueOf(this.cash);
-//
-//            }
-//        }
-//
-//        BufferedWriter bw = new BufferedWriter(new FileWriter("src/" + savePath + ".txt"));
-//        for (int j = 0; j < i; j++) {
-//            if (info[j][0] != null) {
-//                for (int k = 0; k < 10; k++) {
-//
-//                    bw.write(info[j][k] + ",");
-//                }
-//
-//                bw.write(info[j][10]);
-//                bw.newLine();
-//            }
-//
-//        }
-//        if (!checkSame) {
-//            System.out.println(this.playerName);
-//            bw.write(this.playerName);
-//            bw.write("," + String.valueOf(this.inventory));
-//            bw.write("," + String.valueOf(this.stage));
-//            for (int j = 0; j < unlock.length; j++) {
-//                bw.write(String.valueOf("," + this.unlock[j]));
-//            }
-//            bw.write("," + hp);
-//            bw.write("," + mp);
-//            bw.write("," + cash);
-//            bw.newLine();
-//        }
-//        bw.flush();
-//        bw.close();
-//        br.close();
-//        System.out.print("brready" + br.ready());
-//        do {
-//            System.out.println("origin");
-//            String status[] = br.readLine().split(",");
-//            System.out.println("origin" + status[0]);
-//            if (status[0].equals(this.playerName) == false) { //不相等
-//                for (int j = 0; j < 10; j++) {
-//                    System.out.println("origin" + status[j]);
-//                    bw.write(status[j] + ",");
-//                }
-//                bw.write(status[10]);
-//                bw.newLine();//原本值
-//            } else {//相等
-//                checkSame = true;
-//                bw.write(this.playerName);
-//                bw.write(String.valueOf(this.inventory));
-//                bw.write("," + String.valueOf(this.stage));
-//                for (int j = 0; j < 5; j++) {
-//                    bw.write(String.valueOf("," + this.unlock[j]));
-//                }
-//                bw.write("," + hp);
-//                bw.write("," + mp);
-//                bw.write("," + cash);
-//                bw.newLine();
-//            }
-//
-//        } while (br.ready());
-//        if (!checkSame) {
-//            System.out.println(this.playerName);
-//            bw.write(this.playerName);
-//            bw.write("," + String.valueOf(this.inventory));
-//            bw.write("," + String.valueOf(this.stage));
-//            for (int j = 0; j < unlock.length; j++) {
-//                bw.write(String.valueOf("," + this.unlock[j]));
-//            }
-//            bw.write("," + hp);
-//            bw.write("," + mp);
-//            bw.write("," + cash);
-//            bw.newLine();
-//
-//        }
-//        bw.flush();
-//        bw.close();
-//        br.close();
-//        bw.write(playerName + ",");
-//        bw.write(String.valueOf(this.inventory));
-//        bw.write("," + String.valueOf(this.stage));
-//        for (int i = 0; i < 5; i++) {
-//            bw.write(String.valueOf("," + this.unlock[i]));
-//        }
-//        bw.write("," + hp);
-//        bw.write("," + mp);
-//        bw.write("," + cash);
-//        bw.newLine();
-//        bw.flush();
-//        bw.close();
     }
 
     public void setPlayerIndex(int i) {
@@ -301,7 +179,7 @@ public class Player {
     //設定當前玩家資料
     public void loadPlayer(int index) throws IOException { //載入方法
         playerIndex = index;
-        
+
         String status[] = playerInfo.get(index);
         this.playerName = status[0];
         this.inventory = Integer.parseInt(status[1]);
@@ -313,21 +191,56 @@ public class Player {
         this.mp = Integer.parseInt(status[9]);
         this.cash = Integer.parseInt(status[10]);
         
+        this.fp.clear(); //先刪除fp list內所有物件（以防後面讀存重複加入）
+        
         //如果玩家有金融商品
-        if(status.length > 11){
-            int countFp =11; 
-            for(int i=0; i<(status.length-11)/2; i++){
+        if (status.length > 11 ) {
+            int countFp = 11;
+            int indexOfRisk, indexOfProfit;
+            double risk, profit;
+            for (int i = 0; i < (status.length - 11) / 2; i++) {
 //                this.fp.add(new FinProduct());
-                this.fp.get(i).setValue(Integer.parseInt(status[countFp++]));
+                switch (status[countFp++]) {
+                    case "股票":
+                        String stockInfo = FinProduct.PRODUCT_STOCK_INFO;
+                        indexOfRisk = stockInfo.indexOf("風險");
+                        indexOfProfit = stockInfo.indexOf("利潤");
+                        risk = Double.parseDouble(stockInfo.substring(indexOfRisk + 2, indexOfRisk + 6));
+                        profit = Double.parseDouble(stockInfo.substring(indexOfProfit + 2, indexOfProfit + 6));
+                        this.fp.add(new FinProduct(FinProduct.PRODUCT_STOCK_PATH, "股票", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, stockInfo));
+                        this.fp.get(i).setValue(Integer.parseInt(status[countFp++]));
+                        break;
+                    case "基金":
+                        String fundInfo = FinProduct.PRODUCT_FUND_INFO;
+                        indexOfRisk = fundInfo.indexOf("風險");
+                        indexOfProfit = fundInfo.indexOf("利潤");
+                        risk = Double.parseDouble(fundInfo.substring(indexOfRisk + 2, indexOfRisk + 6));
+                        profit = Double.parseDouble(fundInfo.substring(indexOfProfit + 2, indexOfProfit + 6));
+                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUND_PATH, "基金", FinProduct.PRODUCT_FUND_PRICE, risk, profit, fundInfo));
+                        this.fp.get(i).setValue(Integer.parseInt(status[countFp++]));
+                        break;
+                    case "期貨":
+                        String futureInfo = FinProduct.PRODUCT_FUTURES_INFO;
+                        indexOfRisk = futureInfo.indexOf("風險");
+                        indexOfProfit = futureInfo.indexOf("利潤");
+                        risk = Double.parseDouble(futureInfo.substring(indexOfRisk + 2, indexOfRisk + 6));
+                        profit = Double.parseDouble(futureInfo.substring(indexOfProfit + 2, indexOfProfit + 6));
+                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUTURES_PATH, "期貨", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, futureInfo));
+                        this.fp.get(i).setValue(Integer.parseInt(status[countFp++]));
+                        System.out.println("期貨");
+                        break;
+                }
             }
+            this.oldPlayerCheck = true;
         }
     }
+
 
     //初始化玩家數值
     public void defaultPlayer() {
         this.hp = 100;
-        this.mp = 50;
-        this.cash = 6000;
+        this.mp = 100;
+        this.inventory = this.cash = 6000;
     }
 
     //儲存所有玩家資料，方便後續作儲存

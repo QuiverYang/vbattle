@@ -279,13 +279,17 @@ public class Player {
         br.close();
     }
 
-    public void loadPlayerList(String path) throws IOException {
+    public int loadPlayerList(String path) throws IOException {
         int i = 0;
         BufferedReader br = new BufferedReader(new FileReader("src/" + path + ".txt"));
         while (br.ready()) {
+            if(i==6){
+                return 6;
+            }
             String tmp[] = br.readLine().split(",");
             playerNameList[i++] = tmp[0];
         }
+        return i;
     }
 
     public String[] getPlayerList() {

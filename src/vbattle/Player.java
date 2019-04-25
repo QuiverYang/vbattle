@@ -28,6 +28,7 @@ public class Player {
         }
         return player;
     }
+    
 
     public int getHp() {
         return hp;

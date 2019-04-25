@@ -5,6 +5,7 @@
  */
 package vbattle;
 
+import scene.storeScene.SellScene;
 import scene.storeScene.StoreScene;
 import java.applet.Applet;
 import java.applet.AudioClip;
@@ -35,10 +36,8 @@ public class MainPanel extends JPanel {
     public static final int INTRO_SCENE = 1;
     public static final int NEW_GAME_SCENE = 2;
     public static final int LOAD_GAME_SCENE = 3;
-
-    public static final int STORE_SCENE = 5;
-
     public static final int STAGE_SCENE = 4;
+    public static final int STORE_SCENE = 5;
     public static final int SELL_SCENE = 6;
     
     private boolean newGameCheck;
@@ -123,13 +122,15 @@ public class MainPanel extends JPanel {
 
             }
             case STAGE_SCENE:
-        {
-            try {
-                return new StageScene(gsChangeListener);
-            } catch (IOException ex) {
-                Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+                {
+                    try {
+                        return new StageScene(gsChangeListener);
+                    } catch (IOException ex) {
+                        Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+         case SELL_SCENE: 
+                return new SellScene(gsChangeListener);   
 
         }
         return null;

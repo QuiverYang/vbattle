@@ -5,12 +5,35 @@
  */
 package scene.storeScene;
 
+import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import scene.Scene;
+import vbattle.MainPanel;
 
 /**
  *
- * @author anny
+ * @author menglinyang
  */
-public class SellScene{
+public class SellScene extends Scene{
+
+    public SellScene(MainPanel.GameStatusChangeListener gsChangeListener) {
+        super(gsChangeListener);
+    }
+
+    @Override
+    public MouseAdapter genMouseAdapter() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void logicEvent() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
 

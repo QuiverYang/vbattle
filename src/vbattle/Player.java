@@ -1,5 +1,6 @@
 package vbattle;
 
+import scene.storeScene.FinProduct;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -8,9 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Player {
-
-    private int inventory, stage;
-    private int hp, mp, cash; //體力 快樂度
+    private int inventory,stage;
+    private int hp,mp,cash; //體力 快樂度
     private ArrayList<FinProduct> fp;
     private int unlock[] = new int[5];//資源存量,破關進度,解鎖腳色
     private String savePath;
@@ -51,6 +51,14 @@ public class Player {
 
     public void setCash(int cash) {
         this.cash = cash;
+    }
+
+    public ArrayList<FinProduct> getFp() {
+        return fp;
+    }
+
+    public void setFp(ArrayList<FinProduct> fp) {
+        this.fp = fp;
     }
 
     public int getInventory() {
@@ -102,6 +110,14 @@ public class Player {
 
     public void increaseCash(int money) {
         this.cash += money;
+    }
+    
+    public void increaseHp(int hpUp){
+        this.hp += hpUp;
+    }
+    
+    public void increaseMp(int mpUp){
+        this.mp += mpUp;
     }
 
     public String getPlayerName() {

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vbattle;
+package scene.storeScene;
 
 /**
  *
@@ -11,7 +11,19 @@ package vbattle;
  */
 public class FinProduct extends Product{
     
-    public static int STOCK_PRICE = 100;
+
+    public static final int PRODUCT_STOCK_PRICE = 500;
+    public static final int PRODUCT_FUTURES_PRICE = 500;
+    public static final int PRODUCT_FUND_PRICE = 500;
+    
+    public static final String PRODUCT_STOCK_PATH = "/resources/stock.jpg";
+    public static final String PRODUCT_FUTURES_PATH = "/resources/stock.jpg";
+    public static final String PRODUCT_FUND_PATH = "/resources/stock.jpg";
+
+    public static final String PRODUCT_STOCK_INFO = "股票:購買一張股票  風險0.30/利潤0.08";
+    public static final String PRODUCT_FUTURES_INFO  = "期貨:購買一張股票  風險0.60/利潤0.16";
+    public static final String PRODUCT_FUND_INFO  = "基金:購買一張股票  風險0.20/利潤0.04";
+    
     private double risk;
     private int value;
     private double profit;

@@ -51,7 +51,8 @@ public class StoreScene extends Scene{
     private int hpUp,mpUp;//每個物品所提升的hp mp;
     protected int[] pX,pY,pW,pH;//productsOnScreen的座標
     protected int counter;//按鍵左右去計算的counter
-    Font fontBit;
+    protected Font fontBit;
+    protected Font fontC;
     
     public interface ButtomCode {
         int BACK_BTN = 0;
@@ -77,6 +78,7 @@ public class StoreScene extends Scene{
     protected void initParameters(){
         backgroundImg = rc.tryGetImage("/resources/storebg.png");  //store background 圖片
         fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH/20);
+        fontC = new Font("Courier",Font.BOLD,Resource.SCREEN_WIDTH/30);
         this.itemBtnXcenter = Resource.SCREEN_WIDTH/2;
         this.rightBtnYcenter = (int)(Resource.SCREEN_HEIGHT*0.4f);
         pX=new int[3];
@@ -191,7 +193,8 @@ public class StoreScene extends Scene{
         
         //初始化並放置functionBtns 位置
         this.functionBtns = new Button[6];
-        this.functionBtns[ButtomCode.BACK_BTN] = new Button("/resources/return_blue.png");
+        this.functionBtns[ButtomCode.BACK_BTN] = new Button("/resources/return_blue.png",padding,padding,
+                funcBtnWidthUnit, funcBtnWidthUnit);
         this.functionBtns[ButtomCode.BACK_BTN].setCallback(new Callback() {
             @Override
             public void doSomthing() {
@@ -203,7 +206,8 @@ public class StoreScene extends Scene{
                 }
             }
         });
-        this.functionBtns[ButtomCode.BUY_BTN] = new Button("/resources/clickBtn_blue.png");//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
+        this.functionBtns[ButtomCode.BUY_BTN] = new Button("/resources/clickBtn_blue.png",padding,Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),
+                funcBtnWidthUnit*2, funcBtnWidthUnit);//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
         this.functionBtns[ButtomCode.BUY_BTN].setLabel("BUY");
         this.functionBtns[ButtomCode.BUY_BTN].setCallback(new Callback() {
             @Override
@@ -222,7 +226,8 @@ public class StoreScene extends Scene{
                  
             }
         });
-        this.functionBtns[ButtomCode.LEFT_BTN] = new Button("/resources/clickBtn_blue.png");  
+        this.functionBtns[ButtomCode.LEFT_BTN] = new Button("/resources/clickBtn_blue.png",(int) (Resource.SCREEN_WIDTH * 0.1f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
+                funcBtnWidthUnit/2, funcBtnWidthUnit);  
         this.functionBtns[ButtomCode.LEFT_BTN].setLabel("<");
         counter = 1;
         this.functionBtns[ButtomCode.LEFT_BTN].setCallback(new Callback(){
@@ -246,11 +251,13 @@ public class StoreScene extends Scene{
                     productOnScreen[1] = products[counter];
                     productOnScreen[2] = products[0];
                 }
-                
+                changeProductSeq();
+                initParameters();
             }
             
         });
-        this.functionBtns[ButtomCode.RIGHT_BTN] = new Button("/resources/clickBtn_blue.png");
+        this.functionBtns[ButtomCode.RIGHT_BTN] = new Button("/resources/clickBtn_blue.png",(int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
+                funcBtnWidthUnit/2, funcBtnWidthUnit);
         this.functionBtns[ButtomCode.RIGHT_BTN].setLabel(">");
         this.functionBtns[ButtomCode.RIGHT_BTN].setCallback(new Callback(){
 
@@ -269,18 +276,20 @@ public class StoreScene extends Scene{
                 }
                 else if(counter == 2){
                     counter--;
-                    System.out.println("到第一個選項了");
-                    System.out.println("0:"+productOnScreen[0].isIsShown());
-                    System.out.println("1:"+productOnScreen[1].isIsShown());
+                    System.out.println("到第一個選項了"+counter);
+                    
                     productOnScreen[2] = products[counter+1];
                     productOnScreen[1] = products[counter];
                     productOnScreen[0] = products[0];
                 }
+                changeProductSeq();
+                initParameters();
             }
             
         });
 
-        this.functionBtns[ButtomCode.START_BTN] = new Button("/resources/clickBtn_blue.png");
+        this.functionBtns[ButtomCode.START_BTN] = new Button("/resources/clickBtn_blue.png",padding +functionBtns[ButtomCode.BACK_BTN].getWidth()+padding , padding,//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
+                funcBtnWidthUnit*2, funcBtnWidthUnit);
         this.functionBtns[ButtomCode.START_BTN].setLabel("START");
         this.functionBtns[ButtomCode.START_BTN].setCallback(new Callback() {
             @Override
@@ -295,7 +304,8 @@ public class StoreScene extends Scene{
             }
         });
         
-        this.functionBtns[ButtomCode.SELL_BTN] = new Button("/resources/clickBtn_blue.png");
+        this.functionBtns[ButtomCode.SELL_BTN] = new Button("/resources/clickBtn_blue.png",Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
+                funcBtnWidthUnit*2, funcBtnWidthUnit);
         this.functionBtns[ButtomCode.SELL_BTN].setLabel("SELL");
         this.functionBtns[ButtomCode.SELL_BTN].setCallback(new Callback() {
             @Override
@@ -364,13 +374,13 @@ public class StoreScene extends Scene{
         //畫選單
         for(Product p:productOnScreen){
 
-                p.paint(g);
+            p.paint(g);
 
         }
         
         //畫出player金錢
         g.setFont(fontBit);
-        g.setColor(new Color(255,255,255));
+        g.setColor(Color.white);
         FontMetrics fm = g.getFontMetrics();
         String asset = String.valueOf(this.player.getInventory());
         
@@ -390,7 +400,7 @@ public class StoreScene extends Scene{
         
         String info= productsInfo[counter];;
         if(products[counter] instanceof FinProduct){
-            g.setFont(new Font("Courier",Font.BOLD,Resource.SCREEN_WIDTH/40));
+            g.setFont(fontC);
             int y = Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.25f);
             int sh = g.getFontMetrics().getHeight();
             int i = 0;
@@ -405,7 +415,7 @@ public class StoreScene extends Scene{
             }
             
         }else{
-            g.setFont(new Font("Courier",Font.BOLD,Resource.SCREEN_WIDTH/30));
+            g.setFont(fontC);
             sw = fm.stringWidth(info);
             g.drawString(info, (int)(Resource.SCREEN_WIDTH*0.55)-sw/2, Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.22f));
         }
@@ -428,41 +438,50 @@ public class StoreScene extends Scene{
         changePlayerHp();
         changePlayerMp();
         changePlayerInventory();
+        changeProductSeq();
         this.resize();
     } 
     
     
     public void resize(){
-        
-        funcBtnWidthUnit = Resource.SCREEN_WIDTH/12;//functionBtn的一個單位大小     
-        itemBtnWidthUnit = Resource.SCREEN_WIDTH/8;//itemBtn的一個單位大小 
-        this.initParameters();
-        
-        this.functionBtns[ButtomCode.BACK_BTN].reset(padding,padding,
-                funcBtnWidthUnit, funcBtnWidthUnit);
-        this.functionBtns[ButtomCode.BUY_BTN].reset(padding,Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),
-                funcBtnWidthUnit*2, funcBtnWidthUnit);
-        this.functionBtns[ButtomCode.LEFT_BTN].reset((int) (Resource.SCREEN_WIDTH * 0.1f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
-                funcBtnWidthUnit/2, funcBtnWidthUnit);
-        this.functionBtns[ButtomCode.RIGHT_BTN].reset((int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
-                funcBtnWidthUnit/2, funcBtnWidthUnit);
-        this.functionBtns[ButtomCode.START_BTN].reset(padding +functionBtns[ButtomCode.BACK_BTN].getWidth()+padding , padding,//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
-                funcBtnWidthUnit*2, funcBtnWidthUnit);
-        this.functionBtns[ButtomCode.SELL_BTN].reset(Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
-                funcBtnWidthUnit*2, funcBtnWidthUnit);
-        for(Button btn : functionBtns){
-            btn.setLabelSize(btn.getWidth());
+        if(funcBtnWidthUnit!= Resource.SCREEN_WIDTH/12||itemBtnWidthUnit != Resource.SCREEN_WIDTH/8){
+            System.out.println("different size");
+            funcBtnWidthUnit = Resource.SCREEN_WIDTH/12;//functionBtn的一個單位大小     
+            itemBtnWidthUnit = Resource.SCREEN_WIDTH/8;//itemBtn的一個單位大小 
+            
+
+            this.functionBtns[ButtomCode.BACK_BTN].reset(padding,padding,
+                    funcBtnWidthUnit, funcBtnWidthUnit);
+            this.functionBtns[ButtomCode.BUY_BTN].reset(padding,Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),
+                    funcBtnWidthUnit*2, funcBtnWidthUnit);
+            this.functionBtns[ButtomCode.LEFT_BTN].reset((int) (Resource.SCREEN_WIDTH * 0.1f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
+                    funcBtnWidthUnit/2, funcBtnWidthUnit);
+            this.functionBtns[ButtomCode.RIGHT_BTN].reset((int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
+                    funcBtnWidthUnit/2, funcBtnWidthUnit);
+            this.functionBtns[ButtomCode.START_BTN].reset(padding +functionBtns[ButtomCode.BACK_BTN].getWidth()+padding , padding,//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
+                    funcBtnWidthUnit*2, funcBtnWidthUnit);
+            this.functionBtns[ButtomCode.SELL_BTN].reset(Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
+                    funcBtnWidthUnit*2, funcBtnWidthUnit);
+            for(Button btn : functionBtns){
+                btn.setLabelSize(btn.getWidth());
+            }
+            this.functionBtns[ButtomCode.LEFT_BTN].setLabelSize(functionBtns[ButtomCode.LEFT_BTN].getWidth()*4);
+            this.functionBtns[ButtomCode.RIGHT_BTN].setLabelSize(functionBtns[ButtomCode.RIGHT_BTN].getWidth()*4);
         }
-        this.functionBtns[ButtomCode.LEFT_BTN].setLabelSize(functionBtns[ButtomCode.LEFT_BTN].getWidth()*4);
-        this.functionBtns[ButtomCode.RIGHT_BTN].setLabelSize(functionBtns[ButtomCode.RIGHT_BTN].getWidth()*4);
         
+        
+        
+    }
+    
+    protected void changeProductSeq(){
         for(int i = 0; i < pX.length;i++){
-            if(productsNum-i>1)
-            this.productOnScreen[i].reset(pX[i], pY[i], pW[i], pH[i]);
+            if(productsNum-i>0){
+                this.productOnScreen[i].reset(pX[i], pY[i], pW[i], pH[i]);
+            }
         }
     }
     
-    private void changePlayerCash(){
+    protected void changePlayerCash(){
         if(costCash != 0){
             int decreseSpeed = -10;//每針扣除錢的速度
             costCash+=decreseSpeed;

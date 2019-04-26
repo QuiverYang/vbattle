@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 /**
@@ -48,7 +49,7 @@ public class Stuff {
         this.y1 = y0 + imgHeight;
         this.characterNumY0 = characterNum*32;
         this.characterNumY1 = characterNumY0+32;
-        this.cdTime = 50;
+        this.cdTime = 100;
         this.txtpath = txtpath;
         //設定建構子參數
         //讀取參數txt檔
@@ -240,6 +241,7 @@ public class Stuff {
     public void back() {
         frame = 0;
         x0 = x0 - 100 * type;
+        this.x1 = x0 +imgWidth;
     }
     public void refreshCd(){
         if(!attackCd){
@@ -250,22 +252,13 @@ public class Stuff {
             }
         }
     }
-    public boolean collisionCheck(Stuff actor) {
-        int left1, right1;
-        int left2, right2;
-
-        left1 = this.x0;
-        right1 = this.x0 + imgWidth*2/3;
-        left2 = actor.getX0();
-        right2 = actor.x0 + imgWidth*2/3;
-
-        if (left1 > right2) {
-            return false;
+    public Stuff collisionCheck(ArrayList<Stuff> actor) {
+        for (int i = 0; i < actor.size(); i++) {
+            if(this.x0 <actor.get(i).x1 && this.x1 > actor.get(i).x0){
+                return actor.get(i);
+            }
         }
-        if (right1 < left2) {
-            return false;
-        }
-        return true;
+        return null;
     }
     //腳色方法
     

@@ -16,8 +16,8 @@ import vbattle.Resource;
 import vbattle.Stuff;
 
 public class StageScene extends Scene{
-    private Stuff actor1;
-    private Stuff actor2;
+//    private Stuff actor1;
+//    private Stuff actor2;
     private int timeCount = 0; //倍數計時器：初始化
     private int eventTime = 2; // eventListener時間週期：大於0的常數
     private int battleAreaY[] ={500,350,200};//可放置的路
@@ -42,13 +42,14 @@ public class StageScene extends Scene{
 
     public StageScene(MainPanel.GameStatusChangeListener gsChangeListener){
         super(gsChangeListener);
-//                    actor1 = new Stuff(1, 100, battleAreaY[1] , 128, 128, 0, "actor1");  //int type(1:我方角 or 2:敵人) , int x0, int y0, int imgWidth, int imgHeight, int actorIndex(角色圖片), String txtpath(角色資訊)
-//            actor2 = new Stuff(-1, 800, battleAreaY[1] , 128, 128, 3, "actor2");
+        try {
+            movingEnemyStuff1.add(new Stuff(-1, 800, battleAreaY[0] , 100, 100, 3, "actor2"));
+        } catch (IOException ex) {
+        }
         rc = ImgResource.getInstance();
         icon = rc.tryGetImage("/resources/tinyCharacters.png");
         
         for (int i = 0; i < 5; i++) {
-            
             iconX[i] = (int)(Resource.SCREEN_WIDTH *(0.1f * i)+Resource.SCREEN_WIDTH *(0.4f));
             iconY[i] = (int)(Resource.SCREEN_HEIGHT * 0.7f);
             iconX1[i] = iconX[i] +100;
@@ -104,6 +105,7 @@ public class StageScene extends Scene{
                 drag = -1;
             }
             
+//            public void assign(MouseEvent e,ArrayList<Stuff> stuff){
             public void assign(MouseEvent e){
                 if(e.getY() >= battleAreaY[1]+50 && e.getY() < battleAreaY[0]+50){
                     try {
@@ -113,13 +115,13 @@ public class StageScene extends Scene{
                 }
                 if(e.getY() >= battleAreaY[2]+50 && e.getY() < battleAreaY[1]+50){
                     try {
-                    movingPlayerStuff1.add(new Stuff(1,e.getX()-50,battleAreaY[1],100,100,drag,"test"));
+                    movingPlayerStuff2.add(new Stuff(1,e.getX()-50,battleAreaY[1],100,100,drag,"test"));
                     } catch (IOException ex) {
                     }
                 }
                 if(e.getY() < battleAreaY[2]+50){
                     try {
-                    movingPlayerStuff1.add(new Stuff(1,e.getX()-50,battleAreaY[2],100,100,drag,"test"));
+                    movingPlayerStuff3.add(new Stuff(1,e.getX()-50,battleAreaY[2],100,100,drag,"test"));
                     } catch (IOException ex) {
                     }
                 }
@@ -131,6 +133,7 @@ public class StageScene extends Scene{
     public void paint(Graphics g) {
         //場景
         g.setColor(Color.BLACK);
+        movingEnemyStuff1.get(0).paint(g);
 //        g.fillRect(0, 0, 1200, 900);
 //        actor1.paint(g);
 //        actor2.paint(g);
@@ -142,8 +145,12 @@ public class StageScene extends Scene{
         for (int i = 0; i < this.movingPlayerStuff1.size(); i++) {
             this.movingPlayerStuff1.get(i).paint(g);
         }
-        for (int i = 0; i < this.movingEnemyStuff1.size(); i++) {
-        }
+//        for (int i = 0; i < this.movingPlayerStuff2.size(); i++) {
+//            this.movingPlayerStuff2.get(i).paint(g);
+//        }
+//        for (int i = 0; i < this.movingPlayerStuff3.size(); i++) {
+//            this.movingPlayerStuff3.get(i).paint(g);
+//        }
         if(drag != -1){
             g.drawImage(icon,dragX,dragY,dragX+100,dragY+100,0,drag*32,32,(drag+1)*32,null);
         }
@@ -152,8 +159,12 @@ public class StageScene extends Scene{
     @Override
     public void logicEvent() {
         timeCount ++;//倍數計時器：FPS為底的時間倍數
-//        actor1.refreshCd();
-//        actor2.refreshCd();
+        for (int i = 0; i < movingPlayerStuff1.size(); i++) {
+            movingPlayerStuff1.get(i).refreshCd();
+        }
+        for (int i = 0; i < movingEnemyStuff1.size(); i++) {
+            movingEnemyStuff1.get(i).refreshCd();
+        }
         
         if(timeCount == eventTime){ // 計時器重置：取所有事件的最小公倍數
             timeCount = 0;
@@ -173,37 +184,37 @@ public class StageScene extends Scene{
         
         //我方角 
         //如沒有碰撞就呼叫走路方法
-//        if (actor1.collisionCheck(actor2) == false) {
-        for (int i = 0; i < movingPlayerStuff1.size(); i++) {
-            tmpmovemethod(movingPlayerStuff1.get(i));
-        }
-        for (int i = 0; i < movingPlayerStuff2.size(); i++) {
-            tmpmovemethod(movingPlayerStuff2.get(i));
-        }
-        for (int i = 0; i < movingPlayerStuff3.size(); i++) {
-            tmpmovemethod(movingPlayerStuff3.get(i));
-        }
-//        }
+            moveMethod(movingPlayerStuff1,movingEnemyStuff1);
+            moveMethod(movingEnemyStuff1,movingPlayerStuff1);
+            moveMethod(movingPlayerStuff2,movingEnemyStuff2);
+            moveMethod(movingEnemyStuff2,movingPlayerStuff2);
+            moveMethod(movingPlayerStuff3,movingEnemyStuff3);
+            moveMethod(movingEnemyStuff3,movingPlayerStuff3);
 //        //如果碰撞到就呼叫攻擊方法
-//        if (actor1.collisionCheck(actor2)) {
-//            tmpattckmethod(actor1,actor2);
-//        }
-//        
-//        //敵方角
-//        if (actor2.collisionCheck(actor1) == false) {
-//            tmpmovemethod(actor2);
-//        }
-//        if (actor2.collisionCheck(actor1)) {
-//            tmpattckmethod(actor2,actor1);
-//        }
+            attackMethod(movingPlayerStuff1,movingEnemyStuff1);
+            attackMethod(movingPlayerStuff2,movingEnemyStuff2);
+            attackMethod(movingPlayerStuff3,movingEnemyStuff3);
+            attackMethod(movingEnemyStuff1,movingPlayerStuff1);
+            attackMethod(movingEnemyStuff2,movingPlayerStuff2);
+            attackMethod(movingEnemyStuff3,movingPlayerStuff3);
     }
     
-    public void tmpmovemethod(Stuff actor){
-        actor.move();
+    public void moveMethod(ArrayList<Stuff> stuff1,ArrayList<Stuff> stuff2){
+        for (int i = 0; i < stuff1.size(); i++) {
+            if(stuff1.get(i).collisionCheck(stuff2) == null){
+                stuff1.get(i).move();
+            }
+        }
+    }
+    public void attackMethod(ArrayList<Stuff> stuff1,ArrayList<Stuff> stuff2){
+        Stuff tmp;
+        for(int i=0; i < stuff1.size(); i++) {
+            tmp = stuff1.get(i).collisionCheck(stuff2);
+            if (tmp != null) {
+                stuff1.get(i).attack(tmp);
+            }
+        }
     }
     
-    public void tmpattckmethod(Stuff actor1,Stuff actor2){
-        actor1.attack(actor2);  
-    }
     
 }

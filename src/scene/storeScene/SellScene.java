@@ -5,11 +5,16 @@
  */
 package scene.storeScene;
 
+import java.awt.Font;
 import java.awt.Graphics;
 import java.io.IOException;
+import java.util.Arrays;
 import vbattle.Button;
+import vbattle.Fontes;
+import vbattle.ImgResource;
 import vbattle.MainPanel;
 import vbattle.MainPanel.GameStatusChangeListener;
+import vbattle.Player;
 import vbattle.Resource;
 
 /**
@@ -18,7 +23,6 @@ import vbattle.Resource;
  */
 public class SellScene extends StoreScene{
     
-    FinProduct[] products;
 
     public SellScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
@@ -86,7 +90,7 @@ public class SellScene extends StoreScene{
                     costCash += products[counter].getPrice();
                     player.getFp().remove(--counter);
                     setProduct();
-                    initItemBtns();
+                    initProductOnScreen();
                 }
                 
             }
@@ -116,7 +120,6 @@ public class SellScene extends StoreScene{
                     changeProductSeq();
                     initParameters();
                     
-
                 }
                 
             }
@@ -145,8 +148,6 @@ public class SellScene extends StoreScene{
                     }
                     changeProductSeq();
                     initParameters();
-                    
-
                 } 
             }
             
@@ -181,6 +182,9 @@ public class SellScene extends StoreScene{
             player.increaseCash(decreseSpeed);
         }
     }
+    
+
+
   
 }
 

@@ -14,6 +14,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Arrays;
 import scene.Scene;
 import vbattle.Button;
 import vbattle.Button.Callback;
@@ -32,7 +33,7 @@ public class StoreScene extends Scene{
     
     
     protected BufferedImage backgroundImg;
-    private ImgResource rc;
+    protected ImgResource rc;
     protected int productsNum;
     protected int[] productsPrice;
     protected String[] productsInfo;
@@ -65,13 +66,13 @@ public class StoreScene extends Scene{
     
     public StoreScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
-        this.productOnScreen = new Product[3];
+        productOnScreen = new Product[3];
         player = Player.getPlayerInstane();
         rc = ImgResource.getInstance();
         this.initParameters();
         this.setProduct();
         this.setFunctionBtns();
-        this.initItemBtns();
+        this.initProductOnScreen();
     }
     //子類別不用override
     protected void initParameters(){
@@ -326,16 +327,18 @@ public class StoreScene extends Scene{
         });
     }
     
-    public void initItemBtns(){
+    public void initProductOnScreen(){
 //      設定第0,1,2個商品位置
-        int min;
         if(products == null){
-            min = 0;
-        }else{
-            min = Math.min(products.length, productOnScreen.length);
+            System.out.println("product is null");
+            return;
         }
-        for(int i =0; i < min;i++){
-            this.productOnScreen[i] = products[i];
+        for(int i =0; i < productOnScreen.length;i++){
+            if(i > products.length-1){
+                this.productOnScreen[i] = products[0];
+            }else{
+                this.productOnScreen[i] = products[i];
+            }
         }
     }
     
@@ -381,7 +384,6 @@ public class StoreScene extends Scene{
         //=============畫功能按鍵=========================        
         for(int i = 0; i < functionBtns.length; i++){
             if(i == ButtomCode.LEFT_BTN || i == ButtomCode.RIGHT_BTN){
-                System.out.println("enter left or right");
                 functionBtns[i].setFont(fontBit);
             }else{
                 functionBtns[i].setFont(fontBit2);
@@ -416,7 +418,7 @@ public class StoreScene extends Scene{
         paintHpMp(g);
         
         //=============畫出 info=========================
-        if(products != null){
+        if(products != null && products.length>1){
             String info= productsInfo[counter];
             if(products[counter] instanceof FinProduct){
                 g.setFont(fontC);

@@ -29,6 +29,8 @@ public class Button extends ItemOnScreen{
     private int intData;
     private Callback callback;
     AudioClip clickSound;
+    Font fontBit;
+
     
     public interface Callback{
         void doSomthing();
@@ -46,21 +48,13 @@ public class Button extends ItemOnScreen{
         img = rc.tryGetImage(iconName);
     }
     
-    public Button(String iconName){
-        super(iconName);
-        try{
-            clickSound = Applet.newAudioClip(getClass().getResource("/resources/Cursor2.wav"));
-        }catch(Exception ex){
-            ex.getStackTrace();
-        }
-    }
 
     public Button(String iconName, int x, int y, int width, int height) {
-        super(iconName,x,y,width,height);
+        super(iconName);
         imgState = 0;
         clickState = false;
         labelSize = width;
-        
+        fontBit= Fontes.getBitFont(labelSize/4);
         try{
             clickSound = Applet.newAudioClip(getClass().getResource("/resources/Cursor2.wav"));
         }catch(Exception ex){
@@ -109,14 +103,12 @@ public class Button extends ItemOnScreen{
     //for img with 2 types
     public void paintBtn(Graphics g) {
         
-        
         g.drawImage(img, x, y, x+this.getImgWidth(), y+this.getImgHeight(), img.getWidth()/2*imgState, 0, img.getWidth()/2*(imgState+1), img.getHeight(), null);
 //        g.drawOval(x, y, 5, 5);
 //        g.drawOval(x+this.getImgWidth(), y+this.getImgHeight(), 5, 5);
         //畫出按鈕label
         if(label !=null){
-            Font fontBit = Fontes.getBitFont(labelSize/4);//4為調整字體的大小參數 越小表示字體越大
-            g.setColor(new Color(0,0,0));
+            g.setColor(Color.BLACK);
             g.setFont(fontBit);
             FontMetrics fm = g.getFontMetrics();
             int sw = fm.stringWidth(label);
@@ -160,5 +152,6 @@ public class Button extends ItemOnScreen{
     public void action(){
         callback.doSomthing();
     }
+    
 
 }

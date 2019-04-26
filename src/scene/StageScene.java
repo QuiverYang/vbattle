@@ -19,8 +19,8 @@ import vbattle.Resource;
 import vbattle.Stuff;
 
 public class StageScene extends Scene{
-//    private Stuff actor1;
-//    private Stuff actor2;
+    private Stuff actor1;
+    private Stuff actor2;
     private int timeCount = 0; //倍數計時器：初始化
     private int eventTime = 20; // eventListener時間週期：大於0的常數
     private int battleAreaY[] ={500,350,200};//可放置的路
@@ -50,17 +50,16 @@ public class StageScene extends Scene{
     public StageScene(MainPanel.GameStatusChangeListener gsChangeListener){
         super(gsChangeListener);
         try {
-
-        //     movingEnemyStuff1.add(new Stuff(-1, 800, battleAreaY[0] , 100, 100, 3, "actor2"));
-        // } catch (IOException ex) {
-            actor1 = new Stuff(1, 100, battleAreaY[1] , 128, 128, 0, "actor1");  //int type(1:我方角 or 2:敵人) , int x0, int y0, int imgWidth, int imgHeight, int actorIndex(角色圖片), String txtpath(角色資訊)
+             movingEnemyStuff1.add(new Stuff(-1, 800, battleAreaY[0] , 100, 100, 3, "actor2"));
         } catch (IOException ex) {
-            Logger.getLogger(StageScene.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            actor1 = new Stuff(1, 100, battleAreaY[1] , 128, 128, 0, "actor1");  //int type(1:我方角 or 2:敵人) , int x0, int y0, int imgWidth, int imgHeight, int actorIndex(角色圖片), String txtpath(角色資訊)
+        } catch (IOException a1) {
         }
         try {
             actor2 = new Stuff(-1, 800, battleAreaY[1] , 128, 128, 3, "actor2");
-        } catch (IOException ex) {
-            Logger.getLogger(StageScene.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException a2) {
         }
         rc = ImgResource.getInstance();
         icon = rc.tryGetImage("/resources/tinyCharacters.png");

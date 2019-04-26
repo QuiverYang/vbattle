@@ -58,7 +58,7 @@ public class Stuff {
         this.y1 = y0 + imgHeight;
         this.characterNumY0 = characterNum*32;
         this.characterNumY1 = characterNumY0+32;
-        this.cdTime = 100;
+        this.cdTime = 50;
         this.txtpath = txtpath;
         //設定建構子參數
         //讀取參數txt檔
@@ -242,8 +242,8 @@ public class Stuff {
             frame += 1/4f;//播放動畫
             
             if(frame >=5){//動畫完成觸發攻擊效果
-                actor.back();
                 actor.hp = actor.hp - this.atk;
+                actor.back();
                 frame = 0;
                 attackCd = false;
             }
@@ -257,15 +257,16 @@ public class Stuff {
         this.x1 = x0 +imgWidth;
     }
     public void die(){
-       frame += 1/2f;
-       
-       y0 -=15;
-       y1 -=15;
-       
-       if(frame >= 5){
+        img = rc.tryGetImage("/resources/ghost.png");
+        if(frame >= 4){
            frame =3;
-       }
+        }
+        frame += 1/6f;
+       
+        y0 -=15;
+        y1 -=15;
     }
+    
     public void refreshCd(){
         if(!attackCd){
             cdCounter++;
@@ -335,7 +336,8 @@ public class Stuff {
             g.fillRect(x0 + (int)(imgWidth*1/4f), this.getY0() - 5, (int) (this.getImgWidth() * this.getHpPercent()*(1/2f)), 5);
             //角色顯示
             g.drawImage(img,x0,y0,x1,y1,(int)frame*32,characterNumY0, ((int)frame+1)*32,characterNumY1,null);
-        }else if(this.hp<=0){
+        }
+        else if(this.hp<=0){
             g.drawImage(this.ghost, x0, y0 , x0+imgWidth, y1 , (int)frame*32, 0, (((int)frame+1)*32), this.ghost.getHeight(), null);
         }
     }

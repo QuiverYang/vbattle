@@ -21,8 +21,10 @@ public class ItemOnScreen {
     protected boolean isShown;
     protected BufferedImage img;
     protected ImgResource rc;
+    protected String fileName;
     
     public ItemOnScreen(String fileName){
+        this.fileName = fileName;
         this.rc = ImgResource.getInstance();
         this.img = rc.tryGetImage(fileName);
         this.isShown = true;
@@ -35,6 +37,16 @@ public class ItemOnScreen {
         this.x = x;
         this.y = y;
     }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+    
+    
     
     public void reset(int x, int y, int width, int height){
         this.x = x;

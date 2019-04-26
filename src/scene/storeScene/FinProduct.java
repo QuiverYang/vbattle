@@ -17,8 +17,8 @@ public class FinProduct extends Product{
     public static final int PRODUCT_FUND_PRICE = 500;
     
     public static final String PRODUCT_STOCK_PATH = "/resources/stock.jpg";
-    public static final String PRODUCT_FUTURES_PATH = "/resources/stock.jpg";
-    public static final String PRODUCT_FUND_PATH = "/resources/stock.jpg";
+    public static final String PRODUCT_FUTURES_PATH = "/resources/profit.jpg";
+    public static final String PRODUCT_FUND_PATH = "/resources/balance.jpg";
 
     public static final String PRODUCT_STOCK_INFO = "股票:購買一張股票  風險0.30/利潤0.08";
     public static final String PRODUCT_FUTURES_INFO  = "期貨:購買一張股票  風險0.60/利潤0.16";
@@ -34,6 +34,7 @@ public class FinProduct extends Product{
         this.profit = profit;
         this.value = price;
     }
+    
     
     public void changeValue(){
         if(Math.random()>risk){

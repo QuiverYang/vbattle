@@ -39,6 +39,7 @@ public class Button extends ItemOnScreen{
                 && e.getX() <= btn.getX() + btn.getImgWidth() && e.getY() >= btn.getY() && e.getY() <= btn.getY() + btn.getImgHeight()) {
             return true;
         }
+        
         return false;
     }
     
@@ -62,13 +63,16 @@ public class Button extends ItemOnScreen{
         fontBit = Fontes.getBitFont(labelSize/4);//4為調整字體的大小參數 越小表示字體越大
         imgState = 0;
         clickState = false;
-        
+        labelSize = width;
+        fontBit = Fontes.getBitFont(labelSize/4);//4為調整字體的大小參數 越小表示字體越大
         try{
             clickSound = Applet.newAudioClip(getClass().getResource("/resources/Cursor2.wav"));
         }catch(Exception ex){
             ex.getStackTrace();
         }
-        
+    }
+    public void setFont(Font font){
+        this.fontBit = font;
     }
     
     public void setFontBit(int width){
@@ -121,6 +125,7 @@ public class Button extends ItemOnScreen{
 //        g.drawOval(x+this.getImgWidth(), y+this.getImgHeight(), 5, 5);
         //畫出按鈕label
         if(label !=null){
+            
             g.setColor(Color.BLACK);
             g.setFont(fontBit);
             FontMetrics fm = g.getFontMetrics();

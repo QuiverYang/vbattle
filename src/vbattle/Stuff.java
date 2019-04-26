@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 /**
@@ -57,7 +58,7 @@ public class Stuff {
         this.y1 = y0 + imgHeight;
         this.characterNumY0 = characterNum*32;
         this.characterNumY1 = characterNumY0+32;
-        this.cdTime = 50;
+        this.cdTime = 100;
         this.txtpath = txtpath;
         //設定建構子參數
         //讀取參數txt檔
@@ -253,6 +254,7 @@ public class Stuff {
     public void back() {
         frame = 0;
         x0 = x0 - 100 * type;
+        this.x1 = x0 +imgWidth;
     }
     public void die(){
        frame += 1/2f;
@@ -273,35 +275,42 @@ public class Stuff {
             }
         }
     }
-    public boolean collisionCheck(Stuff actor) {
-        int left1, right1;
-        int left2, right2;
-        int top1, top2;
-        int bottom1, bottom2;
+    public Stuff collisionCheck(ArrayList<Stuff> actor) {
+        for (int i = 0; i < actor.size(); i++) {
+            if(this.x0 <actor.get(i).x1 && this.x1 > actor.get(i).x0){
+                return actor.get(i);
+            }
+        }
+        return null;
+    // public boolean collisionCheck(Stuff actor) {
+    //     int left1, right1;
+    //     int left2, right2;
+    //     int top1, top2;
+    //     int bottom1, bottom2;
         
-        left1 = this.x0;
-        right1 = this.x0 + imgWidth*2/3;
-        top1 = this.y0;
-        bottom1 = this.y1;
+    //     left1 = this.x0;
+    //     right1 = this.x0 + imgWidth*2/3;
+    //     top1 = this.y0;
+    //     bottom1 = this.y1;
         
-        left2 = actor.getX0();
-        right2 = actor.x0 + imgWidth*2/3;
-        top2 = actor.y0;
-        bottom2 = actor.y0+ imgWidth*2/3;
+    //     left2 = actor.getX0();
+    //     right2 = actor.x0 + imgWidth*2/3;
+    //     top2 = actor.y0;
+    //     bottom2 = actor.y0+ imgWidth*2/3;
         
-        if (left1 > right2) {
-            return false;
-        }
-        if (right1 < left2) {
-            return false;
-        }
-        if(top1 > bottom2){
-            return false;
-        }
-        if(bottom1 < top2){
-            return false;
-        }
-        return true;
+    //     if (left1 > right2) {
+    //         return false;
+    //     }
+    //     if (right1 < left2) {
+    //         return false;
+    //     }
+    //     if(top1 > bottom2){
+    //         return false;
+    //     }
+    //     if(bottom1 < top2){
+    //         return false;
+    //     }
+    //     return true;
     }
     //腳色方法
     

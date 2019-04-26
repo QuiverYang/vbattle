@@ -58,7 +58,7 @@ public class Button extends ItemOnScreen{
     }
 
     public Button(String iconName, int x, int y, int width, int height) {
-        super(iconName);
+        super(iconName,x,y,width,height);
         imgState = 0;
         clickState = false;
         labelSize = width;
@@ -113,6 +113,7 @@ public class Button extends ItemOnScreen{
     //for img with 2 types
     public void paintBtn(Graphics g) {
         
+        
         g.drawImage(img, x, y, x+this.getImgWidth(), y+this.getImgHeight(), img.getWidth()/2*imgState, 0, img.getWidth()/2*(imgState+1), img.getHeight(), null);
 //        g.drawOval(x, y, 5, 5);
 //        g.drawOval(x+this.getImgWidth(), y+this.getImgHeight(), 5, 5);
@@ -163,6 +164,5 @@ public class Button extends ItemOnScreen{
     public void action(){
         callback.doSomthing();
     }
-    
 
 }

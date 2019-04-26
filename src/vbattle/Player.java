@@ -21,7 +21,6 @@ public class Player {
     private ArrayList<String[]> playerInfo; //儲存所有玩家
     private int playerIndex; //若為 -1 -->新玩家 , 若不等於-1 -->舊玩家於檔案內的行數位置
     public static boolean loadCheck;
-    private boolean oldPlayerCheck;
     //GETTER SETTER
 
     public static Player getPlayerInstane() {
@@ -198,7 +197,6 @@ public class Player {
             int indexOfRisk, indexOfProfit;
             double risk, profit;
             for (int i = 0; i < (status.length - 11) / 2; i++) {
-//                this.fp.add(new FinProduct());
                 switch (status[countFp++]) {
                     case "股票":
                         String stockInfo = FinProduct.PRODUCT_STOCK_INFO;
@@ -230,7 +228,6 @@ public class Player {
                         break;
                 }
             }
-            this.oldPlayerCheck = true;
         }
     }
 

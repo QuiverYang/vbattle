@@ -46,15 +46,17 @@ public class MenuScene extends Scene {
     private static String playerName;
     private static int countChar; //玩家名稱字元個數
     private Player player;
+    Font font;
 
     public MenuScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
+        font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 25);
         rc = ImgResource.getInstance();
         background = rc.tryGetImage("/resources/mainBackground1.png");
 
-        introBtn = new Button("/resources/help_click.png");  //遊戲說明按鈕
-        newGameBtn = new Button("/resources/newGame_click.png");
-        loadBtn = new Button("/resources/loading_click.png");
+        introBtn = new Button("/resources/help_click.png",Resource.SCREEN_WIDTH / 12, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);  //遊戲說明按鈕
+        newGameBtn = new Button("/resources/newGame_click.png",Resource.SCREEN_WIDTH / 12 * 5, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
+        loadBtn = new Button("/resources/loading_click.png",Resource.SCREEN_WIDTH / 12 * 9, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
 //        enterPlayerNameBtn = new Button("/resources/clickBtn.png");
         enterPlayerNameBtn = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH / 12 * 5, Resource.SCREEN_HEIGHT / 2, Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9);
         enterPlayerNameBtn.setLabel("OK");
@@ -78,7 +80,6 @@ public class MenuScene extends Scene {
         loadBtn.paintBtn(g);
 
         //顯示玩家輸入的字元
-        Font font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 25);
         g.setFont(font);
         FontMetrics fm = g.getFontMetrics();
 
@@ -101,7 +102,7 @@ public class MenuScene extends Scene {
 
         }
 
-        g.setColor(new Color(0, 0, 0));
+        g.setColor(Color.BLACK);
         int sw = fm.stringWidth(playerName);
         int sa = fm.getAscent();
         g.drawString(playerName, (int) (Resource.SCREEN_WIDTH * 0.375f) + Resource.SCREEN_WIDTH / 12 * 3 / 2 - sw / 2 + (int) (Resource.SCREEN_WIDTH * 5 / 1200), (int) (Resource.SCREEN_HEIGHT / 2) + Resource.SCREEN_HEIGHT * 50 / 900 / 2 - sa / 2 - Resource.SCREEN_HEIGHT * 60 / 900 + 15);

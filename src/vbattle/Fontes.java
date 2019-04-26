@@ -19,6 +19,7 @@ public class Fontes {
             font = font.deriveFont(Font.BOLD, size);
             return font;
         } catch (Exception ex) {
+            ex.printStackTrace();
         }
         return new Font(Font.MONOSPACED, Font.BOLD, size);
     }

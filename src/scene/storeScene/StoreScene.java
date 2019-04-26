@@ -69,8 +69,8 @@ public class StoreScene extends Scene{
         player = Player.getPlayerInstane();
         rc = ImgResource.getInstance();
         this.initParameters();
-        this.setProduct();
         this.setFunctionBtns();
+        this.setProduct();
         this.initItemBtns();
     }
     //子類別不用override
@@ -192,7 +192,6 @@ public class StoreScene extends Scene{
         
         //初始化並放置functionBtns 位置
         this.functionBtns = new Button[6];
-        
         //===============back buttom==================
         this.functionBtns[ButtomCode.BACK_BTN] = new Button("/resources/return_blue.png",padding,padding,
                 funcBtnWidthUnit, funcBtnWidthUnit);
@@ -233,8 +232,8 @@ public class StoreScene extends Scene{
         this.functionBtns[ButtomCode.LEFT_BTN] = new Button("/resources/clickBtn_blue.png",(int) (Resource.SCREEN_WIDTH * 0.1f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
                 funcBtnWidthUnit/2, funcBtnWidthUnit);  
         this.functionBtns[ButtomCode.LEFT_BTN].setLabel("<");
-        counter = 1;
         this.functionBtns[ButtomCode.LEFT_BTN].setLabelSize(functionBtns[ButtomCode.LEFT_BTN].getWidth()*4);
+        counter = 1;
         this.functionBtns[ButtomCode.LEFT_BTN].setCallback(new Callback(){
 
             @Override
@@ -265,7 +264,6 @@ public class StoreScene extends Scene{
         this.functionBtns[ButtomCode.RIGHT_BTN] = new Button("/resources/clickBtn_blue.png",(int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
                 funcBtnWidthUnit/2, funcBtnWidthUnit);
         this.functionBtns[ButtomCode.RIGHT_BTN].setLabel(">");
-        this.functionBtns[ButtomCode.RIGHT_BTN].setLabelSize(functionBtns[ButtomCode.RIGHT_BTN].getWidth()*4);
         this.functionBtns[ButtomCode.RIGHT_BTN].setCallback(new Callback(){
 
             @Override
@@ -294,6 +292,8 @@ public class StoreScene extends Scene{
             }
             
         });
+        this.functionBtns[ButtomCode.RIGHT_BTN].setLabelSize(functionBtns[ButtomCode.RIGHT_BTN].getWidth()*4);
+        
         //===============start buttom==================
         this.functionBtns[ButtomCode.START_BTN] = new Button("/resources/clickBtn_blue.png",padding +functionBtns[ButtomCode.BACK_BTN].getWidth()+padding , padding,//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
                 funcBtnWidthUnit*2, funcBtnWidthUnit);
@@ -389,10 +389,12 @@ public class StoreScene extends Scene{
         }
         for(Button btn:functionBtns){
             btn.paintBtn(g);
+            System.out.println("btn:"+ btn.getWidth()+" height:"+btn.getHeight());
         }
         //=============畫選單========================= 
         for(Product p:productOnScreen){
             if(p != null){
+                
                 p.paint(g);
             }
         }

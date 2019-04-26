@@ -5,12 +5,11 @@
  */
 package scene.storeScene;
 
-import java.awt.Color;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.io.IOException;
 import vbattle.Button;
 import vbattle.MainPanel;
+import vbattle.MainPanel.GameStatusChangeListener;
 import vbattle.Resource;
 
 /**
@@ -21,7 +20,7 @@ public class SellScene extends StoreScene{
     
     FinProduct[] products;
 
-    public SellScene(MainPanel.GameStatusChangeListener gsChangeListener) {
+    public SellScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
     }
 
@@ -100,25 +99,25 @@ public class SellScene extends StoreScene{
 
             @Override
             public void doSomthing() {
-                if(counter < productsPrice.length-2){
-                    counter++;
-                    productOnScreen[0] = products[counter-1];
-                    productOnScreen[1] = products[counter];
-                    productOnScreen[2] = products[counter+1];
+                if(products.length>1){
+                    if(counter < productsPrice.length-2){
+                        counter++;
+                        productOnScreen[0] = products[counter-1];
+                        productOnScreen[1] = products[counter];
+                        productOnScreen[2] = products[counter+1];
+                    }
+                    else if(counter == productsPrice.length-2){
+                        counter++;
+                        System.out.println("到最後一個選項了"+counter);
+                        productOnScreen[0] = products[counter-1];
+                        productOnScreen[1] = products[counter];
+                        productOnScreen[2] = products[0];
+                    }
+                    changeProductSeq();
+                    initParameters();
+                    
+
                 }
-                else if(counter == productsPrice.length-2){
-                    counter++;
-                    System.out.println("到最後一個選項了"+counter);
-                    productOnScreen[0] = products[counter-1];
-                    productOnScreen[1] = products[counter];
-                    productOnScreen[2] = products[0];
-                }
-                changeProductSeq();
-                initParameters();
-                System.out.println("left counter"+counter);
-                System.out.println(productOnScreen[0].getName()+"x: "+ productOnScreen[0].getX());
-                System.out.println(productOnScreen[1].getName()+"x: "+ productOnScreen[1].getX());
-                System.out.println(productOnScreen[2].getName()+"x: "+ productOnScreen[2].getX());
                 
             }
             
@@ -130,25 +129,25 @@ public class SellScene extends StoreScene{
 
             @Override
             public void doSomthing() {
-                if(counter > 2){
-                    counter--;
-                    productOnScreen[0] = products[counter-1];
-                    productOnScreen[1] = products[counter];
-                    productOnScreen[2] = products[counter+1];
-                }
-                else if(counter == 2){
-                    counter--;
-                    System.out.println("到第一個選項了");
-                    productOnScreen[0] = products[0];
-                    productOnScreen[1] = products[counter];
-                    productOnScreen[2] = products[counter+1];
-                }
-                changeProductSeq();
-                initParameters();
-                System.out.println("right counter" + counter);
-                System.out.println(productOnScreen[0].getName()+"x: "+ productOnScreen[0].getX());
-                System.out.println(productOnScreen[1].getName()+"x: "+ productOnScreen[1].getX());
-                System.out.println(productOnScreen[2].getName()+"x: "+ productOnScreen[2].getX());
+                if(products.length>1){
+                    if(counter > 2){
+                        counter--;
+                        productOnScreen[0] = products[counter-1];
+                        productOnScreen[1] = products[counter];
+                        productOnScreen[2] = products[counter+1];
+                    }
+                    else if(counter == 2){
+                        counter--;
+                        System.out.println("到第一個選項了");
+                        productOnScreen[0] = products[0];
+                        productOnScreen[1] = products[counter];
+                        productOnScreen[2] = products[counter+1];
+                    }
+                    changeProductSeq();
+                    initParameters();
+                    
+
+                } 
             }
             
         });
@@ -163,7 +162,7 @@ public class SellScene extends StoreScene{
             }
         });
         
-        this.functionBtns[ButtomCode.SELL_BTN] = new Button("/resources/clickBtn_blue.png",Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
+        this.functionBtns[ButtomCode.SELL_BTN] = new Button("/resources/nothing.png",Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
                 funcBtnWidthUnit*2, funcBtnWidthUnit);
         this.functionBtns[ButtomCode.SELL_BTN].setLabel("");
         this.functionBtns[ButtomCode.SELL_BTN].setCallback(new Button.Callback() {
@@ -173,79 +172,12 @@ public class SellScene extends StoreScene{
             }
         });
     }
-    
+ 
     @Override
-    public void paint(Graphics g) {
-        //畫背景
-        g.drawImage(backgroundImg, 0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT-20,0,0,backgroundImg.getWidth(),backgroundImg.getHeight(), null);//-20是mac視窗的按鈕列高度
-        //畫功能按鍵
-        for(Button btn:functionBtns){
-            btn.paintBtn(g);
-        }
-        //畫選單
-        for(Product p:productOnScreen){
-            p.paint(g);
-        }
-        
-        //畫出player金錢
-        g.setFont(fontBit);
-        g.setColor(Color.WHITE);
-        FontMetrics fm = g.getFontMetrics();
-        String asset = String.valueOf(this.player.getInventory());
-        
-        int sw = fm.stringWidth(asset);
-        int sa = fm.getAscent();
-        g.drawString(asset, (int)(Resource.SCREEN_WIDTH*0.85)-sw, (int)(Resource.SCREEN_HEIGHT*0.9));
-        
-        String cash = this.player.getCash()+"";
-        int sw2 = fm.stringWidth(cash);
-        g.drawString(cash, (int)(Resource.SCREEN_WIDTH*0.4)-sw, (int)(Resource.SCREEN_HEIGHT*0.9));
-        
-        String pHp = this.player.getHp()+"";
-        g.drawString(pHp, (int)(Resource.SCREEN_WIDTH*0.82)-sw, Resource.SCREEN_HEIGHT/13);
-        
-        String pMp = this.player.getMp()+"";
-        g.drawString(pMp, (int)(Resource.SCREEN_WIDTH*0.82)-sw, Resource.SCREEN_HEIGHT/6);
-        if(productsNum>1){
-            String info= productsInfo[counter];
-            g.setFont(fontC);
-            int y = Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.25f);
-            int sh = g.getFontMetrics().getHeight();
-            int i = 0;
-            sw = fm.stringWidth(info.split("  ")[0]);
-            for (String line : info.split("  ")){
-                g.drawString(line, (int)(Resource.SCREEN_WIDTH*0.55)-sw/2,y);
-                y += sh;
-                if(i ==1){
-                    g.drawString("剩餘價值:" + products[counter].getValue(), (int)(Resource.SCREEN_WIDTH*0.55)-sw/2,y);
-                }
-                i++;
-            }
-        }
-        
+    protected void paintHpMp(Graphics g){
 
     }
     
-    @Override
-    public void logicEvent() {
-        super.logicEvent();
-    } 
-            
-            
-    
-    
-    @Override
-    public void initItemBtns(){
-//      設定第0,1,2個商品位置
-        int min = Math.min(products.length, productOnScreen.length);
-        for(int i =0; i < min;i++){
-//            if(products[i]==null){
-//                this.productOnScreen[i] = products[0];
-//            }else{
-                this.productOnScreen[i] = products[i];
-//            }
-        }
-    }
     @Override
     protected void changePlayerCash(){
         if(costCash > 0){
@@ -254,10 +186,6 @@ public class SellScene extends StoreScene{
             player.increaseCash(decreseSpeed);
         }
     }
-
-    
-
-
-    
+  
 }
 

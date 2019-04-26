@@ -37,7 +37,6 @@ public class StoreScene extends Scene{
     protected int[] productsPrice;
     protected String[] productsInfo;
     protected Product[] products;
-    
     protected int funcBtnWidthUnit = Resource.SCREEN_WIDTH/12;//functionBtn的一個單位大小
     protected int itemBtnWidthUnit = Resource.SCREEN_WIDTH/8;//itemBtn的一個單位大小
     protected final int padding = 20;//與邊框距離
@@ -72,7 +71,6 @@ public class StoreScene extends Scene{
         this.setProduct();
         this.setFunctionBtns();
         this.initItemBtns();
-
     }
     //子類別不用override
     protected void initParameters(){
@@ -98,9 +96,8 @@ public class StoreScene extends Scene{
         pW[2] = pW[0];
         pH[2] = pH[0];
     }
-    
-    
-    public void setProduct(){
+      
+    protected void setProduct(){
         this.productsNum = 9;
         int ITEM_HAMBURGER_PRICE = 100;
         int ITEM_NOODLE_PRICE = 200;
@@ -193,6 +190,8 @@ public class StoreScene extends Scene{
         
         //初始化並放置functionBtns 位置
         this.functionBtns = new Button[6];
+        
+        //===============back buttom==================
         this.functionBtns[ButtomCode.BACK_BTN] = new Button("/resources/return_blue.png",padding,padding,
                 funcBtnWidthUnit, funcBtnWidthUnit);
         this.functionBtns[ButtomCode.BACK_BTN].setCallback(new Callback() {
@@ -206,6 +205,8 @@ public class StoreScene extends Scene{
                 }
             }
         });
+        
+        //===============buy buttom==================
         this.functionBtns[ButtomCode.BUY_BTN] = new Button("/resources/clickBtn_blue.png",padding,Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),
                 funcBtnWidthUnit*2, funcBtnWidthUnit);//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
         this.functionBtns[ButtomCode.BUY_BTN].setLabel("BUY");
@@ -226,10 +227,12 @@ public class StoreScene extends Scene{
                  
             }
         });
+        //===============left buttom==================
         this.functionBtns[ButtomCode.LEFT_BTN] = new Button("/resources/clickBtn_blue.png",(int) (Resource.SCREEN_WIDTH * 0.1f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
                 funcBtnWidthUnit/2, funcBtnWidthUnit);  
         this.functionBtns[ButtomCode.LEFT_BTN].setLabel("<");
         counter = 1;
+        this.functionBtns[ButtomCode.LEFT_BTN].setLabelSize(functionBtns[ButtomCode.LEFT_BTN].getWidth()*4);
         this.functionBtns[ButtomCode.LEFT_BTN].setCallback(new Callback(){
 
             @Override
@@ -256,9 +259,11 @@ public class StoreScene extends Scene{
             }
             
         });
+        //===============right buttom==================
         this.functionBtns[ButtomCode.RIGHT_BTN] = new Button("/resources/clickBtn_blue.png",(int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
                 funcBtnWidthUnit/2, funcBtnWidthUnit);
         this.functionBtns[ButtomCode.RIGHT_BTN].setLabel(">");
+        this.functionBtns[ButtomCode.RIGHT_BTN].setLabelSize(functionBtns[ButtomCode.RIGHT_BTN].getWidth()*4);
         this.functionBtns[ButtomCode.RIGHT_BTN].setCallback(new Callback(){
 
             @Override
@@ -287,7 +292,7 @@ public class StoreScene extends Scene{
             }
             
         });
-
+        //===============start buttom==================
         this.functionBtns[ButtomCode.START_BTN] = new Button("/resources/clickBtn_blue.png",padding +functionBtns[ButtomCode.BACK_BTN].getWidth()+padding , padding,//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
                 funcBtnWidthUnit*2, funcBtnWidthUnit);
         this.functionBtns[ButtomCode.START_BTN].setLabel("START");
@@ -299,11 +304,10 @@ public class StoreScene extends Scene{
                 } catch (IOException ex) {
                     System.out.println("player save problem from StorceScene back to MenuScene");;
                 }
-                //須將MainPanel.MENU_SCENE更改至開始遊戲的SCENE
-                gsChangeListener.changeScene(MainPanel.MENU_SCENE);
+                gsChangeListener.changeScene(MainPanel.STAGE_SCENE);
             }
         });
-        
+        //===============sell buttom==================
         this.functionBtns[ButtomCode.SELL_BTN] = new Button("/resources/clickBtn_blue.png",Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
                 funcBtnWidthUnit*2, funcBtnWidthUnit);
         this.functionBtns[ButtomCode.SELL_BTN].setLabel("SELL");
@@ -322,11 +326,16 @@ public class StoreScene extends Scene{
     
     public void initItemBtns(){
 //      設定第0,1,2個商品位置
-        this.productOnScreen[0] = products[0];
-        this.productOnScreen[1] = products[1];
-        this.productOnScreen[2] = products[2];
+        int min;
+        if(products == null){
+            min = 0;
+        }else{
+            min = Math.min(products.length, productOnScreen.length);
+        }
+        for(int i =0; i < min;i++){
+            this.productOnScreen[i] = products[i];
+        }
     }
-    
     
     @Override
     public MouseAdapter genMouseAdapter() {
@@ -365,63 +374,76 @@ public class StoreScene extends Scene{
 
     @Override
     public void paint(Graphics g) {
-        //畫背景
+        //=============畫背景=========================
         g.drawImage(backgroundImg, 0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT-20,0,0,backgroundImg.getWidth(),backgroundImg.getHeight(), null);//-20是mac視窗的按鈕列高度
-        //畫功能按鍵
+        //=============畫功能按鍵=========================        
         for(Button btn:functionBtns){
             btn.paintBtn(g);
         }
-        //畫選單
+        //=============畫選單========================= 
         for(Product p:productOnScreen){
-
-            p.paint(g);
-
+            if(p != null){
+                p.paint(g);
+            }
         }
-        
-        //畫出player金錢
+        //=============畫player金錢========================= 
         g.setFont(fontBit);
-        g.setColor(Color.white);
+        g.setColor(Color.WHITE);
         FontMetrics fm = g.getFontMetrics();
         String asset = String.valueOf(this.player.getInventory());
         
+        //=============畫出 asset=========================
         int sw = fm.stringWidth(asset);
         int sa = fm.getAscent();
         g.drawString(asset, (int)(Resource.SCREEN_WIDTH*0.85)-sw, (int)(Resource.SCREEN_HEIGHT*0.9));
         
+        //=============畫出 cash=========================
         String cash = this.player.getCash()+"";
-        int sw2 = fm.stringWidth(cash);
+        sw = fm.stringWidth(cash);
         g.drawString(cash, (int)(Resource.SCREEN_WIDTH*0.4)-sw, (int)(Resource.SCREEN_HEIGHT*0.9));
         
-        String pHp = this.player.getHp()+"";
-        g.drawString(pHp, (int)(Resource.SCREEN_WIDTH*0.82)-sw, Resource.SCREEN_HEIGHT/13);
+        //=============畫出 hpmp=========================
+        paintHpMp(g);
         
-        String pMp = this.player.getMp()+"";
-        g.drawString(pMp, (int)(Resource.SCREEN_WIDTH*0.82)-sw, Resource.SCREEN_HEIGHT/6);
-        
-        String info= productsInfo[counter];;
-        if(products[counter] instanceof FinProduct){
-            g.setFont(fontC);
-            int y = Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.25f);
-            int sh = g.getFontMetrics().getHeight();
-            int i = 0;
-            sw = fm.stringWidth(info.split("  ")[0]);
-            for (String line : info.split("  ")){
-                g.drawString(line, (int)(Resource.SCREEN_WIDTH*0.55)-sw/2,y);
-                y += sh;
-                if(i ==1){
-                    g.drawString("價格:"+products[counter].getPrice(), (int)(Resource.SCREEN_WIDTH*0.55)-sw/2,y);
+        //=============畫出 info=========================
+        if(products != null){
+            String info= productsInfo[counter];
+            if(products[counter] instanceof FinProduct){
+                g.setFont(fontC);
+                int y = Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.25f);
+                int sh = g.getFontMetrics().getHeight();
+                int i = 0;
+                sw = fm.stringWidth(info.split("  ")[0]);
+                for (String line : info.split("  ")){
+                    g.drawString(line, (int)(Resource.SCREEN_WIDTH*0.53)-sw/2,y);
+                    y += sh;
+                    if(i ==1){
+                        g.drawString("剩餘價格:"+products[counter].getPrice(), (int)(Resource.SCREEN_WIDTH*0.53)-sw/2,y);
+                    }
+                    i++;
                 }
-                i++;
+
+            }else{
+                g.setFont(fontC);
+                sw = fm.stringWidth(info);
+                g.drawString(info, (int)(Resource.SCREEN_WIDTH*0.53)-sw/2, Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.22f));
+                g.drawString("價格:"+productOnScreen[1].getPrice(), (int)(Resource.SCREEN_WIDTH*0.53)-sw/2, Resource.SCREEN_HEIGHT-padding-(int)(Resource.SCREEN_HEIGHT*0.22f));
             }
-            
-        }else{
-            g.setFont(fontC);
-            sw = fm.stringWidth(info);
-            g.drawString(info, (int)(Resource.SCREEN_WIDTH*0.55)-sw/2, Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.22f));
         }
         
         
+    }
+    
+    protected void paintHpMp(Graphics g){
+        FontMetrics fm = g.getFontMetrics();
+        String pHp = this.player.getHp()+"";
+        int sw = fm.stringWidth(pHp);
+        //=============畫出 hp=========================
+        g.drawString(pHp, (int)(Resource.SCREEN_WIDTH*0.9)-sw, Resource.SCREEN_HEIGHT/13);
         
+        //=============畫出 mp=========================
+        String pMp = this.player.getMp()+"";
+        g.drawString(pMp, (int)(Resource.SCREEN_WIDTH*0.9)-sw, Resource.SCREEN_HEIGHT/6);
     }
     
     @Override
@@ -442,14 +464,11 @@ public class StoreScene extends Scene{
         this.resize();
     } 
     
-    
     public void resize(){
         if(funcBtnWidthUnit!= Resource.SCREEN_WIDTH/12||itemBtnWidthUnit != Resource.SCREEN_WIDTH/8){
             System.out.println("different size");
             funcBtnWidthUnit = Resource.SCREEN_WIDTH/12;//functionBtn的一個單位大小     
             itemBtnWidthUnit = Resource.SCREEN_WIDTH/8;//itemBtn的一個單位大小 
-            
-
             this.functionBtns[ButtomCode.BACK_BTN].reset(padding,padding,
                     funcBtnWidthUnit, funcBtnWidthUnit);
             this.functionBtns[ButtomCode.BUY_BTN].reset(padding,Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),
@@ -467,6 +486,7 @@ public class StoreScene extends Scene{
             }
             this.functionBtns[ButtomCode.LEFT_BTN].setLabelSize(functionBtns[ButtomCode.LEFT_BTN].getWidth()*4);
             this.functionBtns[ButtomCode.RIGHT_BTN].setLabelSize(functionBtns[ButtomCode.RIGHT_BTN].getWidth()*4);
+            initParameters();
         }
         
         
@@ -474,11 +494,14 @@ public class StoreScene extends Scene{
     }
     
     protected void changeProductSeq(){
-        for(int i = 0; i < pX.length;i++){
-            if(productsNum-i>0){
-                this.productOnScreen[i].reset(pX[i], pY[i], pW[i], pH[i]);
+        if(products != null){
+            for(int i = 0; i < pX.length;i++){
+                if(productsNum-i>0){
+                    this.productOnScreen[i].reset(pX[i], pY[i], pW[i], pH[i]);
+                }
             }
         }
+        
     }
     
     protected void changePlayerCash(){
@@ -488,6 +511,7 @@ public class StoreScene extends Scene{
             player.increaseCash(decreseSpeed);
         }
     }
+    
     private void changePlayerHp(){
         if(hpUp != 0){
             int increseSpeed = 2;//每針加血的速度
@@ -495,6 +519,7 @@ public class StoreScene extends Scene{
             player.increaseHp(increseSpeed);
         }
     }
+    
     private void changePlayerMp(){
         if(mpUp!=0){
             int increaseSpeed = 2;
@@ -502,6 +527,7 @@ public class StoreScene extends Scene{
             player.increaseMp(increaseSpeed);
         }
     }
+    
     private void changePlayerInventory(){
         if(costInventory!=0){
             int increaseSpeed = 10;

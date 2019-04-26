@@ -51,6 +51,7 @@ public class StoreScene extends Scene{
     protected int[] pX,pY,pW,pH;//productsOnScreen的座標
     protected int counter;//按鍵左右去計算的counter
     protected Font fontBit;
+    protected Font fontBit2;
     protected Font fontC;
     
     public interface ButtomCode {
@@ -76,6 +77,7 @@ public class StoreScene extends Scene{
     protected void initParameters(){
         backgroundImg = rc.tryGetImage("/resources/storebg.png");  //store background 圖片
         fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH/20);
+        fontBit2 = Fontes.getBitFont(Resource.SCREEN_WIDTH/25);
         fontC = new Font("Courier",Font.BOLD,Resource.SCREEN_WIDTH/30);
         this.itemBtnXcenter = Resource.SCREEN_WIDTH/2;
         this.rightBtnYcenter = (int)(Resource.SCREEN_HEIGHT*0.4f);
@@ -377,6 +379,14 @@ public class StoreScene extends Scene{
         //=============畫背景=========================
         g.drawImage(backgroundImg, 0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT-20,0,0,backgroundImg.getWidth(),backgroundImg.getHeight(), null);//-20是mac視窗的按鈕列高度
         //=============畫功能按鍵=========================        
+        for(int i = 0; i < functionBtns.length; i++){
+            if(i == ButtomCode.LEFT_BTN || i == ButtomCode.RIGHT_BTN){
+                System.out.println("enter left or right");
+                functionBtns[i].setFont(fontBit);
+            }else{
+                functionBtns[i].setFont(fontBit2);
+            }
+        }
         for(Button btn:functionBtns){
             btn.paintBtn(g);
             System.out.println("btn:"+ btn.getWidth()+" height:"+btn.getHeight());

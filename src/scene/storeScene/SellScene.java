@@ -172,11 +172,6 @@ public class SellScene extends StoreScene{
             }
         });
     }
- 
-    @Override
-    protected void paintHpMp(Graphics g){
-
-    }
     
     @Override
     protected void changePlayerCash(){

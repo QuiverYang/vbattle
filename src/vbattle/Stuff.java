@@ -37,6 +37,15 @@ public class Stuff {
     private boolean attackCd = true;//CD狀態：初始化true
     private int cdCounter = 0;//CD計數器：單位是FPS倍數週期
     
+    private BufferedImage ghost;
+    private int price;
+    
+    public static final int ACTOR1_PRICE = 50;
+    public static final int ACTOR2_PRICE = 100;
+    public static final int ACTOR3_PRICE = 200;
+    public static final int ACTOR4_PRICE = 300;
+    public static final int ACTOR5_PRICE = 500;
+    
     
     public Stuff(int type,int x0,int y0,int imgWidth,int imgHeight, int characterNum,String txtpath) throws IOException{
         //設定建構子參數
@@ -57,6 +66,7 @@ public class Stuff {
         BufferedReader br = new BufferedReader(new FileReader("src/"+txtpath+".txt"));
         String status[] = br.readLine().split(",");
         img = rc.tryGetImage(status[0]);
+        ghost = rc.tryGetImage("/resources/ghost.png"); //ghost pic
         this.hpRate = Integer.parseInt(status[1]);
         this.atkRate = Integer.parseInt(status[2]);
         this.hpBase = Integer.parseInt(status[3]);
@@ -68,6 +78,9 @@ public class Stuff {
         this.maxHp = this.hp = hpRate * lv + this.hpBase;
         this.atk = atkRate * lv + this.atkBase;
         //初始化腳色
+    }
+    public int getPrice(){
+        return this.price;
     }
     
     //內建GETTER SETTER
@@ -243,6 +256,16 @@ public class Stuff {
         x0 = x0 - 100 * type;
         this.x1 = x0 +imgWidth;
     }
+    public void die(){
+       frame += 1/2f;
+       
+       y0 -=15;
+       y1 -=15;
+       
+       if(frame >= 5){
+           frame =3;
+       }
+    }
     public void refreshCd(){
         if(!attackCd){
             cdCounter++;
@@ -259,6 +282,35 @@ public class Stuff {
             }
         }
         return null;
+    // public boolean collisionCheck(Stuff actor) {
+    //     int left1, right1;
+    //     int left2, right2;
+    //     int top1, top2;
+    //     int bottom1, bottom2;
+        
+    //     left1 = this.x0;
+    //     right1 = this.x0 + imgWidth*2/3;
+    //     top1 = this.y0;
+    //     bottom1 = this.y1;
+        
+    //     left2 = actor.getX0();
+    //     right2 = actor.x0 + imgWidth*2/3;
+    //     top2 = actor.y0;
+    //     bottom2 = actor.y0+ imgWidth*2/3;
+        
+    //     if (left1 > right2) {
+    //         return false;
+    //     }
+    //     if (right1 < left2) {
+    //         return false;
+    //     }
+    //     if(top1 > bottom2){
+    //         return false;
+    //     }
+    //     if(bottom1 < top2){
+    //         return false;
+    //     }
+    //     return true;
     }
     //腳色方法
     
@@ -278,12 +330,13 @@ public class Stuff {
     
     public void paint(Graphics g){
         //HP顯示
-        if (this.hp >= 0) {
+        if (this.hp > 0) {
             g.setColor(Color.red);
             g.fillRect(x0 + (int)(imgWidth*1/4f), this.getY0() - 5, (int) (this.getImgWidth() * this.getHpPercent()*(1/2f)), 5);
+            //角色顯示
+            g.drawImage(img,x0,y0,x1,y1,(int)frame*32,characterNumY0, ((int)frame+1)*32,characterNumY1,null);
+        }else if(this.hp<=0){
+            g.drawImage(this.ghost, x0, y0 , x0+imgWidth, y1 , (int)frame*32, 0, (((int)frame+1)*32), this.ghost.getHeight(), null);
         }
-        
-        //角色顯示
-        g.drawImage(img,x0,y0,x1,y1,(int)frame*32,characterNumY0, ((int)frame+1)*32,characterNumY1,null);
     }
 }

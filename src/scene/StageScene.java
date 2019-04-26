@@ -1,6 +1,8 @@
 package scene;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import vbattle.Fontes;
 import vbattle.ImgResource;
 import vbattle.MainPanel;
 import vbattle.Resource;
@@ -19,7 +22,7 @@ public class StageScene extends Scene{
 //    private Stuff actor1;
 //    private Stuff actor2;
     private int timeCount = 0; //倍數計時器：初始化
-    private int eventTime = 2; // eventListener時間週期：大於0的常數
+    private int eventTime = 20; // eventListener時間週期：大於0的常數
     private int battleAreaY[] ={500,350,200};//可放置的路
     private ImgResource rc;
     private ArrayList<Stuff> movingPlayerStuff1 = new ArrayList<>();
@@ -39,12 +42,25 @@ public class StageScene extends Scene{
     private int[] iconNum = new int[5];
     private boolean[] iconable = new boolean[5];
     //icon屬性
+    
+    Font fontBit;
+    private int money;
+    private static final int MAX_MONEY = 100; //
 
     public StageScene(MainPanel.GameStatusChangeListener gsChangeListener){
         super(gsChangeListener);
         try {
-            movingEnemyStuff1.add(new Stuff(-1, 800, battleAreaY[0] , 100, 100, 3, "actor2"));
+
+        //     movingEnemyStuff1.add(new Stuff(-1, 800, battleAreaY[0] , 100, 100, 3, "actor2"));
+        // } catch (IOException ex) {
+            actor1 = new Stuff(1, 100, battleAreaY[1] , 128, 128, 0, "actor1");  //int type(1:我方角 or 2:敵人) , int x0, int y0, int imgWidth, int imgHeight, int actorIndex(角色圖片), String txtpath(角色資訊)
         } catch (IOException ex) {
+            Logger.getLogger(StageScene.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            actor2 = new Stuff(-1, 800, battleAreaY[1] , 128, 128, 3, "actor2");
+        } catch (IOException ex) {
+            Logger.getLogger(StageScene.class.getName()).log(Level.SEVERE, null, ex);
         }
         rc = ImgResource.getInstance();
         icon = rc.tryGetImage("/resources/tinyCharacters.png");
@@ -56,6 +72,9 @@ public class StageScene extends Scene{
             iconY1[i] = iconY[i] +100;
             iconNum[i]=i;
         }
+        
+        fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH/30); 
+        money =0;
     }
 
    @Override
@@ -67,7 +86,8 @@ public class StageScene extends Scene{
                     if (e.getX() >= iconX[i]
                         && e.getX() <= iconX[i] + iconX1[i]
                         && e.getY() >= iconY[i]
-                        && e.getY() <= iconY[i] + iconY1[i]) 
+                        && e.getY() <= iconY[i] + iconY1[i]
+                        && money >= checkActorPrice(i))
                     iconable[i] = true;
                 }
             }
@@ -97,7 +117,10 @@ public class StageScene extends Scene{
             @Override
             public void mouseReleased(MouseEvent e) {
                 for (int i = 0; i < 5; i++) {
-                    iconable[i] = false;
+                    if(iconable[i]){
+                        money -= checkActorPrice(i);
+                        iconable[i] = false;
+                    }
                 }
                 if(drag != -1){
                     assign(e);
@@ -135,12 +158,26 @@ public class StageScene extends Scene{
         g.setColor(Color.BLACK);
         movingEnemyStuff1.get(0).paint(g);
 //        g.fillRect(0, 0, 1200, 900);
-//        actor1.paint(g);
-//        actor2.paint(g);
+        actor1.paint(g);
+        actor2.paint(g);
+        
+        g.setFont(fontBit);
+        g.setColor(new Color(0,0,0));
+        FontMetrics fm = g.getFontMetrics();
         
         //腳色
         for (int i = 0; i < 5; i++) {
             g.drawImage(icon, iconX[i], iconY[i],iconX[i]+100,iconY[i]+100,0,iconNum[i]*32,32,(iconNum[i]+1)*32,null);
+            
+            if(this.money<checkActorPrice(i)){
+                System.out.println(i);
+                g.setColor(new Color(186,186,186,150));
+                g.fillRect(iconX[i], iconY[i], 100, 120);
+            }
+             g.setColor(Color.BLACK);
+            int sw = fm.stringWidth("$"+checkActorPrice(i)+"");
+            g.drawString("$"+checkActorPrice(i)+"", iconX[i], iconY[i]+150);
+            
         }
         for (int i = 0; i < this.movingPlayerStuff1.size(); i++) {
             this.movingPlayerStuff1.get(i).paint(g);
@@ -154,24 +191,38 @@ public class StageScene extends Scene{
         if(drag != -1){
             g.drawImage(icon,dragX,dragY,dragX+100,dragY+100,0,drag*32,32,(drag+1)*32,null);
         }
+        
+        //金額
+        g.setColor(Color.BLACK);
+        int sw = fm.stringWidth("$"+money+"/"+MAX_MONEY);
+        g.drawString("$"+money+"/"+MAX_MONEY, Resource.SCREEN_WIDTH-sw, Resource.SCREEN_HEIGHT/9);
+        
+       
     }
 
     @Override
     public void logicEvent() {
         timeCount ++;//倍數計時器：FPS為底的時間倍數
-        for (int i = 0; i < movingPlayerStuff1.size(); i++) {
-            movingPlayerStuff1.get(i).refreshCd();
-        }
-        for (int i = 0; i < movingEnemyStuff1.size(); i++) {
-            movingEnemyStuff1.get(i).refreshCd();
-        }
+        // for (int i = 0; i < movingPlayerStuff1.size(); i++) {
+        //     movingPlayerStuff1.get(i).refreshCd();
+        // }
+        // for (int i = 0; i < movingEnemyStuff1.size(); i++) {
+        //     movingEnemyStuff1.get(i).refreshCd();
+        // }
+        actor1.refreshCd();
+        actor2.refreshCd();
         
         if(timeCount == eventTime){ // 計時器重置：取所有事件的最小公倍數
             timeCount = 0;
         }
         
-        if(timeCount%eventTime == 0 ){
+        if(timeCount%2 == 0 ){
             eventlistener();
+        }
+        if(timeCount%10 == 0){
+            if(money<100){
+                money+=1;
+            }
         }
     }
     
@@ -197,6 +248,40 @@ public class StageScene extends Scene{
             attackMethod(movingEnemyStuff1,movingPlayerStuff1);
             attackMethod(movingEnemyStuff2,movingPlayerStuff2);
             attackMethod(movingEnemyStuff3,movingPlayerStuff3);
+//        if (actor1.collisionCheck(actor2) == false) {
+//        for (int i = 0; i < movingPlayerStuff1.size(); i++) {
+//            tmpmovemethod(movingPlayerStuff1.get(i));
+//        }
+//        for (int i = 0; i < movingPlayerStuff2.size(); i++) {
+//            tmpmovemethod(movingPlayerStuff2.get(i));
+//        }
+//        for (int i = 0; i < movingPlayerStuff3.size(); i++) {
+//            tmpmovemethod(movingPlayerStuff3.get(i));
+//        }
+//        }
+        //如果碰撞到就呼叫攻擊方法
+        // if(actor1.getHp()<=0){
+        //     actor1.die();
+        // }else{
+        //     if (actor1.collisionCheck(actor2) == false) {
+        //     tmpmovemethod(actor1);
+        // }
+        // if (actor1.collisionCheck(actor2) ) {
+        //     tmpattckmethod(actor1,actor2);
+        // }
+        // }
+       
+        // //敵方角
+        // if(actor2.getHp()<=0){
+        //     actor2.die();
+        // }else{
+        //     if (actor2.collisionCheck(actor1) == false) {
+        //     tmpmovemethod(actor2);
+        // }if (actor2.collisionCheck(actor1)) {
+        //     tmpattckmethod(actor2,actor1);
+        // }
+        // }
+        
     }
     
     public void moveMethod(ArrayList<Stuff> stuff1,ArrayList<Stuff> stuff2){
@@ -216,5 +301,19 @@ public class StageScene extends Scene{
         }
     }
     
-    
+    public int checkActorPrice(int i){
+        switch(i){
+            case 0:
+                return Stuff.ACTOR1_PRICE;
+            case 1:
+                return Stuff.ACTOR2_PRICE;
+            case 2:
+                return Stuff.ACTOR3_PRICE;
+            case 3:
+                return Stuff.ACTOR4_PRICE;
+            case 4:
+                return Stuff.ACTOR5_PRICE;
+        }
+        return -1;
+    }
 }

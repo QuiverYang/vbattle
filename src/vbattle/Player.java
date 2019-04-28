@@ -1,6 +1,6 @@
 package vbattle;
 
-import scene.storeScene.FinProduct;
+import scene.storeScene.product.finProduct.FinProduct;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;

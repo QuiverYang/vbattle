@@ -5,6 +5,7 @@
  */
 package scene.storeScene;
 
+import scene.storeScene.product.finProduct.FinProduct;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.io.IOException;

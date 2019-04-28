@@ -6,6 +6,7 @@
 package scene.storeScene;
 
 
+import scene.storeScene.product.*;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -16,6 +17,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Arrays;
 import scene.Scene;
+import scene.storeScene.product.finProduct.*;
+import scene.storeScene.product.hpmp.*;
 import vbattle.Button;
 import vbattle.Button.Callback;
 import vbattle.Fontes;
@@ -102,91 +105,18 @@ public class StoreScene extends Scene{
       
     protected void setProduct(){
         this.productsNum = 9;
-        int ITEM_HAMBURGER_PRICE = 100;
-        int ITEM_NOODLE_PRICE = 200;
-        int ITEM_CHIKEN_PRICE = 300;
-        int ITEM_TV_PRICE = 400;
-        int ITEM_TRAVEL_PRICE = 500;
-        int ITEM_STOCK_PRICE = 500;
-        int ITEM_FUTURES_PRICE = 500;
-        int ITEM_FUND_PRICE = 500;
-        int ITEM_HAMBURGER = 1;
-        int ITEM_NOODLE = 2;
-        int ITEM_CHIKEN = 3;
-        int ITEM_TV = 4;
-        int ITEM_TRAVEL = 5;
-        int ITEM_STOCK = 6;
-        int ITEM_FUTURES = 7;
-        int ITEM_FUND = 8;
-        //設定物品價格
-        this.productsPrice = new int[productsNum];
-        productsPrice[0] = 0;
-        productsPrice[ITEM_HAMBURGER] = ITEM_HAMBURGER_PRICE;
-        productsPrice[ITEM_NOODLE] = ITEM_NOODLE_PRICE;
-        productsPrice[ITEM_CHIKEN] = ITEM_CHIKEN_PRICE;
-        productsPrice[ITEM_TV] = ITEM_TV_PRICE;
-        productsPrice[ITEM_TRAVEL] = ITEM_TRAVEL_PRICE;
-        productsPrice[ITEM_STOCK] = ITEM_STOCK_PRICE;
-        productsPrice[ITEM_FUTURES] = ITEM_FUTURES_PRICE;
-        productsPrice[ITEM_FUND] = ITEM_FUND_PRICE;
-        
-        //設定物品tiembtnIcon圖片
-        this.productsIconPaths = new String[productsNum];
-        this.productsIconPaths[0] = "/resources/nothing.png";
-        this.productsIconPaths[ITEM_HAMBURGER] = "/resources/hamburger.jpg";
-        this.productsIconPaths[ITEM_NOODLE] = "/resources/noodle.jpg";
-        this.productsIconPaths[ITEM_CHIKEN] = "/resources/chiken.jpg";
-        this.productsIconPaths[ITEM_TV] = "/resources/tv.jpg";
-        this.productsIconPaths[ITEM_TRAVEL] = "/resources/travel.jpg";
-        this.productsIconPaths[ITEM_STOCK] = "/resources/stock.jpg";
-        this.productsIconPaths[ITEM_FUTURES] = "/resources/profit.jpg";
-        this.productsIconPaths[ITEM_FUND] = "/resources/balance.jpg";
-        
-        //設定物品產品介紹
-        this.productsInfo = new String[productsNum];
-        productsInfo[0] = "";
-        this.productsInfo[ITEM_HAMBURGER] = "漢堡:HP+20,MP+10";
-        this.productsInfo[ITEM_NOODLE] = "麵食:HP+30";
-        this.productsInfo[ITEM_CHIKEN] = "雞腿:HP+40";
-        this.productsInfo[ITEM_TV] = "電視:MP+20";
-        this.productsInfo[ITEM_TRAVEL] = "旅遊:MP+30";
-        this.productsInfo[ITEM_STOCK] = "股票:購買一張股票  風險0.30/利潤0.08";
-        this.productsInfo[ITEM_FUTURES] = "期貨:購買一張股票  風險0.60/利潤0.16";
-        this.productsInfo[ITEM_FUND] = "基金:購買一張股票  風險0.20/利潤0.04";
         
         //建立產品
         products = new Product[productsNum];
         products[0] = new Product("/resources/nothing.png","",0,"");
-        for(int i = 1; i < productsNum; i++){
-            String pName = productsInfo[i].substring(0, productsInfo[i].indexOf(":"));
-            int price = productsPrice[i];
-            String info = productsInfo[i];
-            int indexOfHp = productsInfo[i].indexOf("HP+");
-            int indexOfMp = productsInfo[i].indexOf("MP+");
-            //判斷是否為金融商品
-            if(indexOfHp == -1 && indexOfMp == -1){
-                int indexOfRisk = productsInfo[i].indexOf("風險");
-                int indexOfProfit = productsInfo[i].indexOf("利潤");
-                double risk = Double.parseDouble(productsInfo[i].substring(indexOfRisk+2, indexOfRisk+6));
-                double profit = Double.parseDouble(productsInfo[i].substring(indexOfProfit+2, indexOfProfit+6));
-                products[i] = new FinProduct(productsIconPaths[i],pName,price,risk,profit,productsInfo[i]);
-            }else{
-                int pHp, pMp;
-                if(indexOfHp != -1){
-                    pHp = Integer.parseInt(productsInfo[i].substring(indexOfHp+3, indexOfHp+5));
-                }else{
-                    pHp = 0;
-                }
-                if(indexOfMp != -1){
-                    pMp = Integer.parseInt(productsInfo[i].substring(indexOfMp+3, indexOfMp+5));
-                }else{
-                    pMp = 0;
-                }
-                products[i] = new Product(productsIconPaths[i],pName,price,info);
-                products[i].setHp(pHp);
-                products[i].setMp(pMp);
-            }
-        }
+        products[1] = new Hamburger();
+        products[2] = new Chicken();
+        products[3] = new Noodle();
+        products[4] = new TV();
+        products[5] = new Travel();
+        products[6] = new Stock();
+        products[7] = new Futures();
+        products[8] = new Fund();
     }
     
     protected void setFunctionBtns(){
@@ -218,16 +148,17 @@ public class StoreScene extends Scene{
             public void doSomthing() {
                 System.out.println(counter);
                 //判斷是不是金融商品
-                if((products[counter] instanceof FinProduct)){
-                    costCash += products[counter].getPrice();
-                    player.getFp().add((FinProduct)products[counter]);
-                }else{
-                    costCash += products[counter].getPrice();
-                    hpUp += products[counter].getHp();
-                    mpUp += products[counter].getMp();
-                    costInventory += products[counter].getPrice();
-                }
-                 
+//                if((products[counter] instanceof FinProduct)){
+//                    costCash += products[counter].getPrice();
+//                    player.getFp().add((FinProduct)products[counter]);
+//                }else{
+//                    Food temp = (Food)products[counter];
+//                    costCash += products[counter].getPrice();
+//                    hpUp += temp.getHp();
+//                    mpUp += temp.getMp();
+//                    costInventory += temp.getPrice();
+//                }
+//                 
             }
         });
         //===============left buttom==================
@@ -240,23 +171,23 @@ public class StoreScene extends Scene{
 
             @Override
             public void doSomthing() {
-                if(counter < productsPrice.length-2){
-                    for(Product p : productOnScreen){
-                        p.setIsShown(true);
-                    }
-                    counter++;
-                    System.out.println("left"+counter);
-                    productOnScreen[0] = products[counter-1];
-                    productOnScreen[1] = products[counter];
-                    productOnScreen[2] = products[counter+1];
-                }
-                else if(counter == productsPrice.length-2){
-                    counter++;
-                    System.out.println("到最後一個選項了");
-                    productOnScreen[0] = products[counter-1];
-                    productOnScreen[1] = products[counter];
-                    productOnScreen[2] = products[0];
-                }
+//                if(counter < productsPrice.length-2){
+//                    for(Product p : productOnScreen){
+//                        p.setIsShown(true);
+//                    }
+//                    counter++;
+//                    System.out.println("left"+counter);
+//                    productOnScreen[0] = products[counter-1];
+//                    productOnScreen[1] = products[counter];
+//                    productOnScreen[2] = products[counter+1];
+//                }
+//                else if(counter == productsPrice.length-2){
+//                    counter++;
+//                    System.out.println("到最後一個選項了");
+//                    productOnScreen[0] = products[counter-1];
+//                    productOnScreen[1] = products[counter];
+//                    productOnScreen[2] = products[0];
+//                }
                 changeProductSeq();
                 initParameters();
             }
@@ -271,25 +202,25 @@ public class StoreScene extends Scene{
 
             @Override
             public void doSomthing() {
-                if(counter > 2){
-
-                    for(Product p : productOnScreen){
-                        p.setIsShown(true);
-                    }
-                    counter--;
-                    System.out.println("right" + counter);
-                    productOnScreen[0] = products[counter-1];
-                    productOnScreen[1] = products[counter];
-                    productOnScreen[2] = products[counter+1];
-                }
-                else if(counter == 2){
-                    counter--;
-                    System.out.println("到第一個選項了"+counter);
-                    
-                    productOnScreen[2] = products[counter+1];
-                    productOnScreen[1] = products[counter];
-                    productOnScreen[0] = products[0];
-                }
+//                if(counter > 2){
+//
+//                    for(Product p : productOnScreen){
+//                        p.setIsShown(true);
+//                    }
+//                    counter--;
+//                    System.out.println("right" + counter);
+//                    productOnScreen[0] = products[counter-1];
+//                    productOnScreen[1] = products[counter];
+//                    productOnScreen[2] = products[counter+1];
+//                }
+//                else if(counter == 2){
+//                    counter--;
+//                    System.out.println("到第一個選項了"+counter);
+//                    
+//                    productOnScreen[2] = products[counter+1];
+//                    productOnScreen[1] = products[counter];
+//                    productOnScreen[0] = products[0];
+//                }
                 changeProductSeq();
                 initParameters();
             }
@@ -332,13 +263,13 @@ public class StoreScene extends Scene{
         if(products == null){
             System.out.println("product is null");
             return;
-        }
-        for(int i =0; i < productOnScreen.length;i++){
-            if(i > products.length-1){
-                this.productOnScreen[i] = products[0];
-            }else{
-                this.productOnScreen[i] = products[i];
-            }
+//        }
+//        for(int i =0; i < productOnScreen.length;i++){
+//            if(i > products.length-1){
+//                this.productOnScreen[i] = products[0];
+//            }else{
+//                this.productOnScreen[i] = products[i];
+//            }
         }
     }
     
@@ -418,30 +349,30 @@ public class StoreScene extends Scene{
         paintHpMp(g);
         
         //=============畫出 info=========================
-        if(products != null && products.length>1){
-            String info= productsInfo[counter];
-            if(products[counter] instanceof FinProduct){
-                g.setFont(fontC);
-                int y = Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.25f);
-                int sh = g.getFontMetrics().getHeight();
-                int i = 0;
-                sw = fm.stringWidth(info.split("  ")[0]);
-                for (String line : info.split("  ")){
-                    g.drawString(line, (int)(Resource.SCREEN_WIDTH*0.53)-sw/2,y);
-                    y += sh;
-                    if(i ==1){
-                        g.drawString("剩餘價格:"+products[counter].getPrice(), (int)(Resource.SCREEN_WIDTH*0.53)-sw/2,y);
-                    }
-                    i++;
-                }
-
-            }else{
-                g.setFont(fontC);
-                sw = fm.stringWidth(info);
-                g.drawString(info, (int)(Resource.SCREEN_WIDTH*0.53)-sw/2, Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.22f));
-                g.drawString("價格:"+productOnScreen[1].getPrice(), (int)(Resource.SCREEN_WIDTH*0.53)-sw/2, Resource.SCREEN_HEIGHT-padding-(int)(Resource.SCREEN_HEIGHT*0.22f));
-            }
-        }
+//        if(products != null && products.length>1){
+//            String info= productsInfo[counter];
+//            if(products[counter] instanceof FinProduct){
+//                g.setFont(fontC);
+//                int y = Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.25f);
+//                int sh = g.getFontMetrics().getHeight();
+//                int i = 0;
+//                sw = fm.stringWidth(info.split("  ")[0]);
+//                for (String line : info.split("  ")){
+//                    g.drawString(line, (int)(Resource.SCREEN_WIDTH*0.53)-sw/2,y);
+//                    y += sh;
+//                    if(i ==1){
+//                        g.drawString("剩餘價格:"+products[counter].getPrice(), (int)(Resource.SCREEN_WIDTH*0.53)-sw/2,y);
+//                    }
+//                    i++;
+//                }
+//
+//            }else{
+//                g.setFont(fontC);
+//                sw = fm.stringWidth(info);
+//                g.drawString(info, (int)(Resource.SCREEN_WIDTH*0.53)-sw/2, Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.22f));
+//                g.drawString("價格:"+productOnScreen[1].getPrice(), (int)(Resource.SCREEN_WIDTH*0.53)-sw/2, Resource.SCREEN_HEIGHT-padding-(int)(Resource.SCREEN_HEIGHT*0.22f));
+//            }
+//        }
         
         
     }

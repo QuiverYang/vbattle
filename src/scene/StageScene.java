@@ -75,7 +75,7 @@ public class StageScene extends Scene {
             iconNum[i]=i;
         }
 
-        money = 0;
+        money = 100;
         fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 20);
         priceFontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 40);
     }
@@ -166,7 +166,6 @@ public class StageScene extends Scene {
         actor2.paint(g);
 
         g.setFont(fontBit);
-        g.setColor(new Color(0, 0, 0));
         FontMetrics fm = g.getFontMetrics();
 
         //玩家金額

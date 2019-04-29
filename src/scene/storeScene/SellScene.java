@@ -6,69 +6,51 @@
 package scene.storeScene;
 
 import scene.storeScene.product.finProduct.FinProduct;
-import java.awt.Font;
-import java.awt.Graphics;
 import java.io.IOException;
-import java.util.Arrays;
 import vbattle.Button;
-import vbattle.Fontes;
-import vbattle.ImgResource;
 import vbattle.MainPanel;
 import vbattle.MainPanel.GameStatusChangeListener;
-import vbattle.Player;
 import vbattle.Resource;
 
 /**
  *
  * @author menglinyang
  */
-public class SellScene extends StoreScene{
-    
+public class SellScene extends Store{
 
     public SellScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
+        this.initParameters();
+        this.setProduct();
+        this.setFunctionBtns();
+        this.initProductOnScreen();
     }
 
     @Override
-    public void setProduct(){
-        this.productsNum = player.getFp().size()+1;
-        //設定物品價格
-        this.productsPrice = new int[productsNum];
-        productsPrice[0] = 0;
-        //設定物品tiembtnIcon圖片
-        this.productsIconPaths = new String[productsNum];
-        this.productsIconPaths[0] = "/resources/nothing.png";
-        //設定物品產品介紹
-        this.productsInfo = new String[productsNum];
-        productsInfo[0] = "";
-        for(int i = 1; i < productsNum; i++){
-            productsPrice[i] = player.getFp().get(i-1).getValue();
-            productsIconPaths[i] = player.getFp().get(i-1).getFileName();
-            productsInfo[i] = player.getFp().get(i-1).getInfo();
-        }
-        
+    public void setProduct(){  
+        productsNum = player.getFp().size()+1;
+        System.out.println("ssssssssss"+productsNum);
         //建立產品
         products = new FinProduct[productsNum];
         products[0] = new FinProduct("/resources/nothing.png","",0,0,0,"");
         for(int i = 1; i < productsNum; i++){
-            String pName = productsInfo[i].substring(0, productsInfo[i].indexOf(":"));
-            int price = productsPrice[i];
-            String info = productsInfo[i];
-            int indexOfRisk = productsInfo[i].indexOf("風險");
-            int indexOfProfit = productsInfo[i].indexOf("利潤");
-            double risk = Double.parseDouble(productsInfo[i].substring(indexOfRisk+2, indexOfRisk+6));
-            double profit = Double.parseDouble(productsInfo[i].substring(indexOfProfit+2, indexOfProfit+6));
-            products[i] = new FinProduct(productsIconPaths[i],pName,price,risk,profit,info);
+            String pName = player.getFp().get(i-1).getName();
+            int price = player.getFp().get(i-1).getPrice();
+            String info = player.getFp().get(i-1).getInfo();
+            double risk = player.getFp().get(i-1).getRisk();
+            double profit = player.getFp().get(i-1).getProfit();
+            String path = player.getFp().get(i-1).getFileName();
+            products[i] = new FinProduct(path,pName,price,risk,profit,info);
         }
         counter = 1;
     }
     
     @Override
-    protected void setFunctionBtns(){
+    public void setFunctionBtns(){
         //初始化並放置functionBtns 位置
         this.functionBtns = new Button[6];
         this.functionBtns[ButtomCode.BACK_BTN] = new Button("/resources/return_blue.png",padding,padding,
-            funcBtnWidthUnit, funcBtnWidthUnit);
+                funcBtnWidthUnit, funcBtnWidthUnit);
         this.functionBtns[ButtomCode.BACK_BTN].setCallback(new Button.Callback() {
             @Override
             public void doSomthing() {
@@ -82,7 +64,7 @@ public class SellScene extends StoreScene{
         });
         //在這個位置變成sell
         this.functionBtns[ButtomCode.BUY_BTN] = new Button("/resources/clickBtn_blue.png",padding,Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),
-            funcBtnWidthUnit*2, funcBtnWidthUnit);//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
+                funcBtnWidthUnit*2, funcBtnWidthUnit);//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
         this.functionBtns[ButtomCode.BUY_BTN].setLabel("SELL");
         this.functionBtns[ButtomCode.BUY_BTN].setCallback(new Button.Callback() {
             @Override
@@ -101,17 +83,16 @@ public class SellScene extends StoreScene{
         this.functionBtns[ButtomCode.LEFT_BTN].setLabel("<");
         counter = 1;
         this.functionBtns[ButtomCode.LEFT_BTN].setCallback(new Button.Callback(){
-
             @Override
             public void doSomthing() {
                 if(products.length>1){
-                    if(counter < productsPrice.length-2){
+                    if(counter < products.length-2){
                         counter++;
                         productOnScreen[0] = products[counter-1];
                         productOnScreen[1] = products[counter];
                         productOnScreen[2] = products[counter+1];
                     }
-                    else if(counter == productsPrice.length-2){
+                    else if(counter == products.length-2){
                         counter++;
                         System.out.println("到最後一個選項了"+counter);
                         productOnScreen[0] = products[counter-1];
@@ -130,7 +111,6 @@ public class SellScene extends StoreScene{
                 funcBtnWidthUnit/2, funcBtnWidthUnit);
         this.functionBtns[ButtomCode.RIGHT_BTN].setLabel(">");
         this.functionBtns[ButtomCode.RIGHT_BTN].setCallback(new Button.Callback(){
-
             @Override
             public void doSomthing() {
                 if(products.length>1){

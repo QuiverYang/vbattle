@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import scene.Scene;
 import vbattle.Fontes;
 import vbattle.ImgResource;
 import vbattle.MainPanel;

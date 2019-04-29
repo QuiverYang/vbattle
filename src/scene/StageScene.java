@@ -39,7 +39,7 @@ public class StageScene extends Scene{
     private boolean[] dragable = new boolean[5];
     //icon屬性
     
-    Font fontBit;
+    Font fontBit,priceFontBit;
     private int money;
     private static final int MAX_MONEY = 100; //
 

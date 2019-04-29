@@ -195,7 +195,7 @@ public class Player {
         //如果玩家有金融商品
         if (status.length > 11 ) {
             int countFp = 11;
-            int indexOfRisk, indexOfProfit;
+            int indexOfRisk, indexOfProfit,value;
             double risk, profit;
             for (int i = 0; i < (status.length - 11) / 2; i++) {
                 switch (status[countFp++]) {
@@ -205,7 +205,8 @@ public class Player {
                         indexOfProfit = stockInfo.indexOf("利潤");
                         risk = Double.parseDouble(stockInfo.substring(indexOfRisk + 2, indexOfRisk + 6));
                         profit = Double.parseDouble(stockInfo.substring(indexOfProfit + 2, indexOfProfit + 6));
-                        this.fp.add(new FinProduct(FinProduct.PRODUCT_STOCK_PATH, "股票", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, stockInfo));
+                        value = Integer.parseInt(status[countFp]);
+                        this.fp.add(new FinProduct(FinProduct.PRODUCT_STOCK_PATH, "股票", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, stockInfo,value));
                         this.fp.get(i).setValue(Integer.parseInt(status[countFp++]));
                         break;
                     case "基金":
@@ -214,7 +215,8 @@ public class Player {
                         indexOfProfit = fundInfo.indexOf("利潤");
                         risk = Double.parseDouble(fundInfo.substring(indexOfRisk + 2, indexOfRisk + 6));
                         profit = Double.parseDouble(fundInfo.substring(indexOfProfit + 2, indexOfProfit + 6));
-                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUND_PATH, "基金", FinProduct.PRODUCT_FUND_PRICE, risk, profit, fundInfo));
+                        value = Integer.parseInt(status[countFp]);
+                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUND_PATH, "基金", FinProduct.PRODUCT_FUND_PRICE, risk, profit, fundInfo,value));
                         this.fp.get(i).setValue(Integer.parseInt(status[countFp++]));
                         break;
                     case "期貨":
@@ -223,7 +225,8 @@ public class Player {
                         indexOfProfit = futureInfo.indexOf("利潤");
                         risk = Double.parseDouble(futureInfo.substring(indexOfRisk + 2, indexOfRisk + 6));
                         profit = Double.parseDouble(futureInfo.substring(indexOfProfit + 2, indexOfProfit + 6));
-                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUTURES_PATH, "期貨", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, futureInfo));
+                        value = Integer.parseInt(status[countFp]);
+                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUTURES_PATH, "期貨", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, futureInfo,value));
                         this.fp.get(i).setValue(Integer.parseInt(status[countFp++]));
                         System.out.println("期貨");
                         break;

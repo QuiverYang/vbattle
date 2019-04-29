@@ -5,8 +5,12 @@
  */
 package scene.storeScene;
 
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import scene.storeScene.product.finProduct.FinProduct;
 import java.io.IOException;
+import scene.storeScene.product.Product;
 import vbattle.Button;
 import vbattle.MainPanel;
 import vbattle.MainPanel.GameStatusChangeListener;
@@ -32,7 +36,7 @@ public class SellScene extends Store{
         System.out.println("ssssssssss"+productsNum);
         //建立產品
         products = new FinProduct[productsNum];
-        products[0] = new FinProduct("/resources/nothing.png","",0,0,0,"");
+        products[0] = new FinProduct("/resources/nothing.png","",0,0,0,"",0);
         for(int i = 1; i < productsNum; i++){
             String pName = player.getFp().get(i-1).getName();
             int price = player.getFp().get(i-1).getPrice();
@@ -40,7 +44,9 @@ public class SellScene extends Store{
             double risk = player.getFp().get(i-1).getRisk();
             double profit = player.getFp().get(i-1).getProfit();
             String path = player.getFp().get(i-1).getFileName();
-            products[i] = new FinProduct(path,pName,price,risk,profit,info);
+            int value = player.getFp().get(i-1).getValue();
+            System.out.println("valueooooooooo" + value);
+            products[i] = new FinProduct(path,pName,price,risk,profit,info,value);
         }
         counter = 1;
     }
@@ -70,7 +76,8 @@ public class SellScene extends Store{
             @Override
             public void doSomthing() {
                 if(productsNum > 1){
-                    costCash += products[counter].getPrice();
+                    FinProduct temp = (FinProduct)products[counter];
+                    costCash += temp.getValue();
                     player.getFp().remove(--counter);
                     setProduct();
                     initProductOnScreen();
@@ -162,6 +169,18 @@ public class SellScene extends Store{
             costCash-=decreseSpeed;
             player.increaseCash(decreseSpeed);
         }
+    }
+    
+    protected void paintHpMp(Graphics g){
+        FontMetrics fm = g.getFontMetrics();
+        String pHp = this.player.getHp()+"";
+        int sw = fm.stringWidth(pHp);
+        //=============畫出 hp=========================
+        g.drawString(pHp, (int)(Resource.SCREEN_WIDTH*0.9)-sw, Resource.SCREEN_HEIGHT/13);
+        
+        //=============畫出 mp=========================
+        String pMp = this.player.getMp()+"";
+        g.drawString(pMp, (int)(Resource.SCREEN_WIDTH*0.9)-sw, Resource.SCREEN_HEIGHT/6);
     }
     
 

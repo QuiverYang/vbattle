@@ -29,6 +29,7 @@ public class Stock extends FinProduct{
         this.risk = 0.3d;
         this.profit = 0.08d;
         this.info = PRODUCT_STOCK_INFO;
+        this.value = price;
     }
    
     

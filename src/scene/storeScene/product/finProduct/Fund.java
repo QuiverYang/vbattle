@@ -27,5 +27,6 @@ public class Fund extends FinProduct{
         this.risk = 0.2d;
         this.profit = 0.04d;
         this.info = PRODUCT_FUND_INFO;
+        this.value = price;
     }
 }

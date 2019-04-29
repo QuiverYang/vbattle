@@ -37,11 +37,11 @@ public class FinProduct extends Product{
         super(fileName);
     }
     
-    public FinProduct(String fileName, String name, int price, double risk, double profit, String info){
+    public FinProduct(String fileName, String name, int price, double risk, double profit, String info, int value){
         super(fileName, name, price, info);
         this.risk = risk;
         this.profit = profit;
-        this.value = price;
+        this.value = value;
     }
     
     public FinProduct(String fileName, int x, int y, int width, int height){

@@ -196,8 +196,8 @@ public abstract class Store extends Scene{
                     g.drawString(line, (int)(Resource.SCREEN_WIDTH*0.53)-sw/2,y);
                     y += sh;
                     if(i ==1){
-                        g.drawString("剩餘價格:"+products[counter].getPrice(), (int)(Resource.SCREEN_WIDTH*0.53)-sw/2,y);
-                    }
+                        FinProduct temp = (FinProduct)products[counter];
+                        g.drawString("剩餘價格:"+temp.getValue(), (int)(Resource.SCREEN_WIDTH*0.53)-sw/2,y);                    }
                     i++;
                 }
 

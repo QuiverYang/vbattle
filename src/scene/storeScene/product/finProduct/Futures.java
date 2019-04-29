@@ -27,5 +27,6 @@ public class Futures extends FinProduct{
         this.risk = 0.6d;
         this.profit = 0.16d;
         this.info = PRODUCT_FUTURES_INFO;
+        this.value = price;
     }
 }

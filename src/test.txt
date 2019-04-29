@@ -1,1 +1,1 @@
-/resources/tinyCharacters.png,20,10,500,50,3,50
+/resources/tinyCharacters.png,20,10,300,55,4

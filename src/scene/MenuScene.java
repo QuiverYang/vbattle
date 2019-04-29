@@ -46,19 +46,22 @@ public class MenuScene extends Scene {
     private static String playerName;
     private static int countChar; //玩家名稱字元個數
     private Player player;
+    private Font font;
+
+    private final int SCREEN_WIDTH = Resource.SCREEN_WIDTH;
+    private final int SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
 
     public MenuScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
         rc = ImgResource.getInstance();
         background = rc.tryGetImage("/resources/mainBackground1.png");
 
-        introBtn = new Button("/resources/help_click.png");  //遊戲說明按鈕
-        newGameBtn = new Button("/resources/newGame_click.png");
-        loadBtn = new Button("/resources/loading_click.png");
-//        enterPlayerNameBtn = new Button("/resources/clickBtn.png");
+        introBtn = new Button("/resources/help_click.png",Resource.SCREEN_WIDTH / 12, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);  //遊戲說明按鈕
+        newGameBtn = new Button("/resources/newGame_click.png",Resource.SCREEN_WIDTH / 12 * 5, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
+        loadBtn = new Button("/resources/loading_click.png",Resource.SCREEN_WIDTH / 12 * 9, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
         enterPlayerNameBtn = new Button("/resources/clickBtn.png", Resource.SCREEN_WIDTH / 12 * 5, Resource.SCREEN_HEIGHT / 2, Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9);
         enterPlayerNameBtn.setLabel("OK");
-
+        
         player = Player.getPlayerInstane();
         try {
             player.loadTotal();
@@ -68,6 +71,8 @@ public class MenuScene extends Scene {
         typeCheck = newGameCheck = false;
         countChar = 0;
         playerName = "";
+
+        font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 25);
     }
 
     @Override
@@ -78,7 +83,6 @@ public class MenuScene extends Scene {
         loadBtn.paintBtn(g);
 
         //顯示玩家輸入的字元
-        Font font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 25);
         g.setFont(font);
         FontMetrics fm = g.getFontMetrics();
 
@@ -101,7 +105,7 @@ public class MenuScene extends Scene {
 
         }
 
-        g.setColor(new Color(0, 0, 0));
+        g.setColor(Color.BLACK);
         int sw = fm.stringWidth(playerName);
         int sa = fm.getAscent();
         g.drawString(playerName, (int) (Resource.SCREEN_WIDTH * 0.375f) + Resource.SCREEN_WIDTH / 12 * 3 / 2 - sw / 2 + (int) (Resource.SCREEN_WIDTH * 5 / 1200), (int) (Resource.SCREEN_HEIGHT / 2) + Resource.SCREEN_HEIGHT * 50 / 900 / 2 - sa / 2 - Resource.SCREEN_HEIGHT * 60 / 900 + 15);
@@ -203,10 +207,16 @@ public class MenuScene extends Scene {
     @Override
     public void logicEvent() {
 // 以下是更新按鈕位置相對於螢幕大小        
-        introBtn.reset(Resource.SCREEN_WIDTH / 12, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);  //遊戲說明按鈕
-        newGameBtn.reset(Resource.SCREEN_WIDTH / 12 * 5, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
-        loadBtn.reset(Resource.SCREEN_WIDTH / 12 * 9, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
-        enterPlayerNameBtn.reset(Resource.SCREEN_WIDTH / 12 * 5, Resource.SCREEN_HEIGHT / 2, Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9);
+        this.resize();
+    }
+
+    public void resize() {
+        if (SCREEN_WIDTH != Resource.SCREEN_WIDTH || SCREEN_HEIGHT != Resource.SCREEN_HEIGHT) {
+            introBtn.reset(Resource.SCREEN_WIDTH / 12, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);  //遊戲說明按鈕
+            newGameBtn.reset(Resource.SCREEN_WIDTH / 12 * 5, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
+            loadBtn.reset(Resource.SCREEN_WIDTH / 12 * 9, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
+            enterPlayerNameBtn.reset(Resource.SCREEN_WIDTH / 12 * 5, Resource.SCREEN_HEIGHT / 2, Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9);
+        }
     }
 
 }

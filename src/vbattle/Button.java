@@ -59,6 +59,8 @@ public class Button extends ItemOnScreen{
 
     public Button(String iconName, int x, int y, int width, int height) {
         super(iconName,x,y,width,height);
+        labelSize = width;
+        fontBit = Fontes.getBitFont(labelSize/4);//4為調整字體的大小參數 越小表示字體越大
         imgState = 0;
         clickState = false;
         labelSize = width;
@@ -71,6 +73,10 @@ public class Button extends ItemOnScreen{
     }
     public void setFont(Font font){
         this.fontBit = font;
+    }
+    
+    public void setFontBit(int width){
+        fontBit =  Fontes.getBitFont(width/4);
     }
     
     public AudioClip getSound(){
@@ -163,6 +169,11 @@ public class Button extends ItemOnScreen{
     
     public void action(){
         callback.doSomthing();
+    }
+    @Override
+    public void reset(int x, int y, int width, int height){
+        super.reset(x,y,width,height);
+        fontBit =  Fontes.getBitFont(width/4);
     }
 
 }

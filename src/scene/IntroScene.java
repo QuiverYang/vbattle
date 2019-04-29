@@ -27,6 +27,8 @@ public class IntroScene extends Scene {
     private ImgResource rc;
     private Button backBtn;
     private int introY;
+    private final int SCREEN_WIDTH = Resource.SCREEN_WIDTH;
+    private final int SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
 
     public IntroScene(MainPanel.GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
@@ -83,9 +85,15 @@ public class IntroScene extends Scene {
     @Override
     public void logicEvent() {
         this.introY -= 1;
-        this.backBtn.reset( (int)(Resource.SCREEN_WIDTH *0.842f), (int)(Resource.SCREEN_HEIGHT *0.778f), Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT / 9);
+        this.resize();
         
 
     }
+    
+    public void resize() {
+        if (SCREEN_WIDTH != Resource.SCREEN_WIDTH || SCREEN_HEIGHT != Resource.SCREEN_HEIGHT) {
+           this.backBtn.reset( (int)(Resource.SCREEN_WIDTH *0.842f), (int)(Resource.SCREEN_HEIGHT *0.778f), Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT / 9);
+        }
 
+}
 }

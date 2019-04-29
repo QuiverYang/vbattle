@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package scene.storeScene;
+package scene.storeScene.product;
 
 import vbattle.ItemOnScreen;
 
@@ -13,15 +13,27 @@ import vbattle.ItemOnScreen;
  * @author menglinyang
  */
 public class Product extends ItemOnScreen{
-    private int price;
-    private int hp,mp;
-    private String info;
+    protected int price;
+    
+    protected String info;
+    
+    public Product(){
+        
+    }
+    
+    public Product(String fileName){
+        super(fileName);
+    }
 
     public Product(String fileName, String name, int price, String info) {
         super(fileName);
         this.info = info;
         this.name = name;
         this.price = price;
+    }
+    
+    public Product(String fileName, int x, int y, int width, int height){
+        super(fileName, x, y, width, height);
     }
 
     public String getInfo() {
@@ -41,24 +53,7 @@ public class Product extends ItemOnScreen{
         this.price = price;
     }
 
-    public int getHp() {
-        return hp;
-    }
-
-    public void setHp(int hp) {
-        this.hp = hp;
-    }
-
-    public int getMp() {
-        return mp;
-    }
-
-    public void setMp(int mp) {
-        this.mp = mp;
-    }
+    
      
-    
-    
-
     
 }

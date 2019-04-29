@@ -23,6 +23,12 @@ public class ItemOnScreen {
     protected ImgResource rc;
     protected String fileName;
     
+    public ItemOnScreen(){
+        this.rc = ImgResource.getInstance();
+        this.img = rc.tryGetImage(fileName);
+        this.isShown = true;
+    }
+    
     public ItemOnScreen(String fileName){
         this.fileName = fileName;
         this.rc = ImgResource.getInstance();

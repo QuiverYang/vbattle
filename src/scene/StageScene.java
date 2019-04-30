@@ -39,8 +39,7 @@ public class StageScene extends Scene{
     private boolean[] dragable = new boolean[5];
     //icon屬性
     
-    Font fontBit;
-    Font priceFontBit;
+    Font fontBit,priceFontBit;
     private Color lightGray;
     private int money;
     private static final int MAX_MONEY = 100; //

@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package scene.storeScene;
+package scene.storeScene.product.finProduct;
+
+import scene.storeScene.product.Product;
 
 /**
  *
@@ -24,15 +26,26 @@ public class FinProduct extends Product{
     public static final String PRODUCT_FUTURES_INFO  = "期貨:購買一張股票  風險0.60/利潤0.16";
     public static final String PRODUCT_FUND_INFO  = "基金:購買一張股票  風險0.20/利潤0.04";
     
-    private double risk;
-    private int value;
-    private double profit;
+    protected double risk;
+    protected int value;
+    protected double profit;
     
-    public FinProduct(String fileName, String name, int price, double risk, double profit, String info){
+    public FinProduct(){
+    }
+    
+    public FinProduct(String fileName){
+        super(fileName);
+    }
+    
+    public FinProduct(String fileName, String name, int price, double risk, double profit, String info, int value){
         super(fileName, name, price, info);
         this.risk = risk;
         this.profit = profit;
-        this.value = price;
+        this.value = value;
+    }
+    
+    public FinProduct(String fileName, int x, int y, int width, int height){
+        super(fileName, x, y, width, height);
     }
     
     

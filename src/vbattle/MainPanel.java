@@ -6,7 +6,7 @@
 package vbattle;
 
 import scene.storeScene.SellScene;
-import scene.storeScene.StoreScene;
+import scene.storeScene.BuyScene;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Color;
@@ -105,7 +105,7 @@ public class MainPanel extends JPanel {
             case INTRO_SCENE:
                 return new IntroScene(gsChangeListener);
             case STORE_SCENE:
-                return new StoreScene(gsChangeListener);
+                return new BuyScene(gsChangeListener);
 //            case NEW_GAME_SCENE:
 //                return new NewGameScene(gsChangeListener);
             case LOAD_GAME_SCENE: {

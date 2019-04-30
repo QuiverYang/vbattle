@@ -40,8 +40,11 @@ public class StageScene extends Scene{
     //icon屬性
     
     Font fontBit;
+    Font priceFontBit;
+    private Color lightGray;
     private int money;
     private static final int MAX_MONEY = 100; //
+    private BufferedImage background;
 
     public StageScene(MainPanel.GameStatusChangeListener gsChangeListener){
         super(gsChangeListener);
@@ -51,18 +54,20 @@ public class StageScene extends Scene{
         }
         rc = ImgResource.getInstance();
         icon = rc.tryGetImage("/resources/tinyCharacters.png");
-        
+        background = rc.tryGetImage("/resources/background5.png");
         for (int i = 0; i < 5; i++) {
-            iconX[i] = (int)(Resource.SCREEN_WIDTH *(0.1f * i)+Resource.SCREEN_WIDTH *(0.4f));
-            iconY[i] = (int)(Resource.SCREEN_HEIGHT * 0.7f);
+            iconX[i] = (int)(Resource.SCREEN_WIDTH *(0.1f * i)+Resource.SCREEN_WIDTH *(0.26f));
+            iconY[i] = (int)(Resource.SCREEN_HEIGHT * 0.77f);
             iconX1[i] = iconX[i] +100;
             iconY1[i] = iconY[i] +100;
             iconNum[i]=i;
         }
 
-        money = 100;
+        money = 0;
         fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 20);
-        priceFontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 40);
+        priceFontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 45);
+        lightGray = new Color(186,186,186,150);
+        
     }
 
    @Override
@@ -145,22 +150,25 @@ public class StageScene extends Scene{
 
     @Override
     public void paint(Graphics g) {
+        g.drawImage(this.background, 0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT, null);
         //場景
 //        g.setColor(Color.BLACK);
 //        g.fillRect(0, 0, 1200, 900);
-        g.setFont(fontBit);
+        g.setFont(this.priceFontBit);
         FontMetrics fm = g.getFontMetrics();
         
         //腳色
         for (int i = 0; i < 5; i++) {
-            g.drawImage(icon, iconX[i], iconY[i],iconX[i]+100,iconY[i]+100,0,iconNum[i]*32,32,(iconNum[i]+1)*32,null);
+            g.setColor(Color.white);
+            g.fillRect(iconX[i], iconY[i], 110, 110);
+            g.drawImage(icon, iconX[i]+100/2-80/2, iconY[i],iconX[i]+80+100/2-80/2,iconY[i]+80,0,iconNum[i]*32,32,(iconNum[i]+1)*32,null);
             if(this.money<checkActorPrice(i)){
-                g.setColor(new Color(186,186,186,150));
-                g.fillRect(iconX[i], iconY[i], 100, 120);
+                g.setColor(lightGray);
+                g.fillRect(iconX[i], iconY[i], 110, 110);
             }
              g.setColor(Color.BLACK);
             int sw = fm.stringWidth("$"+checkActorPrice(i)+"");
-            g.drawString("$"+checkActorPrice(i)+"", iconX[i], iconY[i]+150);
+            g.drawString("$"+checkActorPrice(i)+"", iconX[i]+110/2-sw/2, iconY[i]+102);
             
         }
         
@@ -195,9 +203,10 @@ public class StageScene extends Scene{
         }
         
         //金額
-        g.setColor(Color.BLACK);
+        g.setFont(this.fontBit);
+        g.setColor(Color.white);
         int sw =fm. stringWidth("$"+money+"/"+MAX_MONEY);
-        g.drawString("$"+money+"/"+MAX_MONEY, Resource.SCREEN_WIDTH-sw, Resource.SCREEN_HEIGHT/9);
+        g.drawString("$"+money+"/"+MAX_MONEY, Resource.SCREEN_WIDTH/12*9, Resource.SCREEN_HEIGHT/9-40);
         
        
     }

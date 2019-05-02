@@ -1,5 +1,7 @@
 package vbattle;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -36,6 +38,7 @@ public class Stuff {
     private int characterNumY0,characterNumY1;//角色編號：紀錄載入圖片Y座標
     private boolean attackCd = true;//CD狀態：初始化true
     private int cdCounter = 0;//CD計數器：單位是FPS倍數週期
+    private AudioClip hit;
     
     private BufferedImage ghost;
     private int price;
@@ -78,6 +81,11 @@ public class Stuff {
         this.maxHp = this.hp = hpRate * lv + this.hpBase;
         this.atk = atkRate * lv + this.atkBase;
         //初始化腳色
+        
+        try{
+            hit = Applet.newAudioClip(getClass().getResource("/resources/Damage3.wav"));
+        }catch(Exception ex){
+        }
     }
     public int getPrice(){
         return this.price;
@@ -243,6 +251,7 @@ public class Stuff {
             
             if(frame >=5){//動畫完成觸發攻擊效果
                 actor.back();
+                this.hit.play();
                 actor.hp = actor.hp - this.atk;
                 frame = 0;
                 attackCd = false;

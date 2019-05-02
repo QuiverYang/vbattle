@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import vbattle.Button;
 import vbattle.Fontes;
 import vbattle.ImgResource;
 import vbattle.MainPanel;
@@ -18,7 +19,7 @@ import vbattle.Stuff;
 public class StageScene extends Scene{
     private int timeCount = 0; //倍數計時器：初始化
     private int eventTime = 100; // eventListener時間週期：大於0的常數
-    private int battleAreaY[] ={500,350,200};//可放置的路
+    private int battleAreaY[] ={600,450,300};//可放置的路
     private ImgResource rc;
     private ArrayList<Stuff> movingPlayerStuff1 = new ArrayList<>();
     private ArrayList<Stuff> movingEnemyStuff1 = new ArrayList<>();
@@ -29,6 +30,7 @@ public class StageScene extends Scene{
     private ArrayList<Stuff> dieStuff = new ArrayList<>();
     private int drag = -1;
     private int dragX,dragY;
+    private float genRate = 0.2f;
     //icon屬性
     private BufferedImage icon;
     private int[] iconX = new int[5];
@@ -36,29 +38,28 @@ public class StageScene extends Scene{
     private int[] iconX1 = new int[5];
     private int[] iconY1 = new int[5];
     private int[] iconNum = new int[5];
+    private int iconSize = 100;
     private boolean[] dragable = new boolean[5];
     //icon屬性
+    private Button gameOverBtn;
     
-    Font fontBit,priceFontBit;
+    Font fontBit,priceFontBit,game;
     private Color lightGray;
     private int money;
-    private static final int MAX_MONEY = 100; //
+    private int MAX_MONEY = 100; //
     private BufferedImage background;
+    private boolean gameOver = false;
 
     public StageScene(MainPanel.GameStatusChangeListener gsChangeListener){
         super(gsChangeListener);
-        try {
-             movingEnemyStuff1.add(new Stuff(-1, 800, battleAreaY[0] , 100, 100, 3, "actor2"));
-        } catch (IOException ex) {
-        }
         rc = ImgResource.getInstance();
         icon = rc.tryGetImage("/resources/tinyCharacters.png");
         background = rc.tryGetImage("/resources/background5.png");
         for (int i = 0; i < 5; i++) {
             iconX[i] = (int)(Resource.SCREEN_WIDTH *(0.1f * i)+Resource.SCREEN_WIDTH *(0.26f));
             iconY[i] = (int)(Resource.SCREEN_HEIGHT * 0.77f);
-            iconX1[i] = iconX[i] +100;
-            iconY1[i] = iconY[i] +100;
+            iconX1[i] = iconX[i] + iconSize;
+            iconY1[i] = iconY[i] + iconSize;
             iconNum[i]=i;
         }
 
@@ -74,71 +75,80 @@ public class StageScene extends Scene{
         return new MouseAdapter() {
 
             public void isOnIcon(MouseEvent e) {
-                for (int i = 0; i < 5; i++) {
-                    if (e.getX() >= iconX[i]
-                        && e.getX() <= iconX[i] + iconX1[i]
-                        && e.getY() >= iconY[i]
-                        && e.getY() <= iconY[i] + iconY1[i]
-                        && money >= checkActorPrice(i))
-                    dragable[i] = true;
-                }
+                    for (int i = 0; i < 5; i++) {
+                        if (e.getX() >= iconX[i]
+                            && e.getX() <= iconX1[i]
+                            && e.getY() >= iconY[i]
+                            && e.getY() <= iconY1[i]
+                            && money >= checkActorPrice(i))
+                        dragable[i] = true;
+                    }
             }
             
             @Override
             public void mousePressed(MouseEvent e){
                 this.isOnIcon(e);
-                if(e.getButton() == MouseEvent.BUTTON1){
-                    for (int i = 0; i < 5; i++) {
-                        if (dragable[i]){
-                            drag = iconNum[i];
-                            dragX = e.getX() - 50;
-                            dragY = e.getY()-50;
+                    if(e.getButton() == MouseEvent.BUTTON1){
+                        for (int i = 0; i < 5; i++) {
+                            if (dragable[i]){
+                                drag = iconNum[i];
+                                dragX = e.getX() - (iconSize/2);
+                                dragY = e.getY() - (iconSize/2);
+                            }
                         }
                     }
+                if (gameOver && e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, gameOverBtn)) {
+                    gameOverBtn.setImgState(1);
+                    gameOverBtn.setClickState(true);
                 }
             }
             
             @Override
             public void mouseDragged(MouseEvent e){
                 if(drag != -1){
-                    dragX = e.getX() - 50;
-                    dragY = e.getY()-50;
+                    dragX = e.getX() - (iconSize/2);
+                    dragY = e.getY() - (iconSize/2);
                 }
             }
             
             @Override
             public void mouseReleased(MouseEvent e) {
-                for (int i = 0; i < 5; i++) {
-                    if(dragable[i]){
-                        dragable[i] = false;
+                    for (int i = 0; i < 5; i++) {
+                        if(dragable[i]){
+                            dragable[i] = false;
+                        }
                     }
+                    if(drag != -1){
+                        assign(e);
+                    }
+                    drag = -1;
+                if (gameOver && e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, gameOverBtn) && gameOverBtn.getClickState()) {
+                    gameOverBtn.setImgState(0);
+                    gameOverBtn.setClickState(false);
+                    gsChangeListener.changeScene(MainPanel.STORE_SCENE);
                 }
-                if(drag != -1){
-                    assign(e);
-                }
-                drag = -1;
             }
             
             //待整合
             public void assign(MouseEvent e){
-                if(e.getY() > battleAreaY[0]-100 && e.getY() < battleAreaY[0]+50){
+                if(e.getY() > battleAreaY[0] - iconSize && e.getY() < battleAreaY[0] + (iconSize/2)){
                     try {
                         money -= checkActorPrice(drag);
-                        movingPlayerStuff1.add(new Stuff(1,e.getX()-50,battleAreaY[0],100,100,drag,"test"));
+                        movingPlayerStuff1.add(new Stuff(1,e.getX() - (iconSize/2),battleAreaY[0], iconSize,iconSize,drag,"test"+drag));
                     } catch (IOException ex) {
                     }
                 }
-                if(e.getY() > battleAreaY[1]-100 && e.getY() < battleAreaY[1]+50){
+                if(e.getY() > battleAreaY[1] - iconSize && e.getY() < battleAreaY[1] + (iconSize/2)){
                     try {
                         money -= checkActorPrice(drag);
-                        movingPlayerStuff2.add(new Stuff(1,e.getX()-50,battleAreaY[1],100,100,drag,"test"));
+                        movingPlayerStuff2.add(new Stuff(1,e.getX() - (iconSize/2),battleAreaY[1],iconSize,iconSize,drag,"test"+drag));
                     } catch (IOException ex) {
                     }
                 }
-                if(e.getY() > battleAreaY[2]-100 && e.getY() < battleAreaY[2]+50){
+                if(e.getY() > battleAreaY[2] - iconSize && e.getY() < battleAreaY[2] + (iconSize/2)){
                     try {
                         money -= checkActorPrice(drag);
-                        movingPlayerStuff3.add(new Stuff(1,e.getX()-50,battleAreaY[2],100,100,drag,"test"));
+                        movingPlayerStuff3.add(new Stuff(1,e.getX() - (iconSize/2),battleAreaY[2],iconSize,iconSize,drag,"test"+drag));
                     } catch (IOException ex) {
                     }
                 }
@@ -198,7 +208,7 @@ public class StageScene extends Scene{
         
         
         if(drag != -1){
-            g.drawImage(icon,dragX,dragY,dragX+100,dragY+100,0,drag*32,32,(drag+1)*32,null);
+            g.drawImage(icon,dragX,dragY,dragX+iconSize,dragY+iconSize,0,drag*32,32,(drag+1)*32,null);
         }
         
         //金額
@@ -206,6 +216,12 @@ public class StageScene extends Scene{
         g.setColor(Color.white);
         int sw =fm. stringWidth("$"+money+"/"+MAX_MONEY);
         g.drawString("$"+money+"/"+MAX_MONEY, Resource.SCREEN_WIDTH/12*9, Resource.SCREEN_HEIGHT/9-40);
+        if(gameOver == true){
+            gameOverBtn.paintBtn(g);
+            g.drawString("GAMEOVER", Resource.SCREEN_WIDTH/5*2, Resource.SCREEN_HEIGHT/2);
+            g.setFont(priceFontBit);
+            g.drawString("TO_STORE", gameOverBtn.getX()+25, gameOverBtn.getY()+50);
+        }
         
        
     }
@@ -213,39 +229,67 @@ public class StageScene extends Scene{
     @Override
     public void logicEvent() {
         timeCount ++;//倍數計時器：FPS為底的時間倍數
-        for (int i = 0; i < movingPlayerStuff1.size(); i++) {
-            movingPlayerStuff1.get(i).refreshCd();
+        if(gameOver == false){
+            for (int i = 0; i < movingPlayerStuff1.size(); i++) {
+                movingPlayerStuff1.get(i).refreshCd();
+            }
+            for (int i = 0; i < movingEnemyStuff1.size(); i++) {
+                movingEnemyStuff1.get(i).refreshCd();
+            }
+            for (int i = 0; i < movingPlayerStuff2.size(); i++) {
+                movingPlayerStuff2.get(i).refreshCd();
+            }
+            for (int i = 0; i < movingEnemyStuff2.size(); i++) {
+                movingEnemyStuff2.get(i).refreshCd();
+            }
+            for (int i = 0; i < movingPlayerStuff3.size(); i++) {
+                movingPlayerStuff3.get(i).refreshCd();
+            }
+            for (int i = 0; i < movingEnemyStuff3.size(); i++) {
+                movingEnemyStuff3.get(i).refreshCd();
+            }
+            if(timeCount%2 == 0 ){
+                eventlistener();
+            }
+            if(timeCount%100 == 0){
+                stuffGen();
+            }
+            if(timeCount%2 == 0){
+                if(money < MAX_MONEY){
+                    money+=1;
+                }
+            }
         }
-        for (int i = 0; i < movingEnemyStuff1.size(); i++) {
-            movingEnemyStuff1.get(i).refreshCd();
-        }
-        for (int i = 0; i < movingPlayerStuff2.size(); i++) {
-            movingPlayerStuff2.get(i).refreshCd();
-        }
-        for (int i = 0; i < movingEnemyStuff2.size(); i++) {
-            movingEnemyStuff2.get(i).refreshCd();
-        }
-        for (int i = 0; i < movingPlayerStuff3.size(); i++) {
-            movingPlayerStuff3.get(i).refreshCd();
-        }
-        for (int i = 0; i < movingEnemyStuff3.size(); i++) {
-            movingEnemyStuff3.get(i).refreshCd();
-        }
+        
         
         if(timeCount == eventTime){ // 計時器重置：3600結束場景
             timeCount = 0;
-            //加入場景轉換
-//            gsChangeListener.changeScene(MainPanel.STORE_SCENE);
         }
-        
-        if(timeCount%2 == 0 ){
-            eventlistener();
-        }
-        if(timeCount%2 == 0){
-            if(money<100){
-                money+=1;
+    }
+    
+    
+    public void stuffGen(){
+        this.genRate += 0.01f;
+        float random = (float)(Math.random());
+        if(random < genRate){
+            try {
+                movingEnemyStuff1.add(new Stuff(-1, Resource.SCREEN_WIDTH, battleAreaY[0] , iconSize, iconSize, 3, "actor2"));
+            } catch (IOException ex) {
             }
-//            money = 100;
+        }
+        random = (float)(Math.random());
+        if(random < genRate){
+            try {
+                movingEnemyStuff2.add(new Stuff(-1, Resource.SCREEN_WIDTH, battleAreaY[1] , iconSize, iconSize, 3, "actor2"));
+            } catch (IOException ex) {
+            }
+        }
+        random = (float)(Math.random());
+        if(random < genRate){
+            try {
+                movingEnemyStuff3.add(new Stuff(-1, Resource.SCREEN_WIDTH, battleAreaY[2] , iconSize, iconSize, 3, "actor2"));
+            } catch (IOException ex) {
+            }
         }
     }
     
@@ -266,6 +310,18 @@ public class StageScene extends Scene{
             fightMethod(movingEnemyStuff2,movingPlayerStuff2);
             fightMethod(movingEnemyStuff3,movingPlayerStuff3);
             ghostMethod(dieStuff);
+            gameOver(movingEnemyStuff1);
+            gameOver(movingEnemyStuff2);
+            gameOver(movingEnemyStuff3);
+    }
+    
+    private void gameOver(ArrayList<Stuff> stuff){
+        for (int i = 0; i < stuff.size(); i++) {
+            if(stuff.get(i).getX1() < 0){
+                gameOverBtn = new Button("/resources/clickBtn.png",Resource.SCREEN_WIDTH / 12, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
+                this.gameOver = true;
+            }
+        }
     }
     
     private void moveMethod(ArrayList<Stuff> stuff1,ArrayList<Stuff> stuff2){

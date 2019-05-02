@@ -71,7 +71,7 @@ public class Stuff {
         BufferedReader br = new BufferedReader(new FileReader("src/"+txtpath+".txt"));
         String status[] = br.readLine().split(",");
         img = rc.tryGetImage(status[0]);
-        ghost = rc.tryGetImage("/resources/ghost1.png"); //ghost pic
+        ghost = rc.tryGetImage("/resources/ghost.png"); //ghost pic
         this.hpRate = Integer.parseInt(status[1]);
         this.atkRate = Integer.parseInt(status[2]);
         this.hpBase = Integer.parseInt(status[3]);
@@ -352,9 +352,9 @@ public class Stuff {
             g.drawImage(img,x0,y0,x1,y1,(int)frame*32,characterNumY0, ((int)frame+1)*32,characterNumY1,null);
         }else if(this.hp<=0){
             if(this.type==1){
-                g.drawImage(this.ghost, x0, y0 , x0+imgWidth, y1 , (int)frame*32, 0, (((int)frame+1)*32), this.ghost.getHeight()/2, null);
+                g.drawImage(this.ghost, x0, y0 , x0+imgWidth, y1 , (int)frame*32, 0, (((int)frame+1)*32), this.ghost.getHeight(), null);
             }else{
-                g.drawImage(this.ghost, x0, y0 , x0+imgWidth, y1 , (int)frame*32, this.ghost.getHeight()/2, (((int)frame+1)*32), this.ghost.getHeight(), null);
+                g.drawImage(this.ghost, x0+imgWidth, y0 , x0, y1 , (int)frame*32, 0, (((int)frame+1)*32), this.ghost.getHeight(), null);
             }
         }
     }

@@ -59,8 +59,8 @@ public class MainPanel extends JPanel {
         
         this.setBackground(Color.red);
 
-//        changeCurrentScene(genSceneById(STAGE_SCENE));
-        changeCurrentScene(genSceneById(MENU_SCENE));
+        changeCurrentScene(genSceneById(STAGE_SCENE));
+//        changeCurrentScene(genSceneById(MENU_SCENE));
 
         Timer t1 = new Timer(25, new ActionListener() {
             @Override

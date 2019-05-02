@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import vbattle.Button;
 import vbattle.Fontes;
 import vbattle.ImgResource;
 import vbattle.MainPanel;
@@ -44,6 +45,7 @@ public class StageScene extends Scene{
     private int money;
     private static final int MAX_MONEY = 100; //
     private BufferedImage background;
+    private Button returnBtn; 
 
     public StageScene(MainPanel.GameStatusChangeListener gsChangeListener){
         super(gsChangeListener);
@@ -66,6 +68,8 @@ public class StageScene extends Scene{
         fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 20);
         priceFontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 45);
         lightGray = new Color(186,186,186,150);
+        returnBtn = new Button("/resources/return_click.png",20,20,Resource.SCREEN_WIDTH / 12,Resource.SCREEN_HEIGHT/9);
+        
         
     }
 
@@ -95,6 +99,10 @@ public class StageScene extends Scene{
                             dragY = e.getY()-50;
                         }
                     }
+                    if(Button.isOnBtn(e,returnBtn)){
+                            returnBtn.setClickState(true);
+                            returnBtn.setImgState(1);
+                        }
                 }
             }
             
@@ -108,6 +116,13 @@ public class StageScene extends Scene{
             
             @Override
             public void mouseReleased(MouseEvent e) {
+                returnBtn.setImgState(0);
+                        returnBtn.setIsClicked(false);
+                        if(Button.isOnBtn(e,returnBtn)&&returnBtn.getClickState()){
+                            returnBtn.setClickState(false);
+                            returnBtn.setIsClicked(true);
+                             gsChangeListener.changeScene(MainPanel.STORE_SCENE);
+                        }
                 for (int i = 0; i < 5; i++) {
                     if(dragable[i]){
                         dragable[i] = false;
@@ -207,7 +222,7 @@ public class StageScene extends Scene{
         int sw =fm. stringWidth("$"+money+"/"+MAX_MONEY);
         g.drawString("$"+money+"/"+MAX_MONEY, Resource.SCREEN_WIDTH/12*9, Resource.SCREEN_HEIGHT/9-40);
         
-       
+       this.returnBtn.paintBtn(g);
     }
 
     @Override

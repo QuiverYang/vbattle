@@ -11,22 +11,20 @@ import scene.storeScene.product.finProduct.FinProduct;
  *
  * @author menglinyang
  */
-public class Fund extends FinProduct{
+public class Protein extends FinProduct{
 
-    public static final int PRODUCT_FUND_PRICE = 500;
-    
-    public static final String PRODUCT_FUND_PATH = "/resources/balance.jpg";
+    public final int PRODUCT_PORTEIN_PRICE = 500;
 
-    public static final String PRODUCT_FUND_INFO  = "基金:購買一張股票  風險0.20/利潤0.04";
+    public final String PRODUCT_PORTEIN_INFO  = "健康食品:購買一個健康食品  成長風險0.20/利潤0.04";
     
     
-    public Fund() {
-        super(PRODUCT_FUND_PATH);
-        this.name = "股票";
-        this.price = PRODUCT_FUND_PRICE;
+    public Protein() {
+        super("/resources/protein.jpg");
+        this.name = "健康食品";
+        this.price = PRODUCT_PORTEIN_PRICE;
         this.risk = 0.2d;
         this.profit = 0.04d;
-        this.info = PRODUCT_FUND_INFO;
+        this.info = PRODUCT_PORTEIN_INFO;
         this.value = price;
     }
 }

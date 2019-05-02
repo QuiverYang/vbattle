@@ -12,21 +12,20 @@ import scene.storeScene.product.finProduct.FinProduct;
  *
  * @author menglinyang
  */
-public class Futures extends FinProduct{
+public class Robot extends FinProduct{
     
-    public static final int PRODUCT_FUTURES_PRICE = 500;
-    
-    public static final String PRODUCT_FUTURES_PATH = "/resources/profit.jpg";
+    public static final int PRODUCT_ROBOT_PRICE = 700;
 
-    public static final String PRODUCT_FUTURES_INFO  = "期貨:購買一張股票  風險0.60/利潤0.16";
+    public final String PRODUCT_ROBOT_INFO  = "生化元素:購買一個生化藥劑  成長風險0.60/利潤0.16";
+
     
-    public Futures() {
-        super(PRODUCT_FUTURES_PATH);
-        this.name = "股票";
-        this.price = PRODUCT_FUTURES_PRICE;
+    public Robot() {
+        super("/resources/robot.jpg");
+        this.name = "生化元素";
+        this.price = PRODUCT_ROBOT_PRICE;
         this.risk = 0.6d;
         this.profit = 0.16d;
-        this.info = PRODUCT_FUTURES_INFO;
+        this.info = PRODUCT_ROBOT_INFO;
         this.value = price;
     }
 }

@@ -103,10 +103,10 @@ public class StageScene extends Scene{
                 if (gameOver && e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, gameOverBtn)) {
                     gameOverBtn.setImgState(1);
                     gameOverBtn.setClickState(true);
-                    if(Button.isOnBtn(e,returnBtn)){
-                            returnBtn.setClickState(true);
-                            returnBtn.setImgState(1);
-                        }
+                }
+                if(Button.isOnBtn(e,returnBtn)){
+                    returnBtn.setClickState(true);
+                    returnBtn.setImgState(1);
                 }
             }
             
@@ -120,17 +120,20 @@ public class StageScene extends Scene{
             
             @Override
             public void mouseReleased(MouseEvent e) {
-                    for (int i = 0; i < 5; i++) {
-                        if(dragable[i]){
-                            dragable[i] = false;
-                        }
+                for (int i = 0; i < 5; i++) {
+                    if(dragable[i]){
+                        dragable[i] = false;
+                    }
+                }
+                
                 returnBtn.setImgState(0);
-                        returnBtn.setIsClicked(false);
-                        if(Button.isOnBtn(e,returnBtn)&&returnBtn.getClickState()){
-                            returnBtn.setClickState(false);
-                            returnBtn.setIsClicked(true);
-                             gsChangeListener.changeScene(MainPanel.STORE_SCENE);
-                        }
+                returnBtn.setIsClicked(false);
+                if(Button.isOnBtn(e,returnBtn)&&returnBtn.getClickState()){
+                    returnBtn.setClickState(false);
+                    returnBtn.setIsClicked(true);
+                    gsChangeListener.changeScene(MainPanel.STORE_SCENE);
+                }
+                
                 for (int i = 0; i < 5; i++) {
                     if(dragable[i]){
                         dragable[i] = false;
@@ -139,6 +142,8 @@ public class StageScene extends Scene{
                         assign(e);
                     }
                     drag = -1;
+                }
+                
                 if (gameOver && e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, gameOverBtn) && gameOverBtn.getClickState()) {
                     gameOverBtn.setImgState(0);
                     gameOverBtn.setClickState(false);

@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
  */
 public class Stuff {
     //腳色屬性
-    
+    private String name;
     private int maxHp,maxMp,atk,lv,exp;//物件HP,ATK,LV,EXP
     private String txtpath;//參數txt路徑
     private String imgpath;//圖片路徑...存入參數txt檔
@@ -48,6 +48,11 @@ public class Stuff {
     public static final int ACTOR3_PRICE = 200;
     public static final int ACTOR4_PRICE = 300;
     public static final int ACTOR5_PRICE = 500;
+    
+    public Stuff(String name, int lv){
+        this.name = name;
+        this.lv = lv;
+    }
     
     
     public Stuff(int type,int x0,int y0,int imgWidth,int imgHeight, int characterNum,String txtpath) throws IOException{
@@ -87,6 +92,16 @@ public class Stuff {
         }catch(Exception ex){
         }
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    
     public int getPrice(){
         return this.price;
     }
@@ -323,8 +338,8 @@ public class Stuff {
     }
     //腳色方法
     
-    public void lvup(){
-        
+    public void lvup(){//商店購買等級使用
+        this.lv+=1;
     }
     public void print(){ //測試
 //        System.out.println(this.test+"\n"+

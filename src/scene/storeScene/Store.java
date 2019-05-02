@@ -5,6 +5,8 @@
  */
 package scene.storeScene;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -15,6 +17,7 @@ import java.awt.image.BufferedImage;
 import scene.*;
 import scene.storeScene.product.*;
 import scene.storeScene.product.finProduct.*;
+import scene.storeScene.product.stuffLvUp.StuffLevel;
 import vbattle.Button;
 import vbattle.Fontes;
 import vbattle.ImgResource;
@@ -44,9 +47,9 @@ public abstract class Store extends Scene{
     protected int hpUp,mpUp;//每個物品所提升的hp mp;
     protected int[] pX,pY,pW,pH;//productsOnScreen的座標
     protected int counter;//按鍵左右去計算的counter
-    protected Font fontBit;
-    protected Font fontBit2;
-    protected Font fontC;
+    protected Font fontBit,fontBit2,fontBitSmall;
+    protected Font fontC,fontSmall;
+    private final AudioClip backgroundSound;
     
     public interface ButtomCode {
         int BACK_BTN = 0;
@@ -59,6 +62,8 @@ public abstract class Store extends Scene{
     
     public Store(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
+        backgroundSound = Applet.newAudioClip(getClass().getResource("/resources/storeMusic.wav"));
+        backgroundSound.loop();
         productOnScreen = new Product[3];
         player = Player.getPlayerInstane();
         rc = ImgResource.getInstance();
@@ -68,7 +73,9 @@ public abstract class Store extends Scene{
         backgroundImg = rc.tryGetImage("/resources/storebg.png");  //store background 圖片
         fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH/20);
         fontBit2 = Fontes.getBitFont(Resource.SCREEN_WIDTH/25);
+        fontBitSmall = Fontes.getBitFont(Resource.SCREEN_WIDTH/60);
         fontC = new Font("Courier",Font.BOLD,Resource.SCREEN_WIDTH/30);
+        fontSmall= new Font("Courier",Font.BOLD,Resource.SCREEN_WIDTH/40);
         this.itemBtnXcenter = Resource.SCREEN_WIDTH/2;
         this.rightBtnYcenter = (int)(Resource.SCREEN_HEIGHT*0.4f);
         pX=new int[3];
@@ -181,48 +188,56 @@ public abstract class Store extends Scene{
         g.drawString(cash, (int)(Resource.SCREEN_WIDTH*0.4)-sw, (int)(Resource.SCREEN_HEIGHT*0.9));
         
         //=============畫出 hpmp=========================
-        paintHpMp(g);
+        String pHp = this.player.getHp()+"";
+        sw = fm.stringWidth(pHp);
+        //=============畫出 hp=========================
+        g.drawString(pHp, (int)(Resource.SCREEN_WIDTH*0.9)-sw, Resource.SCREEN_HEIGHT/13);
+        
+        //=============畫出 mp=========================
+        String pMp = this.player.getMp()+"";
+        sw = fm.stringWidth(pMp);
+        g.drawString(pMp, (int)(Resource.SCREEN_WIDTH*0.9)-sw, Resource.SCREEN_HEIGHT/6);
         
         //=============畫出 info=========================
         if(products != null && products.length>1){
             String info= productOnScreen[1].getInfo();
             if(products[counter] instanceof FinProduct){
-                g.setFont(fontC);
+                g.setFont(fontSmall);
                 int y = Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.25f);
                 int sh = g.getFontMetrics().getHeight();
                 int i = 0;
                 sw = fm.stringWidth(info.split("  ")[0]);
                 for (String line : info.split("  ")){
-                    g.drawString(line, (int)(Resource.SCREEN_WIDTH*0.53)-sw/2,y);
+                    g.drawString(line, (int)(Resource.SCREEN_WIDTH*0.53)-sw/4,y);
                     y += sh;
                     if(i ==1){
                         FinProduct temp = (FinProduct)products[counter];
-                        g.drawString("剩餘價格:"+temp.getValue(), (int)(Resource.SCREEN_WIDTH*0.53)-sw/2,y);                    }
+                        g.drawString("剩餘價值:"+temp.getValue(), (int)(Resource.SCREEN_WIDTH*0.53)-sw/4,y);                    }
                     i++;
                 }
 
             }else{
                 g.setFont(fontC);
                 sw = fm.stringWidth(info);
-                g.drawString(info, (int)(Resource.SCREEN_WIDTH*0.53)-sw/2, Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.22f));
-                g.drawString("價格:"+productOnScreen[1].getPrice(), (int)(Resource.SCREEN_WIDTH*0.53)-sw/2, Resource.SCREEN_HEIGHT-padding-(int)(Resource.SCREEN_HEIGHT*0.22f));
-            }
+                g.drawString(info, (int)(Resource.SCREEN_WIDTH*0.5)-sw/4, Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.24f));
+                g.drawString("價格:"+productOnScreen[1].getPrice(), (int)(Resource.SCREEN_WIDTH*0.5)-sw/4, Resource.SCREEN_HEIGHT-padding-(int)(Resource.SCREEN_HEIGHT*0.24f));
+                if(products[counter] instanceof StuffLevel){
+                    g.setFont(fontBitSmall);
+                    String name= products[counter].getName();
+                    int lv;
+                    
+                    lv =player.getUnlock()[counter-6];//第一隻怪物商品放在第六個位置
+                    
+                    g.setColor(Color.red);
+                    String msg = "lv"+lv;
+                    sw = fm.stringWidth(msg);
+                    
+                    g.drawString(msg, products[counter].getX()+products[counter].getWidth()-sw/2, products[counter].getY()+20);
+                }
+            }   
         }
-        
-        
     }
     
-    protected void paintHpMp(Graphics g){
-        FontMetrics fm = g.getFontMetrics();
-        String pHp = this.player.getHp()+"";
-        int sw = fm.stringWidth(pHp);
-        //=============畫出 hp=========================
-        g.drawString(pHp, (int)(Resource.SCREEN_WIDTH*0.9)-sw, Resource.SCREEN_HEIGHT/13);
-        
-        //=============畫出 mp=========================
-        String pMp = this.player.getMp()+"";
-        g.drawString(pMp, (int)(Resource.SCREEN_WIDTH*0.9)-sw, Resource.SCREEN_HEIGHT/6);
-    }
     
     @Override
     public void logicEvent() {
@@ -282,6 +297,9 @@ public abstract class Store extends Scene{
             int increseSpeed = 2;//每針加血的速度
             hpUp-=increseSpeed;
             player.increaseHp(increseSpeed);
+            if(player.getHp()>100){
+                player.setHp(100);
+            }
         }
     }
     
@@ -290,6 +308,9 @@ public abstract class Store extends Scene{
             int increaseSpeed = 2;
             mpUp-=increaseSpeed;
             player.increaseMp(increaseSpeed);
+            if(player.getMp()>100){
+                player.setMp(100);
+            }
         }
     }
     

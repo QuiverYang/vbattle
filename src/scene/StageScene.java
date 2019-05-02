@@ -49,6 +49,7 @@ public class StageScene extends Scene{
     private int MAX_MONEY = 100; //
     private BufferedImage background;
     private boolean gameOver = false;
+    private Button returnBtn; 
 
     public StageScene(MainPanel.GameStatusChangeListener gsChangeListener){
         super(gsChangeListener);
@@ -67,6 +68,8 @@ public class StageScene extends Scene{
         fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 20);
         priceFontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 45);
         lightGray = new Color(186,186,186,150);
+        returnBtn = new Button("/resources/return_click.png",20,20,Resource.SCREEN_WIDTH / 12,Resource.SCREEN_HEIGHT/9);
+        
         
     }
 
@@ -100,6 +103,10 @@ public class StageScene extends Scene{
                 if (gameOver && e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, gameOverBtn)) {
                     gameOverBtn.setImgState(1);
                     gameOverBtn.setClickState(true);
+                    if(Button.isOnBtn(e,returnBtn)){
+                            returnBtn.setClickState(true);
+                            returnBtn.setImgState(1);
+                        }
                 }
             }
             
@@ -117,6 +124,16 @@ public class StageScene extends Scene{
                         if(dragable[i]){
                             dragable[i] = false;
                         }
+                returnBtn.setImgState(0);
+                        returnBtn.setIsClicked(false);
+                        if(Button.isOnBtn(e,returnBtn)&&returnBtn.getClickState()){
+                            returnBtn.setClickState(false);
+                            returnBtn.setIsClicked(true);
+                             gsChangeListener.changeScene(MainPanel.STORE_SCENE);
+                        }
+                for (int i = 0; i < 5; i++) {
+                    if(dragable[i]){
+                        dragable[i] = false;
                     }
                     if(drag != -1){
                         assign(e);
@@ -223,7 +240,7 @@ public class StageScene extends Scene{
             g.drawString("TO_STORE", gameOverBtn.getX()+25, gameOverBtn.getY()+50);
         }
         
-       
+       this.returnBtn.paintBtn(g);
     }
 
     @Override

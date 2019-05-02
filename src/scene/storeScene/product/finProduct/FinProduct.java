@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package scene.storeScene.product.finProduct;
 
 import scene.storeScene.product.Product;
@@ -14,17 +10,17 @@ import scene.storeScene.product.Product;
 public class FinProduct extends Product{
     
 
-    public static final int PRODUCT_STOCK_PRICE = 500;
-    public static final int PRODUCT_FUTURES_PRICE = 500;
     public static final int PRODUCT_FUND_PRICE = 500;
+    public static final int PRODUCT_STOCK_PRICE = 600;
+    public static final int PRODUCT_FUTURES_PRICE = 700;
     
-    public static final String PRODUCT_STOCK_PATH = "/resources/stock.jpg";
-    public static final String PRODUCT_FUTURES_PATH = "/resources/profit.jpg";
-    public static final String PRODUCT_FUND_PATH = "/resources/balance.jpg";
+    public static final String PRODUCT_STOCK_PATH = "/resources/needle.jpg";
+    public static final String PRODUCT_FUTURES_PATH = "/resources/robot.jpg";
+    public static final String PRODUCT_FUND_PATH = "/resources/medicine.jpg";
 
-    public static final String PRODUCT_STOCK_INFO = "股票:購買一張股票  風險0.30/利潤0.08";
-    public static final String PRODUCT_FUTURES_INFO  = "期貨:購買一張股票  風險0.60/利潤0.16";
-    public static final String PRODUCT_FUND_INFO  = "基金:購買一張股票  風險0.20/利潤0.04";
+    public static final String PRODUCT_STOCK_INFO = "抗生藥品:購買一個抗生藥品  成長風險0.30/利潤0.08";
+    public static final String PRODUCT_FUTURES_INFO  = "生化藥劑:購買一個生化藥劑  成長風險0.60/利潤0.16";
+    public static final String PRODUCT_FUND_INFO  = "健康食品:購買一個健康食品  成長風險0.20/利潤0.04";
     
     protected double risk;
     protected int value;
@@ -54,6 +50,9 @@ public class FinProduct extends Product{
             value*=(1+risk);
         }else{
             value*=(1-risk);
+            if(value < 0){
+                value = 0;
+            }
         }
     }
 

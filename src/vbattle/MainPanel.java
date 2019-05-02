@@ -17,8 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import scene.IntroScene;
@@ -61,8 +59,8 @@ public class MainPanel extends JPanel {
         
         this.setBackground(Color.red);
 
-        changeCurrentScene(genSceneById(STAGE_SCENE));
-//        changeCurrentScene(genSceneById(MENU_SCENE));
+//        changeCurrentScene(genSceneById(STAGE_SCENE));
+        changeCurrentScene(genSceneById(MENU_SCENE));
 
         Timer t1 = new Timer(25, new ActionListener() {
             @Override

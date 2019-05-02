@@ -13,8 +13,8 @@ public class Chicken extends Food{
     public Chicken(){
         super("/resources/chiken.jpg");
         this.price = 300;
-        this.mp =20;
-        this.hp = 0;
+        this.mp =0;
+        this.hp = 40;
         this.info = "雞腿:HP+40";
     }
 }

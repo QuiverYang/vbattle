@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.HashMap;
 public class Player {
 
     private int inventory, stage;
@@ -28,6 +28,20 @@ public class Player {
             player = new Player();
         }
         return player;
+    }
+    
+    public Player() { //建立新玩家
+        this.inventory = 0;
+        this.stage = 0;
+        int[] temp = {1,1,0,0,0};
+        unlock = temp;
+        playerNameList = new String[6];
+        savePath = "Playertest";
+        playerIndex = -1;
+        playerInfo = new ArrayList();
+        fp = new ArrayList();
+        loadCheck = false;
+        
     }
     
 
@@ -54,6 +68,7 @@ public class Player {
     public void setCash(int cash) {
         this.cash = cash;
     }
+
 
     public ArrayList<FinProduct> getFp() {
         return fp;
@@ -82,25 +97,15 @@ public class Player {
     public int[] getUnlock() {
         return unlock;
     }
+    
+    public void addUnlockContent(int index){
+        unlock[index]++;
+    }
 
     public void setUnlock(int[] unlock) {
         this.unlock = unlock;
     }
     //GETTER SETTER
-
-    public Player() { //建立新玩家
-        this.inventory = 0;
-        this.stage = 0;
-        for (int i = 0; i < unlock.length; i++) {
-            this.unlock[i] = 0;
-        }
-        playerNameList = new String[6];
-        savePath = "Playertest";
-        playerIndex = -1;
-        playerInfo = new ArrayList();
-        fp = new ArrayList();
-        loadCheck = false;
-    }
 
     public void setPlayerName(String name) {
         this.playerName = name;
@@ -207,7 +212,7 @@ public class Player {
                         profit = Double.parseDouble(stockInfo.substring(indexOfProfit + 2, indexOfProfit + 6));
                         value = Integer.parseInt(status[countFp]);
                         this.fp.add(new FinProduct(FinProduct.PRODUCT_STOCK_PATH, "股票", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, stockInfo,value));
-                        this.fp.get(i).setValue(Integer.parseInt(status[countFp++]));
+                        
                         break;
                     case "基金":
                         String fundInfo = FinProduct.PRODUCT_FUND_INFO;
@@ -217,7 +222,7 @@ public class Player {
                         profit = Double.parseDouble(fundInfo.substring(indexOfProfit + 2, indexOfProfit + 6));
                         value = Integer.parseInt(status[countFp]);
                         this.fp.add(new FinProduct(FinProduct.PRODUCT_FUND_PATH, "基金", FinProduct.PRODUCT_FUND_PRICE, risk, profit, fundInfo,value));
-                        this.fp.get(i).setValue(Integer.parseInt(status[countFp++]));
+                        
                         break;
                     case "期貨":
                         String futureInfo = FinProduct.PRODUCT_FUTURES_INFO;
@@ -227,7 +232,7 @@ public class Player {
                         profit = Double.parseDouble(futureInfo.substring(indexOfProfit + 2, indexOfProfit + 6));
                         value = Integer.parseInt(status[countFp]);
                         this.fp.add(new FinProduct(FinProduct.PRODUCT_FUTURES_PATH, "期貨", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, futureInfo,value));
-                        this.fp.get(i).setValue(Integer.parseInt(status[countFp++]));
+                        
                         System.out.println("期貨");
                         break;
                 }

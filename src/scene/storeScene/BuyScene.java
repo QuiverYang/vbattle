@@ -6,10 +6,14 @@
 package scene.storeScene;
 
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import scene.storeScene.product.*;
 import java.io.IOException;
 import scene.storeScene.product.finProduct.*;
 import scene.storeScene.product.hpmp.*;
+import scene.storeScene.product.stuffLvUp.*;
+import sun.audio.*;
 import vbattle.Button;
 import vbattle.Button.Callback;
 import vbattle.MainPanel;
@@ -21,17 +25,24 @@ import vbattle.Resource;
  * @author menglinyang
  */
 public class BuyScene extends Store{
+    
+
+
+
+                        
 
     public BuyScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
+        
         this.initParameters();
         this.setProduct();
         this.setFunctionBtns();
         this.initProductOnScreen();
+        
     }
     @Override  
     public void setProduct(){
-        this.productsNum = 9;
+        this.productsNum = 14;
         //建立產品
         products = new Product[productsNum];
         products[0] = new Product("/resources/nothing.png","",0,"");
@@ -40,9 +51,14 @@ public class BuyScene extends Store{
         products[3] = new Noodle();
         products[4] = new TV();
         products[5] = new Travel();
-        products[6] = new Stock();
-        products[7] = new Futures();
-        products[8] = new Fund();
+        products[6] = new Red();
+        products[7] = new Blue();
+        products[8] = new Yellow();
+        products[9] = new BigYellow();
+        products[10] = new BigBlue();
+        products[11] = new Protein();
+        products[12] = new Medicine();
+        products[13] = new Robot();
     }
     
     @Override
@@ -73,18 +89,44 @@ public class BuyScene extends Store{
         this.functionBtns[ButtomCode.BUY_BTN].setCallback(new Callback() {
             @Override
             public void doSomthing() {
+            
                 System.out.println(counter);
-                //判斷是不是金融商品
-                if((products[counter] instanceof FinProduct)){
-                    costCash += products[counter].getPrice();
-                    player.getFp().add((FinProduct)products[counter]);
-                }else{
-                    Food temp = (Food)products[counter];
-                    costCash += products[counter].getPrice();
-                    hpUp += temp.getHp();
-                    mpUp += temp.getMp();
-                    costInventory += temp.getPrice();
+                //判斷錢是否夠用
+                if(player.getCash()>=products[counter].getPrice()){
+                    //判斷是否為藥劑
+                    if((products[counter] instanceof FinProduct)){
+                        costCash += products[counter].getPrice();
+                        player.getFp().add((FinProduct)products[counter]);
+                    }else if(products[counter] instanceof Food){//判斷是否為食物
+                        if(!(player.getMp()>=100 && player.getHp()>=100)){
+                            Food temp = (Food)products[counter];
+                            int tempHp = temp.getHp();
+                            int tempMp = temp.getMp();
+                            if(!(player.getHp()>=100&&tempMp==0)||(player.getMp()>=100&&tempHp==0)){
+                                costCash += products[counter].getPrice();
+                                hpUp += temp.getHp();
+                                mpUp += temp.getMp();
+                                costInventory += temp.getPrice();
+                            }
+                            
+                        }
+                        
+                    }else{//此處為升等
+                        AudioClip noupgradeSound,upgradeSound;
+                        noupgradeSound = Applet.newAudioClip(getClass().getResource("/resources/noupgrade.wav"));
+                        upgradeSound = Applet.newAudioClip(getClass().getResource("/resources/upgrade.wav"));
+
+                        if(player.getUnlock()[counter-6]>0){
+                            //更改升級的player屬性
+                            player.addUnlockContent(counter-6);
+                            costCash += products[counter].getPrice();
+                            upgradeSound.play();
+                        }else{
+                            noupgradeSound.play();
+                        }
+                    }
                 }
+                
                  
             }
         });

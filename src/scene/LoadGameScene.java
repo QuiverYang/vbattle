@@ -47,9 +47,9 @@ public class LoadGameScene extends Scene {
         player = Player.getPlayerInstane();
         path = "Playertest";
 
-         playerBtn[0] = new Button("/resources/clickBtn1.png", (int) (Resource.SCREEN_WIDTH * 0.15f), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12 * 2*2, Resource.SCREEN_HEIGHT / 9*2);
+        playerBtn[0] = new Button("/resources/clickBtn1.png", (int) (Resource.SCREEN_WIDTH * 0.15f), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12 * 2*2, Resource.SCREEN_HEIGHT / 9*2);
         playerBtn[1] = new Button("/resources/clickBtn1.png", (int) (Resource.SCREEN_WIDTH * 0.15f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_WIDTH / 12 * 2*2, Resource.SCREEN_HEIGHT / 9*2);
-        playerBtn[2] = new Button("/resources/clickBtn1.png", (int) (Resource.SCREEN_WIDTH * 0.13f), Resource.SCREEN_WIDTH / 12 * 6, Resource.SCREEN_WIDTH / 12 * 2*2, Resource.SCREEN_HEIGHT / 9*2);
+        playerBtn[2] = new Button("/resources/clickBtn1.png", (int) (Resource.SCREEN_WIDTH * 0.15f), Resource.SCREEN_WIDTH / 12 * 6, Resource.SCREEN_WIDTH / 12 * 2*2, Resource.SCREEN_HEIGHT / 9*2);
         playerBtn[3] = new Button("/resources/clickBtn1.png", (int) (Resource.SCREEN_WIDTH * 0.525f), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12 * 2*2, Resource.SCREEN_HEIGHT / 9*2);
         playerBtn[4] = new Button("/resources/clickBtn1.png", (int) (Resource.SCREEN_WIDTH * 0.525f), Resource.SCREEN_WIDTH / 12 * 4, Resource.SCREEN_WIDTH / 12 * 2*2, Resource.SCREEN_HEIGHT / 9*2);
         playerBtn[5] = new Button("/resources/clickBtn1.png", (int) (Resource.SCREEN_WIDTH * 0.525f), Resource.SCREEN_WIDTH / 12 * 6, Resource.SCREEN_WIDTH / 12 * 2*2, Resource.SCREEN_HEIGHT / 9*2);

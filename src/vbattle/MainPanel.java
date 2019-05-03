@@ -78,7 +78,7 @@ public class MainPanel extends JPanel {
             this.removeMouseMotionListener(mouseAdapter);
             this.removeMouseListener(mouseAdapter);
         }
-
+        
         currentScene = scene;
         mouseAdapter = scene.genMouseAdapter();
 

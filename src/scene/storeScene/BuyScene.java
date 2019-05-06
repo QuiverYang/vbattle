@@ -10,6 +10,7 @@ import java.applet.Applet;
 import java.applet.AudioClip;
 import scene.storeScene.product.*;
 import java.io.IOException;
+import scene.SaveScene;
 import scene.storeScene.product.finProduct.*;
 import scene.storeScene.product.hpmp.*;
 import scene.storeScene.product.stuffLvUp.*;
@@ -73,12 +74,10 @@ public class BuyScene extends Store{
         this.functionBtns[ButtomCode.BACK_BTN].setCallback(new Callback() {
             @Override
             public void doSomthing() {
-                try {
-                    player.save();
-                    gsChangeListener.changeScene(MainPanel.MENU_SCENE);
-                } catch (IOException ex) {
-                    System.out.println("player save problem from StorceScene back to MenuScene");;
-                }
+                //                    player.save();
+                SaveScene.currentScene = MainPanel.STORE_SCENE; //設定當前場景為商店
+                SaveScene.nextScene = MainPanel.MENU_SCENE;     //設定儲存後場景為主畫面
+                gsChangeListener.changeScene(MainPanel.SAVE_SCENE);
             }
         });
         

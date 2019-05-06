@@ -21,6 +21,8 @@ public class Player {
     private ArrayList<String[]> playerInfo; //儲存所有玩家
     private int playerIndex; //若為 -1 -->新玩家 , 若不等於-1 -->舊玩家於檔案內的行數位置
     public static boolean loadCheck;
+    
+    private boolean saveCheck;
     //GETTER SETTER
 
     public static Player getPlayerInstane() {
@@ -40,7 +42,7 @@ public class Player {
         playerIndex = -1;
         playerInfo = new ArrayList();
         fp = new ArrayList();
-        loadCheck = false;
+        saveCheck = loadCheck = false;
         
     }
     
@@ -151,13 +153,14 @@ public class Player {
             info[countFp++] = String.valueOf(this.fp.get(i).getName());
             info[countFp++] = String.valueOf(this.fp.get(i).getValue());
         }
-
+        
         //判斷是否為新玩家
         if (this.playerIndex == -1 && this.playerInfo.size() >= 6) { //若為新玩家且當前玩家數>=6，則刪除最舊玩家，新增新玩家
             this.playerInfo.remove(0);
             this.playerInfo.add(info);
         } else if (this.playerIndex == -1 && this.playerInfo.size() < 6) {  //若為新玩家且當前玩家數<6，則存入陣列
             this.playerInfo.add(info);
+            this.playerIndex = this.playerInfo.size()-1;
         } else if (this.playerIndex != -1) {
             this.playerInfo.set(this.playerIndex, info); //若為舊玩家，則修改其資料
         }
@@ -203,39 +206,39 @@ public class Player {
             int indexOfRisk, indexOfProfit,value;
             double risk, profit;
             for (int i = 0; i < (status.length - 11) / 2; i++) {
+                
                 switch (status[countFp++]) {
-                    case "股票":
+                    case "抗生藥品":
                         String stockInfo = FinProduct.PRODUCT_STOCK_INFO;
                         indexOfRisk = stockInfo.indexOf("風險");
                         indexOfProfit = stockInfo.indexOf("利潤");
                         risk = Double.parseDouble(stockInfo.substring(indexOfRisk + 2, indexOfRisk + 6));
                         profit = Double.parseDouble(stockInfo.substring(indexOfProfit + 2, indexOfProfit + 6));
-                        value = Integer.parseInt(status[countFp]);
-                        this.fp.add(new FinProduct(FinProduct.PRODUCT_STOCK_PATH, "股票", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, stockInfo,value));
-                        
+                        value = Integer.parseInt(status[countFp++]);
+                        this.fp.add(new FinProduct(FinProduct.PRODUCT_STOCK_PATH, "抗生藥品", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, stockInfo,value));
                         break;
-                    case "基金":
+                        
+                    case "健康食品":
                         String fundInfo = FinProduct.PRODUCT_FUND_INFO;
                         indexOfRisk = fundInfo.indexOf("風險");
                         indexOfProfit = fundInfo.indexOf("利潤");
                         risk = Double.parseDouble(fundInfo.substring(indexOfRisk + 2, indexOfRisk + 6));
                         profit = Double.parseDouble(fundInfo.substring(indexOfProfit + 2, indexOfProfit + 6));
-                        value = Integer.parseInt(status[countFp]);
-                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUND_PATH, "基金", FinProduct.PRODUCT_FUND_PRICE, risk, profit, fundInfo,value));
-                        
+                        value = Integer.parseInt(status[countFp++]);
+                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUND_PATH, "健康食品", FinProduct.PRODUCT_FUND_PRICE, risk, profit, fundInfo,value));
                         break;
-                    case "期貨":
+                        
+                    case "生化元素":
                         String futureInfo = FinProduct.PRODUCT_FUTURES_INFO;
                         indexOfRisk = futureInfo.indexOf("風險");
                         indexOfProfit = futureInfo.indexOf("利潤");
                         risk = Double.parseDouble(futureInfo.substring(indexOfRisk + 2, indexOfRisk + 6));
                         profit = Double.parseDouble(futureInfo.substring(indexOfProfit + 2, indexOfProfit + 6));
-                        value = Integer.parseInt(status[countFp]);
-                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUTURES_PATH, "期貨", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, futureInfo,value));
-                        
-                        System.out.println("期貨");
+                        value = Integer.parseInt(status[countFp++]);
+                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUTURES_PATH, "生化元素", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, futureInfo,value));
                         break;
                 }
+                
             }
         }
     }
@@ -246,6 +249,7 @@ public class Player {
         this.hp = 100;
         this.mp = 100;
         this.inventory = this.cash = 6000;
+        this.fp.clear();
     }
 
     //儲存所有玩家資料，方便後續作儲存
@@ -284,5 +288,7 @@ public class Player {
             System.out.println(playerNameList[i]);
         }
     }
+    
+   
 
 }

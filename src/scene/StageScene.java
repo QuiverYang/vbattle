@@ -61,6 +61,9 @@ public class StageScene extends Scene{
     private Button gameOverBtn,returnBtn;
     private Font fontBit,priceFontBit,gameFontBit;
     private Color lightGray;
+
+    private BufferedImage winImg;
+    private BufferedImage loseImg;
      
     public StageScene(MainPanel.GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
@@ -77,6 +80,8 @@ public class StageScene extends Scene{
         rc = ImgResource.getInstance();
         icon = rc.tryGetImage("/resources/tinyCharacters.png");
         background = rc.tryGetImage("/resources/background5.png");
+        winImg = rc.tryGetImage("/resources/win.png");
+        loseImg = rc.tryGetImage("/resources/lose.png");
         
         fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 20);
         priceFontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 45);
@@ -100,7 +105,7 @@ public class StageScene extends Scene{
         }
     }
 
-   @Override
+    @Override
     public MouseAdapter genMouseAdapter() {
         return new MouseAdapter() {
 
@@ -114,13 +119,13 @@ public class StageScene extends Scene{
                     dragable[i] = true;
                 }
             }
-            
+
             @Override
-            public void mousePressed(MouseEvent e){
+            public void mousePressed(MouseEvent e) {
                 this.isOnIcon(e);
-                if(e.getButton() == MouseEvent.BUTTON1){
+                if (e.getButton() == MouseEvent.BUTTON1) {
                     for (int i = 0; i < 5; i++) {
-                        if (dragable[i]){
+                        if (dragable[i]) {
                             drag = iconNum[i];
                             dragX = e.getX() - (iconSize/2);
                             dragY = e.getY() - (iconSize/2);
@@ -142,7 +147,7 @@ public class StageScene extends Scene{
 //                    b = new BombA(e.getX(),e.getY(),e.getY(),100);
 //                }
             }
-            
+
             @Override
             public void mouseDragged(MouseEvent e){
                 if(drag != -1){
@@ -150,11 +155,20 @@ public class StageScene extends Scene{
                     dragY = e.getY() - (iconSize/2);
                 }
             }
-            
+
             @Override
             public void mouseReleased(MouseEvent e) {
+                returnBtn.setImgState(0);
+                returnBtn.setIsClicked(false);
+                if (Button.isOnBtn(e, returnBtn) && returnBtn.getClickState()) {
+                    returnBtn.setClickState(false);
+                    returnBtn.setIsClicked(true);
+                    SaveScene.currentScene = MainPanel.STAGE_SCENE;  //設定當前場景為stage scene
+                    SaveScene.nextScene = MainPanel.STORE_SCENE;     //設定儲存後場景為商店
+                    gsChangeListener.changeScene(MainPanel.SAVE_SCENE);
+                }
                 for (int i = 0; i < 5; i++) {
-                    if(dragable[i]){
+                    if (dragable[i]) {
                         dragable[i] = false;
                     }
                 }
@@ -202,7 +216,7 @@ public class StageScene extends Scene{
         g.drawImage(this.background, 0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT, null);
         g.setFont(this.priceFontBit);
         FontMetrics fm = g.getFontMetrics();
-        
+
         //腳色
         for (int i = 0; i < 5; i++) {
             g.setColor(Color.white);
@@ -238,9 +252,16 @@ public class StageScene extends Scene{
         //金錢
         g.setFont(this.fontBit);
         g.setColor(Color.white);
-        int sw =fm. stringWidth("$"+money+"/"+MAX_MONEY);
-        g.drawString("$"+money+"/"+MAX_MONEY, Resource.SCREEN_WIDTH/12*9, Resource.SCREEN_HEIGHT/9-40);
+        int sw = fm.stringWidth("$" + money + "/" + MAX_MONEY);
+        g.drawString("$" + money + "/" + MAX_MONEY, Resource.SCREEN_WIDTH / 12 * 9, Resource.SCREEN_HEIGHT / 9 - 40);
+
+        this.returnBtn.paintBtn(g);
         
+        //WIN畫面
+//        g.drawImage(this.winImg, Resource.SCREEN_WIDTH/2-(int)(this.winImg.getWidth()*1.5)/2, Resource.SCREEN_HEIGHT/2-(int)(this.winImg.getHeight()*1.5)/2, (int)(this.winImg.getWidth()*1.5), (int)(this.winImg.getHeight()*1.5), null);
+        //lose畫面
+//        g.drawImage(this.loseImg, Resource.SCREEN_WIDTH/2-(int)(this.loseImg.getWidth()*1.2)/2, Resource.SCREEN_HEIGHT/2-(int)(this.loseImg.getHeight()*1.2)/2, (int)(this.loseImg.getWidth()*1.2), (int)(this.loseImg.getHeight()*1.2), null);
+
         if(gameOver == true){
             gameOverBtn.paintBtn(g);
             g.drawString("GAMEOVER", Resource.SCREEN_WIDTH/5*2, Resource.SCREEN_HEIGHT/2);
@@ -309,8 +330,8 @@ public class StageScene extends Scene{
             timeCount = 0;
         }
     }
-    
-    public void eventlistener(){
+
+    public void eventlistener() {
         //我方角 
         //如沒有碰撞就呼叫走路方法
         for (int i = 0; i < stuffList.size()/2; i++) {
@@ -366,7 +387,7 @@ public class StageScene extends Scene{
             if (tmp != null && tmp.getHp() > 0) {
                 stuff1.get(i).attack(tmp);
             }
-            if(tmp != null && tmp.getHp() < 1){
+            if (tmp != null && tmp.getHp() < 1) {
                 dieStuff.add(tmp);
                 stuff2.remove(tmp);
             }

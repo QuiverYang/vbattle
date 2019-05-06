@@ -24,6 +24,7 @@ public class Stuff {
     private float speed = 1/16f; //角色移動速度：測試速度1/16f 角色寬
     private int cdTime;//CD時間：單位是FPS倍數週期
     private int type; // 判斷正反角 (1-->我方角 , -1-->敵方)
+    private int range;
     
     //腳色變動屬性
 //    private boolean clickState;
@@ -77,6 +78,7 @@ public class Stuff {
         this.atkRate = Integer.parseInt(status[2]);
         this.hpBase = Integer.parseInt(status[3]);
         this.atkBase = Integer.parseInt(status[4]);
+        this.range = Integer.parseInt(status[5]);
         br.close();
         //讀取參數txt檔
         //初始化腳色
@@ -299,7 +301,7 @@ public class Stuff {
     }
     public Stuff collisionCheck(ArrayList<Stuff> actor) {
         for (int i = 0; i < actor.size(); i++) {
-            if(this.x0 <actor.get(i).x1 && this.x1 > actor.get(i).x0){
+            if(this.x0 + range<actor.get(i).x1 && this.x1 +range > actor.get(i).x0 ){
                 return actor.get(i);
             }
         }

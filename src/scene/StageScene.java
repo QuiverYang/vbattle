@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import vbattle.Button;
+import vbattle.Coin;
 import vbattle.Fontes;
 import vbattle.ImgResource;
 import vbattle.MainPanel;
@@ -28,6 +29,7 @@ public class StageScene extends Scene{
     private ArrayList<Stuff> movingPlayerStuff3 = new ArrayList<>();
     private ArrayList<Stuff> movingEnemyStuff3 = new ArrayList<>();
     private ArrayList<Stuff> dieStuff = new ArrayList<>();
+    private ArrayList<Coin> coins = new ArrayList(); 
     private int drag = -1;
     private int dragX,dragY;
     private float genRate = 0.2f;
@@ -107,6 +109,14 @@ public class StageScene extends Scene{
                 if(Button.isOnBtn(e,returnBtn)){
                     returnBtn.setClickState(true);
                     returnBtn.setImgState(1);
+                }
+                for(int i = 0; i < coins.size();i++){
+                    if(Coin.isOnCoin(e, coins.get(i))){
+                        Coin.CoinClicked(getClass().getResource("/resources/coin.wav"));
+                        coins.remove(i);
+                       
+                        //寫聲音以及cash增加
+                    }
                 }
             }
             
@@ -246,6 +256,10 @@ public class StageScene extends Scene{
         }
         
        this.returnBtn.paintBtn(g);
+       
+        for (Coin coin : coins) {
+            coin.paint(g);
+        }
     }
 
     @Override
@@ -363,6 +377,7 @@ public class StageScene extends Scene{
             }
             if(tmp != null && tmp.getHp() < 1){
                 dieStuff.add(tmp);
+                coins.add(new Coin(tmp.getX0(),tmp.getY0(),tmp.getImgWidth(),tmp.getImgHeight()));
                 stuff2.remove(tmp);
             }
         }

@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import vbattle.Bomb;
 import vbattle.BombA;
 import vbattle.Button;
 import vbattle.Fontes;
@@ -28,13 +29,12 @@ public class StageScene extends Scene{
     //流程控制
     private int timeCount = 0; //倍數計時器：初始化
     private int eventTime = 100; // eventListener時間週期：大於0的常數
-    private int money = 0;
+    private int money = 200;
     private int MAX_MONEY = 200; //
     private boolean gameOver = false;
     private Player player;
     private int hp,mp;
-    private BombA a;
-    private BombA b;
+    private BombA bombContainer;
     private BufferedReader br;
     private ArrayList<Integer> delay = new ArrayList<>();
     private ArrayList<Integer> type = new ArrayList<>();
@@ -285,25 +285,6 @@ public class StageScene extends Scene{
         g.drawString("MP", (int)(Resource.SCREEN_WIDTH*4/30f),(int)(Resource.SCREEN_HEIGHT*4/32f));
         g.fillRect((int)(Resource.SCREEN_WIDTH*1/5f),(int)(Resource.SCREEN_HEIGHT*3/32f) , (int)(Resource.SCREEN_WIDTH*1/2f)* mp/player.getMp(), 10);
         
-        if(a != null){
-            a.move();
-            for (int i = 0; i < stuffList.size()/2; i++) {
-                for (int j = 0; j < stuffList.get(i+3).size(); j++) {
-                    a.checkAttack(stuffList.get(i+3).get(j));
-                }
-            }
-            a.paint(g);
-        }
-        if(b != null){
-            b.move();
-            for (int i = 0; i < stuffList.size()/2; i++) {
-                for (int j = 0; j < stuffList.get(i+3).size(); j++) {
-                    b.checkAttack(stuffList.get(i+3).get(j));
-                }
-            }
-            b.paint(g);
-        }
-
     }
 
     @Override
@@ -325,6 +306,7 @@ public class StageScene extends Scene{
                 stuffGen();
             }
         }
+        bombCollision();
         
         if(timeCount == eventTime){ 
             timeCount = 0;
@@ -430,5 +412,22 @@ public class StageScene extends Scene{
                 return Stuff.ACTOR5_PRICE;
         }
         return -1;
+    }
+    
+    public void bombCollision(){
+        for (int i = 0; i < stuffList.size(); i++) {
+            for (int j = 0; j < stuffList.get(i).size(); j++) {
+                bombContainer = stuffList.get(i).get(j).animationX();
+                if(bombContainer != null){
+                    for (int k = 0; k < stuffList.get(i+3).size(); k++) {
+                        if(bombContainer.checkAttack(stuffList.get(i+3).get(k))== true){
+                            stuffList.get(i+3).get(k).back(stuffList.get(i).get(j));
+                        }
+                        bombContainer.checkTouchGround();
+                    }
+                }
+            }
+        }
+        
     }
 }

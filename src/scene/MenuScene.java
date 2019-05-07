@@ -50,7 +50,7 @@ public class MenuScene extends Scene {
 
     private final int SCREEN_WIDTH = Resource.SCREEN_WIDTH;
     private final int SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
-
+    
     public MenuScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
         rc = ImgResource.getInstance();
@@ -71,7 +71,7 @@ public class MenuScene extends Scene {
         typeCheck = newGameCheck = false;
         countChar = 0;
         playerName = "";
-
+        
         font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 25);
     }
 
@@ -91,7 +91,7 @@ public class MenuScene extends Scene {
             g.setColor(Color.BLACK);
             g.fillRect(Resource.SCREEN_WIDTH / 2 - Resource.SCREEN_WIDTH / 12 * 5 / 2 - 8, (int) (Resource.SCREEN_HEIGHT * 0.278f) - 8, Resource.SCREEN_WIDTH / 12 * 5 + 16, (int) (Resource.SCREEN_HEIGHT * 0.389f) + 16);
 
-            g.setColor(new Color(186, 186, 186));
+            g.setColor(Color.LIGHT_GRAY);
             g.fillRect(Resource.SCREEN_WIDTH / 2 - Resource.SCREEN_WIDTH / 12 * 5 / 2, (int) (Resource.SCREEN_HEIGHT * 0.278f), Resource.SCREEN_WIDTH / 12 * 5, (int) (Resource.SCREEN_HEIGHT * 0.389f));
 
             g.setColor(Color.WHITE);
@@ -123,15 +123,15 @@ public class MenuScene extends Scene {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                if (e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, introBtn)) {
+                if (e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, introBtn) && newGameCheck==false) {
                     introBtn.setImgState(1);
                     introBtn.setClickState(true);
                 }
-                if (e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, newGameBtn)) {
+                if (e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, newGameBtn)&& newGameCheck==false) {
                     newGameBtn.setImgState(1);
                     newGameBtn.setClickState(true);
                 }
-                if (e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, loadBtn)) {
+                if (e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, loadBtn)&& newGameCheck==false) {
                     loadBtn.setImgState(1);
                     loadBtn.setClickState(true);
                 }

@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -25,9 +24,10 @@ public class Stuff {
     private float speed = 1/16f; //角色移動速度：測試速度1/16f 角色寬
     private int cdTime;//CD時間：單位是FPS倍數週期
     private int type; // 判斷正反角 (1-->我方角 , -1-->敵方)
+    private int range;
     
     //腳色變動屬性
-    private boolean clickState;
+//    private boolean clickState;
     private int hp,mp;
     
     //系統屬性
@@ -38,7 +38,7 @@ public class Stuff {
     private int characterNumY0,characterNumY1;//角色編號：紀錄載入圖片Y座標
     private boolean attackCd = true;//CD狀態：初始化true
     private int cdCounter = 0;//CD計數器：單位是FPS倍數週期
-    private AudioClip hit;
+    private static AudioClip hit;
     
     private BufferedImage ghost;
     private int price;
@@ -49,11 +49,10 @@ public class Stuff {
     public static final int ACTOR4_PRICE = 300;
     public static final int ACTOR5_PRICE = 500;
     
-    public Stuff(String name, int lv){
-        this.name = name;
-        this.lv = lv;
-    }
-    
+//    public Stuff(String name, int lv){
+//        this.name = name;
+//        this.lv = lv;
+//    }
     
     public Stuff(int type,int x0,int y0,int imgWidth,int imgHeight, int characterNum,String txtpath) throws IOException{
         //設定建構子參數
@@ -79,6 +78,7 @@ public class Stuff {
         this.atkRate = Integer.parseInt(status[2]);
         this.hpBase = Integer.parseInt(status[3]);
         this.atkBase = Integer.parseInt(status[4]);
+        this.range = Integer.parseInt(status[5]);
         br.close();
         //讀取參數txt檔
         //初始化腳色
@@ -93,26 +93,26 @@ public class Stuff {
         }
     }
 
-    public String getName() {
-        return name;
-    }
+//    public String getName() {
+//        return name;
+//    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+//    public void setName(String name) {
+//        this.name = name;
+//    }
     
     
-    public int getPrice(){
-        return this.price;
-    }
+//    public int getPrice(){
+//        return this.price;
+//    }
     
     //內建GETTER SETTER
-    public int getType(){
-        return this.type;
-    }
-    public void setType(int type){
-        this.type = type;
-    }
+//    public int getType(){
+//        return this.type;
+//    }
+//    public void setType(int type){
+//        this.type = type;
+//    }
     
     public int getX0() {
         return x0;
@@ -129,15 +129,15 @@ public class Stuff {
     public int getImgWidth() {
         return imgWidth;
     }
-    public void setImgWidth(int imgWidth) {
-        this.imgWidth = imgWidth;
-    }
+//    public void setImgWidth(int imgWidth) {
+//        this.imgWidth = imgWidth;
+//    }
     public int getImgHeight() {
         return imgHeight;
     }
-    public void setImgHeight(int imgHeight) {
-        this.imgHeight = imgHeight;
-    }
+//    public void setImgHeight(int imgHeight) {
+//        this.imgHeight = imgHeight;
+//    }
     public int getX1() {
         return x1;
     }
@@ -177,12 +177,12 @@ public class Stuff {
     public void setAtk(int atk) {
         this.atk = atk;
     }
-    public int getLv() {
-        return lv;
-    }
-    public void setLv(int lv) {
-        this.lv = lv;
-    }
+//    public int getLv() {
+//        return lv;
+//    }
+//    public void setLv(int lv) {
+//        this.lv = lv;
+//    }
     public int getExp() {
         return exp;
     }
@@ -201,38 +201,38 @@ public class Stuff {
     public void setImgpath(String imgpath) {
         this.imgpath = imgpath;
     }
-    public int getHpRate() {
-        return hpRate;
-    }
-    public void setHpRate(int hpRate) {
-        this.hpRate = hpRate;
-    }
-    public int getAtkRate() {
-        return atkRate;
-    }
-    public void setAtkRate(int atkRate) {
-        this.atkRate = atkRate;
-    }
-    public int getHpBase() {
-        return hpBase;
-    }
-    public void setHpBase(int hpBase) {
-        this.hpBase = hpBase;
-    }
-    public int getAtkBase() {
-        return atkBase;
-    }
-    public void setAtkBase(int atkBase) {
-        this.atkBase = atkBase;
-    }
-
-    public boolean isClickState() {
-        return clickState;
-    }
-
-    public void setClickState(boolean clickState) {
-        this.clickState = clickState;
-    }
+//    public int getHpRate() {
+//        return hpRate;
+//    }
+//    public void setHpRate(int hpRate) {
+//        this.hpRate = hpRate;
+//    }
+//    public int getAtkRate() {
+//        return atkRate;
+//    }
+//    public void setAtkRate(int atkRate) {
+//        this.atkRate = atkRate;
+//    }
+//    public int getHpBase() {
+//        return hpBase;
+//    }
+//    public void setHpBase(int hpBase) {
+//        this.hpBase = hpBase;
+//    }
+//    public int getAtkBase() {
+//        return atkBase;
+//    }
+//    public void setAtkBase(int atkBase) {
+//        this.atkBase = atkBase;
+//    }
+//
+//    public boolean isClickState() {
+//        return clickState;
+//    }
+//
+//    public void setClickState(boolean clickState) {
+//        this.clickState = clickState;
+//    }
     //內建GETTER SETTER
     
     public void setCoordinate(int x,int y){
@@ -266,7 +266,7 @@ public class Stuff {
             
             if(frame >=5){//動畫完成觸發攻擊效果
                 actor.back();
-                this.hit.play();
+                hit.play();
                 actor.hp = actor.hp - this.atk;
                 frame = 0;
                 attackCd = false;
@@ -301,53 +301,19 @@ public class Stuff {
     }
     public Stuff collisionCheck(ArrayList<Stuff> actor) {
         for (int i = 0; i < actor.size(); i++) {
-            if(this.x0 <actor.get(i).x1 && this.x1 > actor.get(i).x0){
+            if(this.x0 + range<actor.get(i).x1 && this.x1 +range > actor.get(i).x0 ){
                 return actor.get(i);
             }
         }
         return null;
-    // public boolean collisionCheck(Stuff actor) {
-    //     int left1, right1;
-    //     int left2, right2;
-    //     int top1, top2;
-    //     int bottom1, bottom2;
-        
-    //     left1 = this.x0;
-    //     right1 = this.x0 + imgWidth*2/3;
-    //     top1 = this.y0;
-    //     bottom1 = this.y1;
-        
-    //     left2 = actor.getX0();
-    //     right2 = actor.x0 + imgWidth*2/3;
-    //     top2 = actor.y0;
-    //     bottom2 = actor.y0+ imgWidth*2/3;
-        
-    //     if (left1 > right2) {
-    //         return false;
-    //     }
-    //     if (right1 < left2) {
-    //         return false;
-    //     }
-    //     if(top1 > bottom2){
-    //         return false;
-    //     }
-    //     if(bottom1 < top2){
-    //         return false;
-    //     }
-    //     return true;
     }
+    
     //腳色方法
     
     public void lvup(){//商店購買等級使用
         this.lv+=1;
     }
-    public void print(){ //測試
-//        System.out.println(this.test+"\n"+
-//        this.hpRate+"\n"+
-//        this.atkRate+"\n"+
-//        this.hpBase+"\n"+
-//        this.atkBase);
-    }
+    
     public float getHpPercent(){
          return (float)this.hp/(float)this.maxHp;
     }

@@ -19,7 +19,7 @@ public class FinProduct extends Product{
     public static final String PRODUCT_FUND_PATH = "/resources/medicine.jpg";
 
     public static final String PRODUCT_STOCK_INFO = "抗生藥品:購買一個抗生藥品  成長風險0.30/利潤0.08";
-    public static final String PRODUCT_FUTURES_INFO  = "生化藥劑:購買一個生化藥劑  成長風險0.60/利潤0.16";
+    public static final String PRODUCT_FUTURES_INFO  = "生化元素:購買一個生化藥劑  成長風險0.60/利潤0.16";
     public static final String PRODUCT_FUND_INFO  = "健康食品:購買一個健康食品  成長風險0.20/利潤0.04";
     
     protected double risk;

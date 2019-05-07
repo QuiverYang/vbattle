@@ -37,8 +37,11 @@ public class MainPanel extends JPanel {
     public static final int STAGE_SCENE = 4;
     public static final int STORE_SCENE = 5;
     public static final int SELL_SCENE = 6;
-    
-    private boolean newGameCheck;
+    public static final int SAVE_SCENE = 7;
+
+
+    private StageScene stageScene; //暫存stage實體（for暫停使用）
+    private BuyScene buyScene;  //暫存stage實體 （for暫停使用）
 
     public interface GameStatusChangeListener {
 
@@ -56,7 +59,7 @@ public class MainPanel extends JPanel {
                 changeCurrentScene(genSceneById(sceneId));
             }
         };
-        
+
         this.setBackground(Color.red);
 
 //        changeCurrentScene(genSceneById(STAGE_SCENE));
@@ -85,8 +88,8 @@ public class MainPanel extends JPanel {
         this.addMouseListener(mouseAdapter);
         this.addMouseMotionListener(mouseAdapter);
         System.out.println(MenuScene.newGameCheck);
-        
-        if (MenuScene.newGameCheck==false) {
+
+        if (MenuScene.newGameCheck == false) {
             System.out.println(MenuScene.newGameCheck);
             this.addKeyListener(MenuScene.genKeyAdapter());
             this.setFocusable(true);
@@ -103,7 +106,13 @@ public class MainPanel extends JPanel {
             case INTRO_SCENE:
                 return new IntroScene(gsChangeListener);
             case STORE_SCENE:
-                return new BuyScene(gsChangeListener);
+                if(this.buyScene == null){
+                    this.buyScene = new BuyScene(gsChangeListener); 
+                }
+                if(SaveScene.saveSceneCheck){  //如果使用到儲存畫面，則回傳上一刻的實體
+                    return this.buyScene;
+                }
+                return new BuyScene(gsChangeListener);  
 //            case NEW_GAME_SCENE:
 //                return new NewGameScene(gsChangeListener);
             case LOAD_GAME_SCENE: {
@@ -112,29 +121,34 @@ public class MainPanel extends JPanel {
                 } catch (IOException ex) {
                     ex.getStackTrace();
                 }
-            
+
 //            case LOAD_GAME_SCENE:
 //                return LoadGameScene(gsChangeListener);
 //            case STAGE_SCENE: 
 //                return new StageScene(gsChangeListener);
-
             }
             case STAGE_SCENE:
-                {
-                        return new StageScene(gsChangeListener);
+                if(this.stageScene == null){
+                    this.stageScene = new StageScene(gsChangeListener);
+                } 
+                if(SaveScene.saveSceneCheck){  //如果使用到儲存畫面，則回傳上一刻的實體
+                     return this.stageScene;
                 }
-         case SELL_SCENE: 
-                return new SellScene(gsChangeListener);   
+                return new StageScene(gsChangeListener);
 
+            case SELL_SCENE:
+                return new SellScene(gsChangeListener);
+            case SAVE_SCENE:
+                return new SaveScene(gsChangeListener);
         }
         return null;
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        if (currentScene != null) {
+       
             currentScene.paint(g);
-        }
+        
     }
 
 }

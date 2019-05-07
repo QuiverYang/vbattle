@@ -25,11 +25,6 @@ public class Coin extends ItemOnScreen{
         coinSound = Applet.newAudioClip(url);
         coinSound.play();
     }
-
-    
-    public void play(){
-        coinSound.play();
-    }
     
     public Coin(int x, int y, int width, int height){
         super("/resources/coin.png",x,y,width,height);

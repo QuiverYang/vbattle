@@ -213,6 +213,7 @@ public class StageScene extends Scene{
                     SaveScene.nextScene = MainPanel.STORE_SCENE;     //設定儲存後場景為商店
                     gsChangeListener.changeScene(MainPanel.SAVE_SCENE);
                 }
+                
                 for (int i = 0; i < 5; i++) {
                     if (dragable[i]) {
                         dragable[i] = false;
@@ -234,11 +235,16 @@ public class StageScene extends Scene{
                     gameOverBtn.setImgState(0);
                     gameOverBtn.setIsClicked(false);
                 }
+                
                 if(Button.isOnBtn(e,returnBtn)&&returnBtn.getClickState()){
                     gsChangeListener.changeScene(MainPanel.STORE_SCENE);
                 }
+                
                 if (gameOver && Button.isOnBtn(e, gameOverBtn) && gameOverBtn.getClickState()) {
                     gsChangeListener.changeScene(MainPanel.STORE_SCENE);
+                    for(int i=0; i<player.getFp().size(); i++){
+                        player.getFp().get(i).changeValue();
+                    }
                 }
                 
                 for (int i = 0; i < 5; i++) {
@@ -418,7 +424,9 @@ public class StageScene extends Scene{
             for (int j = 0; j < stuffList.get(i).size(); j++) {
                 stuffList.get(i).get(j).refreshCd();
                 //刷新每隻怪物的cd時間與mp的關係
-                stuffList.get(i).get(j).setCdTime(100*50/this.maxMp);
+                
+                stuffList.get(i).get(j).setCdTime(500-(int)((double)(9/2)*mp));
+                
                 System.out.println("cdtime: "+ stuffList.get(i).get(j).getCdTime());
             }
             for (int j = 0; j < stuffList.get(i+3).size(); j++) {
@@ -486,9 +494,6 @@ public class StageScene extends Scene{
             hp = mp = 0;
             player.setHp(hp);   //存回player內
             player.setMp(mp);
-            for(int i=0; i<player.getFp().size(); i++){
-                player.getFp().get(i).changeValue();
-            }
             this.loseSound.play();
             gameOverBtn = new Button("/resources/clickBtn.png",Resource.SCREEN_WIDTH / 12*8, (int) (Resource.SCREEN_HEIGHT / 9 * 6), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
 //            gameOverBtn.setLabel("CONTINUE");

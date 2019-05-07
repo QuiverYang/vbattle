@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import vbattle.Bomb;
 import vbattle.BombA;
 import vbattle.Button;
 import vbattle.Coin;
@@ -31,7 +32,7 @@ public class StageScene extends Scene{
     //流程控制
     private int timeCount = 0; //倍數計時器：初始化
     private int eventTime = 100; // eventListener時間週期：大於0的常數
-    private int money = 0;
+    private int money = 200;
     private int MAX_MONEY = 200; //
     private boolean gameOver = false;
     private Player player;
@@ -408,6 +409,7 @@ public class StageScene extends Scene{
                 stuffGen();
             }
         }
+        bombCollision();
         
         if(timeCount == eventTime){ 
             timeCount = 0;
@@ -527,5 +529,22 @@ public class StageScene extends Scene{
                 return Stuff.ACTOR5_PRICE;
         }
         return -1;
+    }
+    
+    public void bombCollision(){
+        for (int i = 0; i < stuffList.size(); i++) {
+            for (int j = 0; j < stuffList.get(i).size(); j++) {
+                bombContainer = stuffList.get(i).get(j).animationX();
+                if(bombContainer != null){
+                    for (int k = 0; k < stuffList.get(i+3).size(); k++) {
+                        if(bombContainer.checkAttack(stuffList.get(i+3).get(k))== true){
+                            stuffList.get(i+3).get(k).back(stuffList.get(i).get(j));
+                        }
+                        bombContainer.checkTouchGround();
+                    }
+                }
+            }
+        }
+        
     }
 }

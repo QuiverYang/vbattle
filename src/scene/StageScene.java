@@ -61,6 +61,7 @@ public class StageScene extends Scene{
     private int[] iconNum = new int[5];
     private int iconSize = 100;
     private boolean[] dragable = new boolean[5];
+    private BombA bombContainer;
     
     //控制元件
     private ImgResource rc;

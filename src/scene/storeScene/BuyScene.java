@@ -120,6 +120,7 @@ public class BuyScene extends Store{
                             //更改升級的player屬性
                             player.addUnlockContent(counter-6);
                             costCash += products[counter].getPrice();
+                            costInventory+= products[counter].getPrice();
                             upgradeSound.play();
                         }else{
                             noupgradeSound.play();
@@ -201,6 +202,7 @@ public class BuyScene extends Store{
                 } catch (IOException ex) {
                     System.out.println("player save problem from StorceScene back to MenuScene");;
                 }
+                backgroundSound.stop();
                 gsChangeListener.changeScene(MainPanel.STAGE_SCENE);
             }
         });

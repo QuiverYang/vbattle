@@ -108,6 +108,7 @@ public class MainPanel extends JPanel {
             case STORE_SCENE:
                 if(this.buyScene == null){
                     this.buyScene = new BuyScene(gsChangeListener); 
+                    return this.buyScene;
                 }
                 if(SaveScene.saveSceneCheck){  //如果使用到儲存畫面，則回傳上一刻的實體
                     return this.buyScene;

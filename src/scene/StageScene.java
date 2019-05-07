@@ -147,8 +147,7 @@ public class StageScene extends Scene{
                     if(Coin.isOnCoin(e, coins.get(i))){
                         Coin.CoinClicked(getClass().getResource("/resources/coin.wav"));
                         coins.remove(i);
-                       
-                        //寫聲音以及cash增加
+                        player.increaseCash(10);//設定每隻怪物增加10元
                     }
                 }
 //                
@@ -355,6 +354,9 @@ public class StageScene extends Scene{
             gameOver(stuffList.get(i+3));
             for (int j = 0; j < stuffList.get(i).size(); j++) {
                 stuffList.get(i).get(j).refreshCd();
+                //刷新每隻怪物的cd時間與mp的關係
+                stuffList.get(i).get(j).setCdTime(100*50/mp);
+                System.out.println("cdtime: "+ stuffList.get(i).get(j).getCdTime());
             }
             for (int j = 0; j < stuffList.get(i+3).size(); j++) {
                 stuffList.get(i+3).get(j).refreshCd();

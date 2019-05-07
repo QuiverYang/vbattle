@@ -201,6 +201,15 @@ public class Stuff {
     public void setImgpath(String imgpath) {
         this.imgpath = imgpath;
     }
+
+    public int getCdTime() {
+        return cdTime;
+    }
+
+    public void setCdTime(int cdTime) {
+        this.cdTime = cdTime;
+    }
+    
 //    public int getHpRate() {
 //        return hpRate;
 //    }

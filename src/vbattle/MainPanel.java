@@ -81,16 +81,14 @@ public class MainPanel extends JPanel {
             this.removeMouseMotionListener(mouseAdapter);
             this.removeMouseListener(mouseAdapter);
         }
-
+        
         currentScene = scene;
         mouseAdapter = scene.genMouseAdapter();
 
         this.addMouseListener(mouseAdapter);
         this.addMouseMotionListener(mouseAdapter);
-        System.out.println(MenuScene.newGameCheck);
 
         if (MenuScene.newGameCheck == false) {
-            System.out.println(MenuScene.newGameCheck);
             this.addKeyListener(MenuScene.genKeyAdapter());
             this.setFocusable(true);
         }
@@ -108,6 +106,7 @@ public class MainPanel extends JPanel {
             case STORE_SCENE:
                 if(this.buyScene == null){
                     this.buyScene = new BuyScene(gsChangeListener); 
+                    return this.buyScene;
                 }
                 if(SaveScene.saveSceneCheck){  //如果使用到儲存畫面，則回傳上一刻的實體
                     return this.buyScene;

@@ -1,5 +1,7 @@
 package scene;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import vbattle.Bomb;
 import vbattle.BombA;
 import vbattle.Button;
+import vbattle.Coin;
 import vbattle.Fontes;
 import vbattle.ImgResource;
 import vbattle.MainPanel;
@@ -34,7 +37,10 @@ public class StageScene extends Scene{
     private boolean gameOver = false;
     private Player player;
     private int hp,mp;
-    private BombA bombContainer;
+    private int maxHp;      //存取玩家原始hp
+    private int maxMp;
+    private BombA a;
+    private BombA b;
     private BufferedReader br;
     private ArrayList<Integer> delay = new ArrayList<>();
     private ArrayList<Integer> type = new ArrayList<>();
@@ -46,7 +52,8 @@ public class StageScene extends Scene{
     private int battleAreaY[] ={600,450,300};//可放置的路
     private ArrayList<ArrayList<Stuff>> stuffList = new ArrayList<>();
     private ArrayList<Stuff> dieStuff = new ArrayList<>();
-    private int drag = -1;//
+    private ArrayList<Coin> coins = new ArrayList(); 
+    private int drag = -1;
     private int dragX,dragY;
     private float genRate = 0.2f;// 怪物產生機率
     private int[] iconX = new int[5];
@@ -64,8 +71,13 @@ public class StageScene extends Scene{
 
     private BufferedImage winImg;
     private BufferedImage loseImg;
-     
-    public StageScene(MainPanel.GameStatusChangeListener gsChangeListener) {
+    private BufferedImage energy;
+    private AudioClip clickSound;
+    private AudioClip winSound;
+    private AudioClip loseSound;
+    
+    
+    public StageScene(MainPanel.GameStatusChangeListener gsChangeListener){
         super(gsChangeListener);
         
         for (int i = 0; i < 6; i++) {
@@ -82,13 +94,22 @@ public class StageScene extends Scene{
         background = rc.tryGetImage("/resources/background5.png");
         winImg = rc.tryGetImage("/resources/win.png");
         loseImg = rc.tryGetImage("/resources/lose.png");
+        energy = rc.tryGetImage("/resources/energy.png");
         
-        fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 20);
+        fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 23);
         priceFontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 45);
         gameFontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 37);
         
         lightGray = new Color(186,186,186,150);
         returnBtn = new Button("/resources/return_click.png",20,20,Resource.SCREEN_WIDTH / 12,Resource.SCREEN_HEIGHT/9);
+        
+        try{
+            clickSound = Applet.newAudioClip(getClass().getResource("/resources/pop.wav"));
+            winSound  = Applet.newAudioClip(getClass().getResource("/resources/WinnerSoundEffect.wav"));
+            loseSound = Applet.newAudioClip(getClass().getResource("/resources/LosingSoundEffects.wav"));
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
         
         player = Player.getPlayerInstane();
         hp = player.getHp();
@@ -119,6 +140,17 @@ public class StageScene extends Scene{
                     dragable[i] = true;
                 }
             }
+            
+            //判斷點擊惡魔
+            public boolean isOnDevilPic(MouseEvent e, Stuff dieStuff){
+                    if(e.getX()>=dieStuff.getX0() 
+                       && e.getX() <= dieStuff.getX0()+dieStuff.getImgWidth()
+                       &&e.getY() >= dieStuff.getY0()
+                       && e.getY()<= dieStuff.getY0() + dieStuff.getImgHeight()){
+                        return true;
+                    }
+                    return false;
+            }
 
             @Override
             public void mousePressed(MouseEvent e) {
@@ -140,6 +172,21 @@ public class StageScene extends Scene{
                 if(Button.isOnBtn(e,returnBtn)){
                     returnBtn.setClickState(true);
                     returnBtn.setImgState(1);
+                }
+                
+                 //判斷點擊惡魔
+                for(int i=0; i<dieStuff.size(); i++){
+                     if(e.getButton() == MouseEvent.BUTTON1 && isOnDevilPic(e,dieStuff.get(i))){
+                         dieStuff.get(i).setClickState(true);
+                     }
+                }
+               
+                for(int i = 0; i < coins.size();i++){
+                    if(Coin.isOnCoin(e, coins.get(i))){
+                        Coin.CoinClicked(getClass().getResource("/resources/coin.wav"));
+                        coins.remove(i);
+                        player.increaseCash(10);//設定每隻怪物增加10元
+                    }
                 }
 //                
 //                if(e.getButton() == MouseEvent.BUTTON1){
@@ -175,6 +222,15 @@ public class StageScene extends Scene{
                 
                 returnBtn.setImgState(0);
                 returnBtn.setIsClicked(false);
+                    
+                //判斷點擊惡魔
+                for(int i =0; i<dieStuff.size(); i++){
+                    if(isOnDevilPic(e, dieStuff.get(i)) && dieStuff.get(i).getClickState()){  //如果點擊惡魔成功，將此惡魔物件刪除
+                        clickSound.play();
+                        dieStuff.remove(i);
+                    }
+                }
+                
                 if(gameOver){
                     gameOverBtn.setImgState(0);
                     gameOverBtn.setIsClicked(false);
@@ -228,8 +284,8 @@ public class StageScene extends Scene{
             }
             //價格
             g.setColor(Color.BLACK);
-            int sw = fm.stringWidth("$"+checkActorPrice(i)+"");
-            g.drawString("$"+checkActorPrice(i)+"", iconX[i]+110/2-sw/2, iconY[i]+102);
+            int sw = fm.stringWidth(checkActorPrice(i)+"");
+            g.drawString(checkActorPrice(i)+"", iconX[i]+110/2-sw/2, iconY[i]+102);
             
         }
         //走路角色
@@ -250,11 +306,19 @@ public class StageScene extends Scene{
         }
         
         //金錢
+         int sw = fm.stringWidth( money + "/" + MAX_MONEY);
+         g.setColor(lightGray);
+        g.fillRect( Resource.SCREEN_WIDTH/12*9, Resource.SCREEN_HEIGHT / 9 - 80, 290, 50);
         g.setFont(this.fontBit);
         g.setColor(Color.white);
-        int sw = fm.stringWidth("$" + money + "/" + MAX_MONEY);
-        g.drawString("$" + money + "/" + MAX_MONEY, Resource.SCREEN_WIDTH / 12 * 9, Resource.SCREEN_HEIGHT / 9 - 40);
-
+        g.drawString(money + "/" + MAX_MONEY, Resource.SCREEN_WIDTH-(int)(sw*2.3), Resource.SCREEN_HEIGHT / 9 - 40);
+       
+        g.drawImage(this.energy, Resource.SCREEN_WIDTH/12*9-15, Resource.SCREEN_HEIGHT / 9 - 70, 80, 80, null);
+        //cash
+        g.setFont(this.fontBit);
+        g.setColor(Color.white);
+        sw = fm.stringWidth( money + "/" + MAX_MONEY);
+        
         this.returnBtn.paintBtn(g);
         
         //WIN畫面
@@ -262,16 +326,16 @@ public class StageScene extends Scene{
         //lose畫面
 //        g.drawImage(this.loseImg, Resource.SCREEN_WIDTH/2-(int)(this.loseImg.getWidth()*1.2)/2, Resource.SCREEN_HEIGHT/2-(int)(this.loseImg.getHeight()*1.2)/2, (int)(this.loseImg.getWidth()*1.2), (int)(this.loseImg.getHeight()*1.2), null);
 
-        if(gameOver == true){
-            gameOverBtn.paintBtn(g);
-            g.drawString("GAMEOVER", Resource.SCREEN_WIDTH/5*2, Resource.SCREEN_HEIGHT/2);
-            g.setFont(gameFontBit);
-            g.setColor(Color.BLACK);
-            g.drawString("TO_STORE", gameOverBtn.getX()+25, gameOverBtn.getY()+55);
-        }
         
+        
+       
+       
+        for (Coin coin : coins) {
+            coin.paint(g);
+        }
         this.returnBtn.paintBtn(g);
         
+    
         g.setColor(Color.white);
         g.setFont(this.fontBit);
         g.fillRect((int)(Resource.SCREEN_WIDTH*1/5f),(int)(Resource.SCREEN_HEIGHT*1/32f-2) , (int)(Resource.SCREEN_WIDTH*1/2f), 14);
@@ -279,12 +343,45 @@ public class StageScene extends Scene{
         
         g.setColor(Color.red);
         g.drawString("HP", (int)(Resource.SCREEN_WIDTH*4/30f),(int)(Resource.SCREEN_HEIGHT*2/32f));
-        g.fillRect((int)(Resource.SCREEN_WIDTH*1/5f),(int)(Resource.SCREEN_HEIGHT*1/32f) , (int)(Resource.SCREEN_WIDTH*1/2f)* hp/player.getHp(), 10);
+        g.fillRect((int)(Resource.SCREEN_WIDTH*1/5f),(int)(Resource.SCREEN_HEIGHT*1/32f) , (int)(Resource.SCREEN_WIDTH*1/2f)* hp/100, 10);
         
         g.setColor(Color.blue);
         g.drawString("MP", (int)(Resource.SCREEN_WIDTH*4/30f),(int)(Resource.SCREEN_HEIGHT*4/32f));
-        g.fillRect((int)(Resource.SCREEN_WIDTH*1/5f),(int)(Resource.SCREEN_HEIGHT*3/32f) , (int)(Resource.SCREEN_WIDTH*1/2f)* mp/player.getMp(), 10);
+        g.fillRect((int)(Resource.SCREEN_WIDTH*1/5f),(int)(Resource.SCREEN_HEIGHT*3/32f) , (int)(Resource.SCREEN_WIDTH*1/2f)* mp/100, 10);
         
+        
+        if(a != null){
+            a.move();
+            for (int i = 0; i < stuffList.size()/2; i++) {
+                for (int j = 0; j < stuffList.get(i+3).size(); j++) {
+                    a.checkAttack(stuffList.get(i+3).get(j));
+                }
+            }
+            a.paint(g);
+        }
+        if(b != null){
+            b.move();
+            for (int i = 0; i < stuffList.size()/2; i++) {
+                for (int j = 0; j < stuffList.get(i+3).size(); j++) {
+                    b.checkAttack(stuffList.get(i+3).get(j));
+                }
+            }
+            b.paint(g);
+        }
+        
+        if(gameOver == true){
+            g.setColor(lightGray);
+            g.fillRect(0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT);
+            gameOverBtn.paintBtn(g);
+            
+            g.drawImage(this.loseImg, Resource.SCREEN_WIDTH/2-(int)(this.loseImg.getWidth()*1.2)/2, Resource.SCREEN_HEIGHT/2-(int)(this.loseImg.getHeight()*1.2)/2, (int)(this.loseImg.getWidth()*1.2), (int)(this.loseImg.getHeight()*1.2), null);
+//            g.drawString("GAMEOVER", Resource.SCREEN_WIDTH/5*2, Resource.SCREEN_HEIGHT/2);
+            g.setFont(gameFontBit);
+            g.setColor(Color.BLACK);
+            int sw1 = fm.stringWidth("CONTINUE");
+            g.drawString("CONTINUE", gameOverBtn.getX()+gameOverBtn.getWidth()/2-sw1/2-10, gameOverBtn.getY()+55);
+        }
+
     }
 
     @Override
@@ -322,6 +419,9 @@ public class StageScene extends Scene{
             gameOver(stuffList.get(i+3));
             for (int j = 0; j < stuffList.get(i).size(); j++) {
                 stuffList.get(i).get(j).refreshCd();
+                //刷新每隻怪物的cd時間與mp的關係
+                stuffList.get(i).get(j).setCdTime(100*50/this.maxMp);
+                System.out.println("cdtime: "+ stuffList.get(i).get(j).getCdTime());
             }
             for (int j = 0; j < stuffList.get(i+3).size(); j++) {
                 stuffList.get(i+3).get(j).refreshCd();
@@ -371,6 +471,7 @@ public class StageScene extends Scene{
             }
             if (tmp != null && tmp.getHp() < 1) {
                 dieStuff.add(tmp);
+                coins.add(new Coin(tmp.getX0(),tmp.getY0(),tmp.getImgWidth(),tmp.getImgHeight()));
                 stuff2.remove(tmp);
             }
         }
@@ -379,20 +480,31 @@ public class StageScene extends Scene{
     private void gameOver(ArrayList<Stuff> stuff){
         for (int i = 0; i < stuff.size(); i++) {
             if(stuff.get(i).getX1() < 0){
-                hp -= 10;
+                hp -= 50;
                 stuff.remove(i);
             }
         }
-        if(hp < 0){
-            gameOverBtn = new Button("/resources/clickBtn.png",Resource.SCREEN_WIDTH / 12, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
+        if(hp <= 0){
+            hp = mp = 0;
+            player.setHp(hp);   //存回player內
+            player.setMp(mp);
+            for(int i=0; i<player.getFp().size(); i++){
+                player.getFp().get(i).changeValue();
+            }
+            this.loseSound.play();
+            gameOverBtn = new Button("/resources/clickBtn.png",Resource.SCREEN_WIDTH / 12*8, (int) (Resource.SCREEN_HEIGHT / 9 * 6), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
+//            gameOverBtn.setLabel("CONTINUE");
             this.gameOver = true;
+            
+            
         }
     }
     
     private void ghostMethod(ArrayList<Stuff> ghost){
         for (int i = 0; i < ghost.size(); i++) {
             ghost.get(i).die();
-            if(ghost.get(i).getY0() < 0){
+            if (ghost.get(i).getY0() < 0 && ghost.get(i).getType()!=1) {
+                hp -= 2;    //如果沒有點擊到惡魔則減少hp
                 ghost.remove(i);
             }
         }

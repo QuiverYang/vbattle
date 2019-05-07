@@ -186,7 +186,7 @@ public class Player {
     //設定當前玩家資料
     public void loadPlayer(int index) throws IOException { //載入方法
         playerIndex = index;
-
+        
         String status[] = playerInfo.get(index);
         this.playerName = status[0];
         this.inventory = Integer.parseInt(status[1]);

@@ -9,9 +9,13 @@ import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import vbattle.BombA;
 import vbattle.Button;
+import vbattle.Coin;
 import vbattle.Fontes;
 import vbattle.ImgResource;
 import vbattle.MainPanel;
@@ -28,18 +32,27 @@ public class StageScene extends Scene{
     private int timeCount = 0; //倍數計時器：初始化
     private int eventTime = 100; // eventListener時間週期：大於0的常數
     private int money = 0;
-    private int MAX_MONEY = 100; //
+    private int MAX_MONEY = 200; //
     private boolean gameOver = false;
     private Player player;
-    private int hp,mp;      //玩家遊戲中hp.mp
+    private int hp,mp;
     private int maxHp;      //存取玩家原始hp
     private int maxMp;
+    private BombA a;
+    private BombA b;
+    private BufferedReader br;
+    private ArrayList<Integer> delay = new ArrayList<>();
+    private ArrayList<Integer> type = new ArrayList<>();
+    private ArrayList<Integer> areaI = new ArrayList<>();
+    private int stageCounter = 0;
+    private int genCounter = 0;
     
     //物件控制
     private int battleAreaY[] ={600,450,300};//可放置的路
     private ArrayList<ArrayList<Stuff>> stuffList = new ArrayList<>();
     private ArrayList<Stuff> dieStuff = new ArrayList<>();
-    private int drag = -1;//
+    private ArrayList<Coin> coins = new ArrayList(); 
+    private int drag = -1;
     private int dragX,dragY;
     private float genRate = 0.2f;// 怪物產生機率
     private int[] iconX = new int[5];
@@ -98,9 +111,18 @@ public class StageScene extends Scene{
         }
         
         player = Player.getPlayerInstane();
-        hp = maxHp = player.getHp();
+         hp = maxHp = player.getHp();
         mp = maxMp = player.getMp();
-        
+        try {
+            br = new BufferedReader(new FileReader("stage1.txt"));
+            while(br.ready()){
+                String str[] = br.readLine().split(",");
+                delay.add(Integer.parseInt(str[0]));
+                type.add(Integer.parseInt(str[1]));
+                areaI.add(Integer.parseInt(str[2]));
+            }
+        } catch (Exception e) {
+        }
     }
 
     @Override
@@ -158,6 +180,18 @@ public class StageScene extends Scene{
                      }
                 }
                
+                for(int i = 0; i < coins.size();i++){
+                    if(Coin.isOnCoin(e, coins.get(i))){
+                        Coin.CoinClicked(getClass().getResource("/resources/coin.wav"));
+                        coins.remove(i);
+                        player.increaseCash(10);//設定每隻怪物增加10元
+                    }
+                }
+//                
+//                if(e.getButton() == MouseEvent.BUTTON1){
+//                    a = new BombA(e.getX(),e.getY(),e.getY(),200);
+//                    b = new BombA(e.getX(),e.getY(),e.getY(),100);
+//                }
             }
 
             @Override
@@ -304,6 +338,11 @@ public class StageScene extends Scene{
             g.drawString("CONTINUE", gameOverBtn.getX()+gameOverBtn.getWidth()/2-sw1/2-10, gameOverBtn.getY()+55);
         }
         
+       
+       
+        for (Coin coin : coins) {
+            coin.paint(g);
+        }
         this.returnBtn.paintBtn(g);
         
     
@@ -321,6 +360,25 @@ public class StageScene extends Scene{
         g.fillRect((int)(Resource.SCREEN_WIDTH*1/5f),(int)(Resource.SCREEN_HEIGHT*3/32f) , (int)(Resource.SCREEN_WIDTH*1/2f)* mp/this.maxMp, 10);
         
         
+        if(a != null){
+            a.move();
+            for (int i = 0; i < stuffList.size()/2; i++) {
+                for (int j = 0; j < stuffList.get(i+3).size(); j++) {
+                    a.checkAttack(stuffList.get(i+3).get(j));
+                }
+            }
+            a.paint(g);
+        }
+        if(b != null){
+            b.move();
+            for (int i = 0; i < stuffList.size()/2; i++) {
+                for (int j = 0; j < stuffList.get(i+3).size(); j++) {
+                    b.checkAttack(stuffList.get(i+3).get(j));
+                }
+            }
+            b.paint(g);
+        }
+
     }
 
     @Override
@@ -331,12 +389,15 @@ public class StageScene extends Scene{
                 eventlistener();
             }
             if(timeCount%100 == 0){
-                stuffGen();
+                mp --;
             }
             if(timeCount%2 == 0){
                 if(money < MAX_MONEY){
                     money += 1;
                 }
+            }
+            if(timeCount%25 == 0){
+                stuffGen();
             }
         }
         
@@ -354,6 +415,9 @@ public class StageScene extends Scene{
             gameOver(stuffList.get(i+3));
             for (int j = 0; j < stuffList.get(i).size(); j++) {
                 stuffList.get(i).get(j).refreshCd();
+                //刷新每隻怪物的cd時間與mp的關係
+                stuffList.get(i).get(j).setCdTime(100*50/mp);
+                System.out.println("cdtime: "+ stuffList.get(i).get(j).getCdTime());
             }
             for (int j = 0; j < stuffList.get(i+3).size(); j++) {
                 stuffList.get(i+3).get(j).refreshCd();
@@ -361,17 +425,34 @@ public class StageScene extends Scene{
         }
         ghostMethod(dieStuff);
     }
+    //隨機產生
+//    private void stuffGen(){
+//        this.genRate += 0.01f;
+//        try {
+//            for (int i = 0; i < stuffList.size()/2; i++) {
+//                if((float)(Math.random()) < genRate){
+//                    stuffList.get(i+3).add(new Stuff(-1, Resource.SCREEN_WIDTH, battleAreaY[i] , iconSize, iconSize, 3, "actor2"));
+//                }
+//            }
+//        } catch (IOException ex) {
+//        }
+//    }
     
     private void stuffGen(){
-        this.genRate += 0.01f;
-        try {
-            for (int i = 0; i < stuffList.size()/2; i++) {
-                if((float)(Math.random()) < genRate){
-                    stuffList.get(i+3).add(new Stuff(-1, Resource.SCREEN_WIDTH, battleAreaY[i] , iconSize, iconSize, 3, "actor2"));
-                }
-            }
-        } catch (IOException ex) {
+        if(stageCounter == delay.size()){
+            return;
         }
+        if(genCounter == delay.get(stageCounter)){
+            try {
+                stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+1 ,"actor"+type.get(stageCounter)));
+                while((delay.get(++stageCounter)) == 0){
+                    stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+1 ,"actor"+type.get(stageCounter)));
+                }
+                genCounter = 0;
+            } catch (Exception e) {
+            }
+        }
+        genCounter++;
     }
     
     private void callCollision(ArrayList<Stuff> stuff1,ArrayList<Stuff> stuff2){
@@ -386,6 +467,7 @@ public class StageScene extends Scene{
             }
             if (tmp != null && tmp.getHp() < 1) {
                 dieStuff.add(tmp);
+                coins.add(new Coin(tmp.getX0(),tmp.getY0(),tmp.getImgWidth(),tmp.getImgHeight()));
                 stuff2.remove(tmp);
             }
         }

@@ -49,7 +49,7 @@ public abstract class Store extends Scene{
     protected int counter;//按鍵左右去計算的counter
     protected Font fontBit,fontBit2,fontBitSmall;
     protected Font fontC,fontSmall;
-    private final AudioClip backgroundSound;
+    protected final AudioClip backgroundSound;
     
     public interface ButtomCode {
         int BACK_BTN = 0;

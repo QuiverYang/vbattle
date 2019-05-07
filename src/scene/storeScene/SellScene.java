@@ -5,8 +5,7 @@
  */
 package scene.storeScene;
 
-import java.awt.FontMetrics;
-import java.awt.Graphics;
+
 import scene.storeScene.product.finProduct.FinProduct;
 import java.io.IOException;
 import vbattle.Button;
@@ -58,6 +57,7 @@ public class SellScene extends Store{
             public void doSomthing() {
                 try {
                     player.save();
+                    backgroundSound.stop();
                     gsChangeListener.changeScene(MainPanel.STORE_SCENE);
                 } catch (IOException ex) {
                     System.out.println("player save problem from StorceScene back to MenuScene");;

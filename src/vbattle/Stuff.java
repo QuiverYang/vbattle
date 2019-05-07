@@ -38,8 +38,10 @@ public class Stuff {
     private boolean attackCd = true;//CD狀態：初始化true
     private int cdCounter = 0;//CD計數器：單位是FPS倍數週期
     private static AudioClip hit;
+    private boolean clickState;
     
-    private BufferedImage ghost;
+    private BufferedImage ghostImg;
+    private BufferedImage devilImg;
     private int price;
     
     public static final int ACTOR1_PRICE = 50;
@@ -72,7 +74,8 @@ public class Stuff {
         BufferedReader br = new BufferedReader(new FileReader("src/"+txtpath+".txt"));
         String status[] = br.readLine().split(",");
         img = rc.tryGetImage(status[0]);
-        ghost = rc.tryGetImage("/resources/ghost.png"); //ghost pic
+        ghostImg = rc.tryGetImage("/resources/ghost.png"); //ghost pic
+        devilImg = rc.tryGetImage("/resources/devil_1.png"); //ghost pic
         this.hpRate = Integer.parseInt(status[1]);
         this.atkRate = Integer.parseInt(status[2]);
         this.hpBase = Integer.parseInt(status[3]);
@@ -89,6 +92,7 @@ public class Stuff {
             hit = Applet.newAudioClip(getClass().getResource("/resources/Damage3.wav"));
         }catch(Exception ex){
         }
+        clickState = false;
     }
 
 //    public String getName() {
@@ -137,7 +141,7 @@ public class Stuff {
 //        this.imgHeight = imgHeight;
 //    }
     public int getX1() {
-        return x1;
+        return x0 + imgWidth;
     }
 
     public int getMp() {
@@ -183,6 +187,9 @@ public class Stuff {
 //    }
     public int getExp() {
         return exp;
+    }
+    public int getType(){
+        return this.type;
     }
     public void setExp(int exp) {
         this.exp = exp;
@@ -238,6 +245,14 @@ public class Stuff {
         this.y0 = y - imgHeight/2;
         this.x1 = x0 + imgWidth;
         this.y1 = y0 + imgHeight;
+    }
+    
+    public void setClickState(boolean a){
+        this.clickState = a;
+    }
+    
+    public boolean getClickState(){
+        return this.clickState;
     }
     
     //腳色方法
@@ -325,9 +340,9 @@ public class Stuff {
             g.drawImage(img,x0,y0,x1,y1,(int)frame*32,characterNumY0, ((int)frame+1)*32,characterNumY1,null);
         }else if(this.hp<=0){
             if(this.type==1){
-                g.drawImage(this.ghost, x0, y0 , x0+imgWidth, y1 , (int)frame*32, 0, (((int)frame+1)*32), this.ghost.getHeight(), null);
+                g.drawImage(this.ghostImg, x0, y0 , x0+imgWidth, y1 , (int)frame*32, 0, (((int)frame+1)*32), this.ghostImg.getHeight(), null);
             }else{
-                g.drawImage(this.ghost, x0+imgWidth, y0 , x0, y1 , (int)frame*32, 0, (((int)frame+1)*32), this.ghost.getHeight(), null);
+                g.drawImage(this.devilImg, x0, y0 , x0+imgWidth, y1 , (int)frame*32, 0, (((int)frame+1)*32), this.devilImg.getHeight(), null);
             }
         }
     }

@@ -63,7 +63,7 @@ public abstract class Store extends Scene{
     public Store(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
         backgroundSound = Applet.newAudioClip(getClass().getResource("/resources/storeMusic.wav"));
-        backgroundSound.loop();
+//        backgroundSound.loop();
         productOnScreen = new Product[3];
         player = Player.getPlayerInstane();
         rc = ImgResource.getInstance();

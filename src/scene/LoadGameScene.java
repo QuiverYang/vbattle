@@ -79,7 +79,7 @@ public class LoadGameScene extends Scene {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                for (int i = 0; i < PLAYER_NUM; i++) {
+                for (int i = 0; i < player.getPlayerList().length; i++) {
                     if (e.getButton() == MouseEvent.BUTTON1 && isOnBtn(e, playerBtn[i])) {
                         playerBtn[i].setClickState(true);
                         playerBtn[i].setImgState(1);

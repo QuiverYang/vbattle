@@ -28,8 +28,8 @@ public class Button extends ItemOnScreen{
     private boolean isClicked;
     private int intData;
     private Callback callback;
-    AudioClip clickSound;
-    Font fontBit;
+    private AudioClip clickSound;
+    private Font fontBit;
     public interface Callback{
         void doSomthing();
     }
@@ -63,8 +63,6 @@ public class Button extends ItemOnScreen{
         fontBit = Fontes.getBitFont(labelSize/4);//4為調整字體的大小參數 越小表示字體越大
         imgState = 0;
         clickState = false;
-        labelSize = width;
-        fontBit = Fontes.getBitFont(labelSize/4);//4為調整字體的大小參數 越小表示字體越大
         try{
             clickSound = Applet.newAudioClip(getClass().getResource("/resources/Cursor2.wav"));
         }catch(Exception ex){

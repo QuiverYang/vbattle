@@ -111,8 +111,8 @@ public class StageScene extends Scene{
         }
         
         player = Player.getPlayerInstane();
-         hp = maxHp = player.getHp();
-        mp = maxMp = player.getMp();
+        hp = player.getHp();
+        mp = player.getMp();
         try {
             br = new BufferedReader(new FileReader("stage1.txt"));
             while(br.ready()){
@@ -325,18 +325,7 @@ public class StageScene extends Scene{
         //lose畫面
 //        g.drawImage(this.loseImg, Resource.SCREEN_WIDTH/2-(int)(this.loseImg.getWidth()*1.2)/2, Resource.SCREEN_HEIGHT/2-(int)(this.loseImg.getHeight()*1.2)/2, (int)(this.loseImg.getWidth()*1.2), (int)(this.loseImg.getHeight()*1.2), null);
 
-        if(gameOver == true){
-            g.setColor(lightGray);
-            g.fillRect(0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT);
-            gameOverBtn.paintBtn(g);
-            
-            g.drawImage(this.loseImg, Resource.SCREEN_WIDTH/2-(int)(this.loseImg.getWidth()*1.2)/2, Resource.SCREEN_HEIGHT/2-(int)(this.loseImg.getHeight()*1.2)/2, (int)(this.loseImg.getWidth()*1.2), (int)(this.loseImg.getHeight()*1.2), null);
-//            g.drawString("GAMEOVER", Resource.SCREEN_WIDTH/5*2, Resource.SCREEN_HEIGHT/2);
-            g.setFont(gameFontBit);
-            g.setColor(Color.BLACK);
-            int sw1 = fm.stringWidth("CONTINUE");
-            g.drawString("CONTINUE", gameOverBtn.getX()+gameOverBtn.getWidth()/2-sw1/2-10, gameOverBtn.getY()+55);
-        }
+        
         
        
        
@@ -353,11 +342,11 @@ public class StageScene extends Scene{
         
         g.setColor(Color.red);
         g.drawString("HP", (int)(Resource.SCREEN_WIDTH*4/30f),(int)(Resource.SCREEN_HEIGHT*2/32f));
-        g.fillRect((int)(Resource.SCREEN_WIDTH*1/5f),(int)(Resource.SCREEN_HEIGHT*1/32f) , (int)(Resource.SCREEN_WIDTH*1/2f)* hp/this.maxHp, 10);
+        g.fillRect((int)(Resource.SCREEN_WIDTH*1/5f),(int)(Resource.SCREEN_HEIGHT*1/32f) , (int)(Resource.SCREEN_WIDTH*1/2f)* hp/100, 10);
         
         g.setColor(Color.blue);
         g.drawString("MP", (int)(Resource.SCREEN_WIDTH*4/30f),(int)(Resource.SCREEN_HEIGHT*4/32f));
-        g.fillRect((int)(Resource.SCREEN_WIDTH*1/5f),(int)(Resource.SCREEN_HEIGHT*3/32f) , (int)(Resource.SCREEN_WIDTH*1/2f)* mp/this.maxMp, 10);
+        g.fillRect((int)(Resource.SCREEN_WIDTH*1/5f),(int)(Resource.SCREEN_HEIGHT*3/32f) , (int)(Resource.SCREEN_WIDTH*1/2f)* mp/100, 10);
         
         
         if(a != null){
@@ -377,6 +366,19 @@ public class StageScene extends Scene{
                 }
             }
             b.paint(g);
+        }
+        
+        if(gameOver == true){
+            g.setColor(lightGray);
+            g.fillRect(0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT);
+            gameOverBtn.paintBtn(g);
+            
+            g.drawImage(this.loseImg, Resource.SCREEN_WIDTH/2-(int)(this.loseImg.getWidth()*1.2)/2, Resource.SCREEN_HEIGHT/2-(int)(this.loseImg.getHeight()*1.2)/2, (int)(this.loseImg.getWidth()*1.2), (int)(this.loseImg.getHeight()*1.2), null);
+//            g.drawString("GAMEOVER", Resource.SCREEN_WIDTH/5*2, Resource.SCREEN_HEIGHT/2);
+            g.setFont(gameFontBit);
+            g.setColor(Color.BLACK);
+            int sw1 = fm.stringWidth("CONTINUE");
+            g.drawString("CONTINUE", gameOverBtn.getX()+gameOverBtn.getWidth()/2-sw1/2-10, gameOverBtn.getY()+55);
         }
 
     }
@@ -416,7 +418,7 @@ public class StageScene extends Scene{
             for (int j = 0; j < stuffList.get(i).size(); j++) {
                 stuffList.get(i).get(j).refreshCd();
                 //刷新每隻怪物的cd時間與mp的關係
-                stuffList.get(i).get(j).setCdTime(100*50/mp);
+                stuffList.get(i).get(j).setCdTime(100*50/this.maxMp);
                 System.out.println("cdtime: "+ stuffList.get(i).get(j).getCdTime());
             }
             for (int j = 0; j < stuffList.get(i+3).size(); j++) {
@@ -481,8 +483,12 @@ public class StageScene extends Scene{
             }
         }
         if(hp <= 0){
+            hp = mp = 0;
             player.setHp(hp);   //存回player內
             player.setMp(mp);
+            for(int i=0; i<player.getFp().size(); i++){
+                player.getFp().get(i).changeValue();
+            }
             this.loseSound.play();
             gameOverBtn = new Button("/resources/clickBtn.png",Resource.SCREEN_WIDTH / 12*8, (int) (Resource.SCREEN_HEIGHT / 9 * 6), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
 //            gameOverBtn.setLabel("CONTINUE");

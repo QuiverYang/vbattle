@@ -47,9 +47,11 @@ public class FinProduct extends Product{
     
     public void changeValue(){
         if(Math.random()>risk){
-            value*=(1+risk);
+            value= (int)(value*(1+profit));
+            System.out.println("++"+value);
         }else{
-            value*=(1-risk);
+            value  = (int)(value*(1-profit));
+            System.out.println("--"+value);
             if(value < 0){
                 value = 0;
             }

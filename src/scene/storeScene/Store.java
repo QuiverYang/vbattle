@@ -243,7 +243,6 @@ public abstract class Store extends Scene{
     public void logicEvent() {
         for(int i = 0; i < functionBtns.length; i++){
             if(functionBtns[i].isClicked()){
-                System.out.println("logicEvent clicked");
                 functionBtns[i].action();
                 functionBtns[i].setIsClicked(false);
             }

@@ -87,10 +87,8 @@ public class MainPanel extends JPanel {
 
         this.addMouseListener(mouseAdapter);
         this.addMouseMotionListener(mouseAdapter);
-        System.out.println(MenuScene.newGameCheck);
 
         if (MenuScene.newGameCheck == false) {
-            System.out.println(MenuScene.newGameCheck);
             this.addKeyListener(MenuScene.genKeyAdapter());
             this.setFocusable(true);
         }

@@ -34,8 +34,11 @@ public abstract class Store extends Scene{
     protected ImgResource rc;
     protected int productsNum;
     protected Product[] products;
-    protected int funcBtnWidthUnit = Resource.SCREEN_WIDTH/12;//functionBtn的一個單位大小
+    protected int funcBtnWidthUnit = Resource.SCREEN_WIDTH/12;//functionBtn的一個單位寬大小
+    protected int funcBtnHeightUnit = Resource.SCREEN_HEIGHT/9;//functionBtn的一個單位高
     protected int itemBtnWidthUnit = Resource.SCREEN_WIDTH/8;//itemBtn的一個單位大小
+    protected int itemBtnHeightUnit = Resource.SCREEN_WIDTH/8;//itemBtn的一個單位大小
+   
     protected final int padding = 20;//與邊框距離
     protected int itemBtnXcenter;//選單圖片中心x座標
     protected int rightBtnYcenter;//選單圖片中心y座標
@@ -83,11 +86,11 @@ public abstract class Store extends Scene{
         pW=new int[3];
         pH=new int[3];
         pX[0] = itemBtnXcenter-itemBtnWidthUnit*2-2*padding;
-        pY[0] = rightBtnYcenter-itemBtnWidthUnit/2;
+        pY[0] = rightBtnYcenter-itemBtnHeightUnit/2;
         pW[0] = itemBtnWidthUnit;
-        pH[0] = itemBtnWidthUnit;
+        pH[0] = itemBtnHeightUnit;
         pX[1] = itemBtnXcenter - itemBtnWidthUnit;
-        pY[1] = rightBtnYcenter-itemBtnWidthUnit;
+        pY[1] = rightBtnYcenter-itemBtnHeightUnit;
         pW[1] = 2 * pW[0];
         pH[1] = 2 * pH[0];
         pX[2] = itemBtnXcenter + itemBtnWidthUnit+ 2*padding;
@@ -257,22 +260,26 @@ public abstract class Store extends Scene{
     } 
     
     public void resize(){
-        if(funcBtnWidthUnit!= Resource.SCREEN_WIDTH/12||itemBtnWidthUnit != Resource.SCREEN_WIDTH/8){
+        if(funcBtnWidthUnit!= Resource.SCREEN_WIDTH/12||itemBtnWidthUnit != Resource.SCREEN_WIDTH/8
+                ||funcBtnHeightUnit !=Resource.SCREEN_HEIGHT/9 ||itemBtnHeightUnit != Resource.SCREEN_WIDTH/8){
             System.out.println("different size");
-            funcBtnWidthUnit = Resource.SCREEN_WIDTH/12;//functionBtn的一個單位大小     
-            itemBtnWidthUnit = Resource.SCREEN_WIDTH/8;//itemBtn的一個單位大小 
+            funcBtnWidthUnit = Resource.SCREEN_WIDTH/12;//functionBtn的一個單位寬大小
+            funcBtnHeightUnit = Resource.SCREEN_HEIGHT/9;//functionBtn的一個單位高
+            itemBtnWidthUnit = Resource.SCREEN_WIDTH/8;//itemBtn的一個單位大小
+            itemBtnHeightUnit = Resource.SCREEN_HEIGHT/6;//itemBtn的一個單位大小
+            
             this.functionBtns[BuyScene.ButtomCode.BACK_BTN].reset(padding,padding,
-                    funcBtnWidthUnit, funcBtnWidthUnit);
+                    funcBtnWidthUnit, funcBtnHeightUnit);
             this.functionBtns[BuyScene.ButtomCode.BUY_BTN].reset(padding,Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),
-                    funcBtnWidthUnit*2, funcBtnWidthUnit);
+                    funcBtnWidthUnit*2, funcBtnHeightUnit);
             this.functionBtns[BuyScene.ButtomCode.LEFT_BTN].reset((int) (Resource.SCREEN_WIDTH * 0.1f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
-                    funcBtnWidthUnit/2, funcBtnWidthUnit);
+                    funcBtnWidthUnit/2, funcBtnHeightUnit);
             this.functionBtns[BuyScene.ButtomCode.RIGHT_BTN].reset((int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
-                    funcBtnWidthUnit/2, funcBtnWidthUnit);
+                    funcBtnWidthUnit/2, funcBtnHeightUnit);
             this.functionBtns[BuyScene.ButtomCode.START_BTN].reset(padding +functionBtns[BuyScene.ButtomCode.BACK_BTN].getWidth()+padding , padding,//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
-                    funcBtnWidthUnit*2, funcBtnWidthUnit);
+                    funcBtnWidthUnit*2, funcBtnHeightUnit);
             this.functionBtns[BuyScene.ButtomCode.SELL_BTN].reset(Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
-                    funcBtnWidthUnit*2, funcBtnWidthUnit);
+                    funcBtnWidthUnit*2, funcBtnHeightUnit);
             for(Button btn : functionBtns){
                 btn.setLabelSize(btn.getWidth());
             }

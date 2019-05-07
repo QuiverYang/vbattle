@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import vbattle.Bomb;
 import vbattle.BombA;
 import vbattle.Button;
 import vbattle.Coin;
@@ -31,7 +32,7 @@ public class StageScene extends Scene{
     //流程控制
     private int timeCount = 0; //倍數計時器：初始化
     private int eventTime = 100; // eventListener時間週期：大於0的常數
-    private int money = 0;
+    private int money = 200;
     private int MAX_MONEY = 200; //
     private boolean gameOver = false;
     private Player player;
@@ -61,6 +62,7 @@ public class StageScene extends Scene{
     private int[] iconNum = new int[5];
     private int iconSize = 100;
     private boolean[] dragable = new boolean[5];
+    private BombA bombContainer;
     
     //控制元件
     private ImgResource rc;
@@ -216,6 +218,7 @@ public class StageScene extends Scene{
                     SaveScene.nextScene = MainPanel.STORE_SCENE;     //設定儲存後場景為商店
                     gsChangeListener.changeScene(MainPanel.SAVE_SCENE);
                 }
+                
                 for (int i = 0; i < 5; i++) {
                     if (dragable[i]) {
                         dragable[i] = false;
@@ -237,11 +240,16 @@ public class StageScene extends Scene{
                     gameOverBtn.setImgState(0);
                     gameOverBtn.setIsClicked(false);
                 }
+                
                 if(Button.isOnBtn(e,returnBtn)&&returnBtn.getClickState()){
                     gsChangeListener.changeScene(MainPanel.STORE_SCENE);
                 }
+                
                 if (gameOver && Button.isOnBtn(e, gameOverBtn) && gameOverBtn.getClickState()) {
                     gsChangeListener.changeScene(MainPanel.STORE_SCENE);
+                    for(int i=0; i<player.getFp().size(); i++){
+                        player.getFp().get(i).changeValue();
+                    }
                 }
                 
                 for (int i = 0; i < 5; i++) {
@@ -410,6 +418,7 @@ public class StageScene extends Scene{
                 stuffGen();
             }
         }
+        bombCollision();
         
         if(timeCount == eventTime){ 
             timeCount = 0;
@@ -426,7 +435,9 @@ public class StageScene extends Scene{
             for (int j = 0; j < stuffList.get(i).size(); j++) {
                 stuffList.get(i).get(j).refreshCd();
                 //刷新每隻怪物的cd時間與mp的關係
-                stuffList.get(i).get(j).setCdTime(100*50/mp);
+                
+                stuffList.get(i).get(j).setCdTime(500-(int)((double)(9/2)*mp));
+                
                 System.out.println("cdtime: "+ stuffList.get(i).get(j).getCdTime());
             }
             for (int j = 0; j < stuffList.get(i+3).size(); j++) {
@@ -494,9 +505,6 @@ public class StageScene extends Scene{
             hp = mp = 0;
             player.setHp(hp);   //存回player內
             player.setMp(mp);
-            for(int i=0; i<player.getFp().size(); i++){
-                player.getFp().get(i).changeValue();
-            }
             this.loseSound.play();
             gameOverBtn = new Button("/resources/clickBtn.png",Resource.SCREEN_WIDTH / 12*8, (int) (Resource.SCREEN_HEIGHT / 9 * 6), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
 //            gameOverBtn.setLabel("CONTINUE");
@@ -530,5 +538,22 @@ public class StageScene extends Scene{
                 return Stuff.ACTOR5_PRICE;
         }
         return -1;
+    }
+    
+    public void bombCollision(){
+        for (int i = 0; i < stuffList.size(); i++) {
+            for (int j = 0; j < stuffList.get(i).size(); j++) {
+                bombContainer = stuffList.get(i).get(j).animationX();
+                if(bombContainer != null){
+                    for (int k = 0; k < stuffList.get(i+3).size(); k++) {
+                        if(bombContainer.checkAttack(stuffList.get(i+3).get(k))== true){
+                            stuffList.get(i+3).get(k).back(stuffList.get(i).get(j));
+                        }
+                        bombContainer.checkTouchGround();
+                    }
+                }
+            }
+        }
+        
     }
 }

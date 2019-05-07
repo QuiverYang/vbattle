@@ -197,13 +197,16 @@ public class BuyScene extends Store{
         this.functionBtns[ButtomCode.START_BTN].setCallback(new Callback() {
             @Override
             public void doSomthing() {
-                try {
-                    player.save();
-                } catch (IOException ex) {
-                    System.out.println("player save problem from StorceScene back to MenuScene");;
+                if(player.getHp()>0){
+                    try {
+                        player.save();
+                    } catch (IOException ex) {
+                        System.out.println("player save problem from StorceScene back to MenuScene");;
+                    }
+                    backgroundSound.stop();
+                    gsChangeListener.changeScene(MainPanel.STAGE_SCENE);
                 }
-                backgroundSound.stop();
-                gsChangeListener.changeScene(MainPanel.STAGE_SCENE);
+                
             }
         });
         //===============sell buttom==================

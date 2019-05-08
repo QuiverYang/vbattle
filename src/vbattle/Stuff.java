@@ -69,7 +69,7 @@ public class Stuff {
         this.characterNumY0 = characterNum*32;
         this.characterNumY1 = characterNumY0+32;
         this.cdTime = 40;
-        this.attackedTime = 5;
+        this.attackedTime = 1;
         this.txtpath = txtpath;
         //設定建構子參數
         //讀取參數txt檔
@@ -221,7 +221,7 @@ public class Stuff {
         this.x1 = x0 +imgWidth;
     }
     public void attack(Stuff attacked) {
-        if(attackCd){//cd中不進攻擊狀態
+        if(attackCd && attackedCd){//cd中不進攻擊狀態
             if(frame < 3 || frame > 6){ //進入攻擊狀態：防止重複初始化frame;
                 frame = 3;
                 
@@ -257,13 +257,13 @@ public class Stuff {
     }
     
     public void back(Stuff attacker) {
-        if(attackCd){
+        if(attackedCd){
             hp = hp - attacker.atk;
             frame = 0;
             x0 = x0 - 100 * type;
             this.x1 = x0 +imgWidth;
             hit.play();
-            attackCd = false;
+            attackedCd = false;
         }
     }
     public void die(){
@@ -297,7 +297,7 @@ public class Stuff {
             if(type == 1 && this.x0 <actor.get(i).x1 && this.x1 + (range*type) > actor.get(i).x0){
                 return actor.get(i);
             }
-            if(type == -1 && this.x0 + (range*type) <actor.get(i).x1 && this.x1 + (range*imgWidth*type) > actor.get(i).x0){
+            if(type == -1 && this.x0 + (range*type) <actor.get(i).x1 && this.x1 > actor.get(i).x0){
                 return actor.get(i);
             }
         }

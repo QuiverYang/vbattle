@@ -75,7 +75,7 @@ public class BuyScene extends Store{
             @Override
             public void doSomthing() {
                 //                    player.save();
-                backgroundSound.stop();
+//                backgroundSound.stop();
                 SaveScene.currentScene = MainPanel.STORE_SCENE; //設定當前場景為商店
                 SaveScene.nextScene = MainPanel.MENU_SCENE;     //設定儲存後場景為主畫面
                 gsChangeListener.changeScene(MainPanel.SAVE_SCENE);
@@ -97,6 +97,7 @@ public class BuyScene extends Store{
                     if((products[counter] instanceof FinProduct)){
                         costCash += products[counter].getPrice();
                         player.getFp().add((FinProduct)products[counter]);
+                       
                     }else if(products[counter] instanceof Food){//判斷是否為食物
                         if(!(player.getMp()>=100 && player.getHp()>=100)){
                             Food temp = (Food)products[counter];
@@ -203,7 +204,8 @@ public class BuyScene extends Store{
                     } catch (IOException ex) {
                         System.out.println("player save problem from StorceScene back to MenuScene");;
                     }
-                    backgroundSound.stop();
+                    MainPanel.backgroundSound.stop();
+//                    backgroundSound.stop();
                     gsChangeListener.changeScene(MainPanel.STAGE_SCENE);
                 }
                 
@@ -218,7 +220,6 @@ public class BuyScene extends Store{
             public void doSomthing() {
                 try {
                     player.save();
-                    backgroundSound.stop();
                     gsChangeListener.changeScene(MainPanel.SELL_SCENE);
                 } catch (IOException ex) {
                     System.out.println("player save problem from StorceScene back to MenuScene");;

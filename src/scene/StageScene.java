@@ -247,6 +247,7 @@ public class StageScene extends Scene{
                 
                 if (gameOver && Button.isOnBtn(e, gameOverBtn) && gameOverBtn.getClickState()) {
                     gsChangeListener.changeScene(MainPanel.STORE_SCENE);
+                    MainPanel.backgroundSound.loop();
                     for(int i=0; i<player.getFp().size(); i++){
                         player.getFp().get(i).changeValue();
                     }

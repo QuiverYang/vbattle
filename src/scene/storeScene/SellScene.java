@@ -57,7 +57,7 @@ public class SellScene extends Store{
             public void doSomthing() {
                 try {
                     player.save();
-                    backgroundSound.stop();
+//                    backgroundSound.stop();
                     gsChangeListener.changeScene(MainPanel.STORE_SCENE);
                 } catch (IOException ex) {
                     System.out.println("player save problem from StorceScene back to MenuScene");;

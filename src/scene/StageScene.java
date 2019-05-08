@@ -293,6 +293,13 @@ public class StageScene extends Scene{
                     stuffList.get(i).get(j).paint(g);
                 }
             }
+            for (int i = 0; i < stuffList.size(); i++) {
+                for (int j = 0; j < stuffList.get(i).size(); j++) {
+                    if(stuffList.get(i).get(j).getBomb() != null){
+                        stuffList.get(i).get(j).getBomb().paint(g);
+                    }
+                }
+            }
         }
         
         for (int i = 0; i < dieStuff.size(); i++) {
@@ -406,9 +413,9 @@ public class StageScene extends Scene{
                 //刷新每隻怪物的cd時間與mp的關係
 //                stuffList.get(i).get(j).setCdTime(100*50/this.maxMp);
                 
-                stuffList.get(i).get(j).setCdTime(500-(int)((double)(9/2)*mp));
+//                stuffList.get(i).get(j).setCdTime(500-(int)((double)(9/2)*mp));
                 
-                System.out.println("cdtime: "+ stuffList.get(i).get(j).getCdTime());
+//                System.out.println("cdtime: "+ stuffList.get(i).get(j).getCdTime());
             }
             for (int j = 0; j < stuffList.get(i+3).size(); j++) {
                 stuffList.get(i+3).get(j).refreshCd();
@@ -461,6 +468,9 @@ public class StageScene extends Scene{
                 coins.add(new Coin(tmp.getX0(),tmp.getY0(),tmp.getImgWidth(),tmp.getImgHeight()));
                 stuff2.remove(tmp);
             }
+            if(stuff1.get(i).getType() == 1 && stuff1.get(i).getX0() > Resource.SCREEN_WIDTH ){
+                stuff1.remove(i);
+            } 
         }
     }
     

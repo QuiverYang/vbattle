@@ -29,7 +29,7 @@ public class Stuff {
     private int type; // 判斷正反角 (1-->我方角 , -1-->敵方)
     private int range;
     private int imgSize;
-    private BombA a;
+    private BombA bombContainer;
     
     //腳色變動屬性
 //    private boolean clickState;
@@ -68,8 +68,8 @@ public class Stuff {
         this.y1 = y0 + imgHeight;
         this.characterNumY0 = characterNum*32;
         this.characterNumY1 = characterNumY0+32;
-        this.cdTime = 40;
-        this.attackedTime = 1;
+        this.cdTime = 20;
+        this.attackedTime = 20;
         this.txtpath = txtpath;
         //設定建構子參數
         //讀取參數txt檔
@@ -189,7 +189,11 @@ public class Stuff {
         this.cdTime = cdTime;
     }
     
-    //內建GETTER SETTER
+    public BombA getBomb(){
+        return bombContainer;
+    }
+    
+    //GETTER SETTER
     
     public void setCoordinate(int x,int y){
         this.x0 = x - imgWidth/2;
@@ -210,7 +214,7 @@ public class Stuff {
     public void walkFrame(){
         //控制更新範圍：0~3
         frame ++;
-        if (frame == 3) {
+        if (frame >= 3) {
             frame = 0;
         }
     }
@@ -221,13 +225,12 @@ public class Stuff {
         this.x1 = x0 +imgWidth;
     }
     public void attack(Stuff attacked) {
-        if(attackCd && attackedCd){//cd中不進攻擊狀態
+        if(attackCd && attacked.attackedCd){//cd中不進攻擊狀態
             if(frame < 3 || frame > 6){ //進入攻擊狀態：防止重複初始化frame;
                 frame = 3;
                 
                 if(range > 0 ){
-                a = new BombA(x0,y0,32,Math.abs(x0 - attacked.x0));
-                
+                    bombContainer = new BombA(x0,y0,32,Math.abs(x0 - attacked.x0));
                 }
             }
             
@@ -237,21 +240,19 @@ public class Stuff {
                 if(range < 1){
                     attacked.back(this);
                 }else{
+                    frame = 0;
                 }
-                frame = 0;
                 attackCd = false;
             }
-            
-            
         }else{
             walkFrame();
         }
     }
     
     public BombA animation(){
-        if(a != null){
-            a.move();
-            return a;
+        if(bombContainer != null){
+            bombContainer.move();
+            return bombContainer;
         }
         return null;
     }
@@ -286,7 +287,7 @@ public class Stuff {
         }
         if(!attackedCd){
             attackedCdCounter++;
-            if(attackedCdCounter ==attackedTime){
+            if(attackedCdCounter == attackedTime){
                 attackedCd = true;
                 attackedCdCounter = 0;
             }
@@ -327,8 +328,8 @@ public class Stuff {
             }
         }
         
-        if(a != null){
-            a.paint(g);
+        if(bombContainer != null){
+            bombContainer.paint(g);
         }
     }
 }

@@ -202,31 +202,38 @@ public abstract class Store extends Scene{
         g.drawString(pMp, (int)(Resource.SCREEN_WIDTH*0.9)-sw, Resource.SCREEN_HEIGHT/6);
         
         //=============畫出 info=========================
+        paintProductInfo(g);
+    }
+    
+    public void paintProductInfo(Graphics g){
+        FontMetrics fm = g.getFontMetrics();
+        int sw;
+        int sa = fm.getAscent();
         if(products != null && products.length>1){
             String info= productOnScreen[1].getInfo();
             if(products[counter] instanceof FinProduct){
                 g.setFont(fontSmall);
                 int y = Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.25f);
-                int sh = g.getFontMetrics().getHeight();
+                int sh = g.getFontMetrics().getHeight();//換行使用
                 int i = 0;
                 sw = fm.stringWidth(info.split("  ")[0]);
                 for (String line : info.split("  ")){
-                    g.drawString(line, (int)(Resource.SCREEN_WIDTH*0.53)-sw/4,y);
+                    g.drawString(line, (int)(Resource.SCREEN_WIDTH*0.51)-sw/4,y);
                     y += sh;
-                    if(i ==1){
-                        FinProduct temp = (FinProduct)products[counter];
-                        g.drawString("剩餘價值:"+temp.getValue(), (int)(Resource.SCREEN_WIDTH*0.53)-sw/4,y);                    }
-                    i++;
+//                    if(i ==1){
+//                        FinProduct temp = (FinProduct)products[counter];
+//                        g.drawString("剩餘價值:"+temp.getValue(), (int)(Resource.SCREEN_WIDTH*0.51)-sw/4,y);                    }
+//                    i++;
                 }
 
             }else{
                 g.setFont(fontC);
                 sw = fm.stringWidth(info);
-                g.drawString(info, (int)(Resource.SCREEN_WIDTH*0.5)-sw/4, Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.24f));
-                g.drawString("價格:"+productOnScreen[1].getPrice(), (int)(Resource.SCREEN_WIDTH*0.5)-sw/4, Resource.SCREEN_HEIGHT-padding-(int)(Resource.SCREEN_HEIGHT*0.24f));
+                g.drawString(info, (int)(Resource.SCREEN_WIDTH*0.47)-sw/4, Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.24f));
+                g.drawString("價格:"+productOnScreen[1].getPrice(), (int)(Resource.SCREEN_WIDTH*0.47)-sw/4, Resource.SCREEN_HEIGHT-padding-(int)(Resource.SCREEN_HEIGHT*0.24f));
                 if(products[counter] instanceof StuffLevel){
                     g.setFont(fontBitSmall);
-                    String name= products[counter].getName();
+                    
                     int lv;
                     
                     lv =player.getUnlock()[counter-6];//第一隻怪物商品放在第六個位置
@@ -240,7 +247,6 @@ public abstract class Store extends Scene{
             }   
         }
     }
-    
     
     @Override
     public void logicEvent() {

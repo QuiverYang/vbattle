@@ -141,6 +141,36 @@ public class BuyScene extends Store{
 
             @Override
             public void doSomthing() {
+                if(counter > 2){
+                    counter--;
+                    System.out.println("right" + counter);
+                    productOnScreen[0] = products[counter-1];
+                    productOnScreen[1] = products[counter];
+                    productOnScreen[2] = products[counter+1];
+                }
+                else if(counter == 2){
+                    counter--;
+                    System.out.println("到第一個選項了"+counter);
+                    
+                    productOnScreen[2] = products[counter+1];
+                    productOnScreen[1] = products[counter];
+                    productOnScreen[0] = products[0];
+                }
+                changeProductSeq();
+                initParameters();
+            }
+            
+            
+        });
+        //===============right buttom==================
+        this.functionBtns[ButtomCode.RIGHT_BTN] = new Button("/resources/clickBtn_blue.png",(int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
+                funcBtnWidthUnit/2, funcBtnWidthUnit);
+        this.functionBtns[ButtomCode.RIGHT_BTN].setLabel(">");
+        this.functionBtns[ButtomCode.RIGHT_BTN].setLabelSize(functionBtns[ButtomCode.RIGHT_BTN].getWidth()*4);
+        this.functionBtns[ButtomCode.RIGHT_BTN].setCallback(new Callback(){
+
+            @Override
+            public void doSomthing() {
                 if(counter < products.length-2){
 
                     counter++;
@@ -160,34 +190,6 @@ public class BuyScene extends Store{
                 initParameters();
             }
             
-        });
-        //===============right buttom==================
-        this.functionBtns[ButtomCode.RIGHT_BTN] = new Button("/resources/clickBtn_blue.png",(int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
-                funcBtnWidthUnit/2, funcBtnWidthUnit);
-        this.functionBtns[ButtomCode.RIGHT_BTN].setLabel(">");
-        this.functionBtns[ButtomCode.RIGHT_BTN].setLabelSize(functionBtns[ButtomCode.RIGHT_BTN].getWidth()*4);
-        this.functionBtns[ButtomCode.RIGHT_BTN].setCallback(new Callback(){
-
-            @Override
-            public void doSomthing() {
-                if(counter > 2){
-                    counter--;
-                    System.out.println("right" + counter);
-                    productOnScreen[0] = products[counter-1];
-                    productOnScreen[1] = products[counter];
-                    productOnScreen[2] = products[counter+1];
-                }
-                else if(counter == 2){
-                    counter--;
-                    System.out.println("到第一個選項了"+counter);
-                    
-                    productOnScreen[2] = products[counter+1];
-                    productOnScreen[1] = products[counter];
-                    productOnScreen[0] = products[0];
-                }
-                changeProductSeq();
-                initParameters();
-            }
             
         });
         //===============start buttom==================

@@ -32,16 +32,15 @@ public class SellScene extends Store{
         productsNum = player.getFp().size()+1;
         //建立產品
         products = new FinProduct[productsNum];
-        products[0] = new FinProduct("/resources/nothing.png","",0,0,0,"",0);
+        products[0] = new FinProduct("/resources/nothing.png","",0,0,0,"");
         for(int i = 1; i < productsNum; i++){
             String pName = player.getFp().get(i-1).getName();
             int price = player.getFp().get(i-1).getPrice();
             String info = player.getFp().get(i-1).getInfo();
             double risk = player.getFp().get(i-1).getRisk();
-            double profit = player.getFp().get(i-1).getProfit();
+            int profit = player.getFp().get(i-1).getProfit();
             String path = player.getFp().get(i-1).getFileName();
-            int value = player.getFp().get(i-1).getValue();
-            products[i] = new FinProduct(path,pName,price,risk,profit,info,value);
+            products[i] = new FinProduct(path,pName,price,risk,profit,info);
         }
         counter = 1;
     }
@@ -73,8 +72,8 @@ public class SellScene extends Store{
             public void doSomthing() {
                 if(productsNum > 1){
                     FinProduct temp = (FinProduct)products[counter];
-                    costCash += temp.getValue();
                     player.getFp().remove(--counter);
+                    player.increaseHpMax(temp.getPlusHp());
                     setProduct();
                     initProductOnScreen();
                 }
@@ -86,6 +85,32 @@ public class SellScene extends Store{
         this.functionBtns[ButtomCode.LEFT_BTN].setLabel("<");
         counter = 1;
         this.functionBtns[ButtomCode.LEFT_BTN].setCallback(new Button.Callback(){
+            @Override
+            public void doSomthing() {
+                if(products.length>1){
+                    if(counter > 2){
+                        counter--;
+                        productOnScreen[0] = products[counter-1];
+                        productOnScreen[1] = products[counter];
+                        productOnScreen[2] = products[counter+1];
+                    }
+                    else if(counter == 2){
+                        counter--;
+                        System.out.println("到第一個選項了");
+                        productOnScreen[0] = products[0];
+                        productOnScreen[1] = products[counter];
+                        productOnScreen[2] = products[counter+1];
+                    }
+                    changeProductSeq();
+                    initParameters();
+                } 
+            }
+            
+        });
+        this.functionBtns[ButtomCode.RIGHT_BTN] = new Button("/resources/clickBtn_blue.png",(int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
+                funcBtnWidthUnit/2, funcBtnWidthUnit);
+        this.functionBtns[ButtomCode.RIGHT_BTN].setLabel(">");
+        this.functionBtns[ButtomCode.RIGHT_BTN].setCallback(new Button.Callback(){
             @Override
             public void doSomthing() {
                 if(products.length>1){
@@ -109,31 +134,6 @@ public class SellScene extends Store{
                 
             }
             
-        });
-        this.functionBtns[ButtomCode.RIGHT_BTN] = new Button("/resources/clickBtn_blue.png",(int) (Resource.SCREEN_WIDTH * 0.9f)-funcBtnWidthUnit/2/2, this.rightBtnYcenter-funcBtnWidthUnit/2,
-                funcBtnWidthUnit/2, funcBtnWidthUnit);
-        this.functionBtns[ButtomCode.RIGHT_BTN].setLabel(">");
-        this.functionBtns[ButtomCode.RIGHT_BTN].setCallback(new Button.Callback(){
-            @Override
-            public void doSomthing() {
-                if(products.length>1){
-                    if(counter > 2){
-                        counter--;
-                        productOnScreen[0] = products[counter-1];
-                        productOnScreen[1] = products[counter];
-                        productOnScreen[2] = products[counter+1];
-                    }
-                    else if(counter == 2){
-                        counter--;
-                        System.out.println("到第一個選項了");
-                        productOnScreen[0] = products[0];
-                        productOnScreen[1] = products[counter];
-                        productOnScreen[2] = products[counter+1];
-                    }
-                    changeProductSeq();
-                    initParameters();
-                } 
-            }
             
         });
 

@@ -65,7 +65,7 @@ public class SaveScene extends Scene {
 
         saveSceneCheck = false;
         player = Player.getPlayerInstane();
-
+        
     }
 
 //    public void setPrevous(int i){

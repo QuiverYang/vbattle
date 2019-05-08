@@ -116,20 +116,17 @@ public class Button extends ItemOnScreen{
 
     //for img with 2 types
     public void paintBtn(Graphics g) {
-        
-        
-        g.drawImage(img, x, y, x+this.getImgWidth(), y+this.getImgHeight(), img.getWidth()/2*imgState, 0, img.getWidth()/2*(imgState+1), img.getHeight(), null);
-//        g.drawOval(x, y, 5, 5);
-//        g.drawOval(x+this.getImgWidth(), y+this.getImgHeight(), 5, 5);
+        g.drawImage(img, x, y, x+this.getImgWidth(), y+this.getImgHeight(),
+                img.getWidth()/2*imgState, 0, img.getWidth()/2*(imgState+1), img.getHeight(), null);
+
         //畫出按鈕label
         if(label !=null){
-            
             g.setColor(Color.BLACK);
             g.setFont(fontBit);
             FontMetrics fm = g.getFontMetrics();
             int sw = fm.stringWidth(label);
             int sa = fm.getAscent();
-            g.drawString(label, x+width/2-sw/2-imgState*3+3, y+height/2-sa/2+height/3+imgState*5);
+            g.drawString(label, x+width/2-sw/2-imgState*3+3, y+height/2-sa/2+height/3+imgState*5);//imgState*的部分是按下去的偏移量
         }
         
     }

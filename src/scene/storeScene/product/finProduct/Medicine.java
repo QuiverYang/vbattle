@@ -15,7 +15,7 @@ public class Medicine extends FinProduct{
     
     public static final int PRODUCT_MEDICINE_PRICE = 600;
 
-    public final String PRODUCT_MEDICINE_INFO = "抗生藥品:購買一個抗生藥品  成長風險0.30/利潤0.08";
+    public final String PRODUCT_MEDICINE_INFO = "抗生藥品:每一回合  有7成機會最大體力增加30  3成機會減少30";
     
 
     public Medicine() {
@@ -23,9 +23,8 @@ public class Medicine extends FinProduct{
         this.name = "抗生藥品";
         this.price = PRODUCT_MEDICINE_PRICE;
         this.risk = 0.3d;
-        this.profit = 0.08d;
+        this.profit = 30;
         this.info = PRODUCT_MEDICINE_INFO;
-        this.value = price;
     }
    
     

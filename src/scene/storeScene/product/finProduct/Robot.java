@@ -16,7 +16,7 @@ public class Robot extends FinProduct{
     
     public static final int PRODUCT_ROBOT_PRICE = 700;
 
-    public final String PRODUCT_ROBOT_INFO  = "生化元素:購買一個生化藥劑  成長風險0.60/利潤0.16";
+    public final String PRODUCT_ROBOT_INFO  = "生化元素:每一回合  有6成機會最大體力增加50  4成機會減少50";
 
     
     public Robot() {
@@ -24,8 +24,7 @@ public class Robot extends FinProduct{
         this.name = "生化元素";
         this.price = PRODUCT_ROBOT_PRICE;
         this.risk = 0.6d;
-        this.profit = 0.16d;
+        this.profit = 50;
         this.info = PRODUCT_ROBOT_INFO;
-        this.value = price;
     }
 }

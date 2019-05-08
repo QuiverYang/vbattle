@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class Player {
 
     private int inventory, stage;
-    private int hp, mp, cash; //體力 快樂度
+    private int hp, mp, cash,hpMax,mpMax; //體力 快樂度
     private ArrayList<FinProduct> fp;
     private int unlock[] = new int[5];//資源存量,破關進度,解鎖腳色
     private String savePath;
@@ -107,8 +107,34 @@ public class Player {
     public void setUnlock(int[] unlock) {
         this.unlock = unlock;
     }
-    //GETTER SETTER
 
+    public int getHpMax() {
+        return hpMax;
+    }
+
+    public void setHpMax(int hpMax) {
+        this.hpMax = hpMax;
+    }
+
+    public int getMpMax() {
+        return mpMax;
+    }
+
+    public void setMpMax(int mpMax) {
+        this.mpMax = mpMax;
+    }
+    
+    
+    
+    //GETTER SETTER
+    
+    public void increaseMpMax(int num){
+        this.mpMax += num;
+    }
+    public void increaseHpMax(int num){
+        this.hpMax += num;
+    }
+    
     public void setPlayerName(String name) {
         this.playerName = name;
     }
@@ -138,8 +164,8 @@ public class Player {
         //(0         ,1        ,2    ,3      ,4      ,5      ,6      ,7      ,8 ,9 ,10)
 
         //暫存當前玩家資料
-        int countFp = 11;
-        String[] info = new String[11 + this.fp.size() * 2];
+        int countFp = 13;
+        String[] info = new String[13 + this.fp.size() * 3];
         info[0] = this.playerName;
         info[1] = String.valueOf(this.inventory);
         info[2] = String.valueOf(this.stage);
@@ -149,11 +175,13 @@ public class Player {
         info[8] = String.valueOf(this.hp);
         info[9] = String.valueOf(this.mp);
         info[10] = String.valueOf(this.cash);
+        info[12] = String.valueOf(this.hpMax);
+        info[11] = String.valueOf(this.mpMax);
         for (int i = 0; i < this.fp.size(); i++) {
             info[countFp++] = String.valueOf(this.fp.get(i).getName());
-            info[countFp++] = String.valueOf(this.fp.get(i).getValue());
+            info[countFp++] = String.valueOf(this.fp.get(i).getPlusHp());
+            info[countFp++] = String.valueOf(this.fp.get(i).getPlusMp());
         }
-        
         //判斷是否為新玩家
         if (this.playerIndex == -1 && this.playerInfo.size() >= 6) { //若為新玩家且當前玩家數>=6，則刪除最舊玩家，新增新玩家
             this.playerInfo.remove(0);
@@ -203,8 +231,8 @@ public class Player {
         //如果玩家有金融商品
         if (status.length > 11 ) {
             int countFp = 11;
-            int indexOfRisk, indexOfProfit,value;
-            double risk, profit;
+            int indexOfRisk, indexOfProfit,profit;
+            double risk;
             for (int i = 0; i < (status.length - 11) / 2; i++) {
                 
                 switch (status[countFp++]) {
@@ -212,30 +240,30 @@ public class Player {
                         String stockInfo = FinProduct.PRODUCT_STOCK_INFO;
                         indexOfRisk = stockInfo.indexOf("風險");
                         indexOfProfit = stockInfo.indexOf("利潤");
-                        risk = Double.parseDouble(stockInfo.substring(indexOfRisk + 2, indexOfRisk + 6));
-                        profit = Double.parseDouble(stockInfo.substring(indexOfProfit + 2, indexOfProfit + 6));
-                        value = Integer.parseInt(status[countFp++]);
-                        this.fp.add(new FinProduct(FinProduct.PRODUCT_STOCK_PATH, "抗生藥品", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, stockInfo,value));
+                        risk = Double.parseDouble(stockInfo.substring(indexOfRisk + 2, indexOfRisk + 4));
+                        profit = Integer.parseInt(stockInfo.substring(indexOfProfit + 2, indexOfProfit + 4));
+                        countFp++;
+                        this.fp.add(new FinProduct(FinProduct.PRODUCT_STOCK_PATH, "抗生藥品", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, stockInfo));
                         break;
                         
                     case "健康食品":
                         String fundInfo = FinProduct.PRODUCT_FUND_INFO;
                         indexOfRisk = fundInfo.indexOf("風險");
                         indexOfProfit = fundInfo.indexOf("利潤");
-                        risk = Double.parseDouble(fundInfo.substring(indexOfRisk + 2, indexOfRisk + 6));
-                        profit = Double.parseDouble(fundInfo.substring(indexOfProfit + 2, indexOfProfit + 6));
-                        value = Integer.parseInt(status[countFp++]);
-                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUND_PATH, "健康食品", FinProduct.PRODUCT_FUND_PRICE, risk, profit, fundInfo,value));
+                        risk = Double.parseDouble(fundInfo.substring(indexOfRisk + 2, indexOfRisk + 4));
+                        profit = Integer.parseInt(fundInfo.substring(indexOfProfit + 2, indexOfProfit + 4));
+                        countFp++;
+                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUND_PATH, "健康食品", FinProduct.PRODUCT_FUND_PRICE, risk, profit, fundInfo));
                         break;
                         
                     case "生化元素":
                         String futureInfo = FinProduct.PRODUCT_FUTURES_INFO;
                         indexOfRisk = futureInfo.indexOf("風險");
                         indexOfProfit = futureInfo.indexOf("利潤");
-                        risk = Double.parseDouble(futureInfo.substring(indexOfRisk + 2, indexOfRisk + 6));
-                        profit = Double.parseDouble(futureInfo.substring(indexOfProfit + 2, indexOfProfit + 6));
-                        value = Integer.parseInt(status[countFp++]);
-                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUTURES_PATH, "生化元素", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, futureInfo,value));
+                        risk = Double.parseDouble(futureInfo.substring(indexOfRisk + 2, indexOfRisk + 4));
+                        profit = Integer.parseInt(futureInfo.substring(indexOfProfit + 2, indexOfProfit + 4));
+                        countFp++;
+                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUTURES_PATH, "生化元素", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, futureInfo));
                         break;
                 }
                 
@@ -246,8 +274,8 @@ public class Player {
 
     //初始化玩家數值
     public void defaultPlayer() {
-        this.hp = 100;
-        this.mp = 100;
+        this.hp = this.hpMax = 100;
+        this.mp = this.mpMax = 100;
         this.inventory = this.cash = 6000;
         this.fp.clear();
     }

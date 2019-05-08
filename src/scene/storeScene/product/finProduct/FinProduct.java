@@ -18,13 +18,13 @@ public class FinProduct extends Product{
     public static final String PRODUCT_FUTURES_PATH = "/resources/robot.jpg";
     public static final String PRODUCT_FUND_PATH = "/resources/medicine.jpg";
 
-    public static final String PRODUCT_STOCK_INFO = "抗生藥品:購買一個抗生藥品  成長風險0.30/利潤0.08";
-    public static final String PRODUCT_FUTURES_INFO  = "生化元素:購買一個生化藥劑  成長風險0.60/利潤0.16";
-    public static final String PRODUCT_FUND_INFO  = "健康食品:購買一個健康食品  成長風險0.20/利潤0.04";
+    public static final String PRODUCT_STOCK_INFO = "抗生藥品:購買一個抗生藥品  成長風險0.30/利潤10";
+    public static final String PRODUCT_FUTURES_INFO  = "生化元素:購買一個生化藥劑  成長風險0.60/利潤50";
+    public static final String PRODUCT_FUND_INFO  = "健康食品:購買一個健康食品  成長風險0.20/利潤30";
     
     protected double risk;
-    protected int value;
-    protected double profit;
+    protected int profit;
+    protected int plusHp,plusMp;
     
     public FinProduct(){
     }
@@ -33,11 +33,10 @@ public class FinProduct extends Product{
         super(fileName);
     }
     
-    public FinProduct(String fileName, String name, int price, double risk, double profit, String info, int value){
+    public FinProduct(String fileName, String name, int price, double risk, int profit, String info){
         super(fileName, name, price, info);
         this.risk = risk;
         this.profit = profit;
-        this.value = value;
     }
     
     public FinProduct(String fileName, int x, int y, int width, int height){
@@ -47,16 +46,28 @@ public class FinProduct extends Product{
     
     public void changeValue(){
         if(Math.random()>risk){
-            value= (int)(value*(1+profit));
-            System.out.println("++"+value);
+            plusHp += profit;
         }else{
-            value  = (int)(value*(1-profit));
-            System.out.println("--"+value);
-            if(value < 0){
-                value = 0;
-            }
+            plusHp -= profit;
         }
     }
+
+    public int getPlusHp() {
+        return plusHp;
+    }
+
+    public void setPlusHp(int plusHp) {
+        this.plusHp = plusHp;
+    }
+
+    public int getPlusMp() {
+        return plusMp;
+    }
+
+    public void setPlusMp(int plusMp) {
+        this.plusMp = plusMp;
+    }
+    
 
     public double getRisk() {
         return risk;
@@ -66,21 +77,11 @@ public class FinProduct extends Product{
         this.risk = risk;
     }
 
-    public int getValue() {
-        return value;
-    }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
-
-    public double getProfit() {
+    public int getProfit() {
         return profit;
     }
 
-    public void setProfit(double profit) {
-        this.profit = profit;
-    }
     
     
 }

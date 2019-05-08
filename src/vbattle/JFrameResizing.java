@@ -26,10 +26,11 @@ public class JFrameResizing extends JFrame implements ComponentListener {
     public void componentMoved(ComponentEvent ce) { };
    @Override
     public void componentResized(ComponentEvent ce) {
-      int height = this.getHeight();
       int width = this.getWidth();
-      Resource.SCREEN_HEIGHT = height;
+      int height = width*9/12;
       Resource.SCREEN_WIDTH = width;
+      Resource.SCREEN_HEIGHT = height;
+      this.setSize(width,height); 
       
     }
 }

@@ -37,7 +37,7 @@ public abstract class Store extends Scene{
     protected int funcBtnWidthUnit = Resource.SCREEN_WIDTH/12;//functionBtn的一個單位寬大小
     protected int funcBtnHeightUnit = Resource.SCREEN_HEIGHT/9;//functionBtn的一個單位高
     protected int itemBtnWidthUnit = Resource.SCREEN_WIDTH/8;//itemBtn的一個單位大小
-    protected int itemBtnHeightUnit = Resource.SCREEN_WIDTH/8;//itemBtn的一個單位大小
+    protected int itemBtnHeightUnit = Resource.SCREEN_HEIGHT/6;//itemBtn的一個單位大小
    
     protected final int padding = 20;//與邊框距離
     protected int itemBtnXcenter;//選單圖片中心x座標
@@ -261,7 +261,7 @@ public abstract class Store extends Scene{
     
     public void resize(){
         if(funcBtnWidthUnit!= Resource.SCREEN_WIDTH/12||itemBtnWidthUnit != Resource.SCREEN_WIDTH/8
-                ||funcBtnHeightUnit !=Resource.SCREEN_HEIGHT/9 ||itemBtnHeightUnit != Resource.SCREEN_WIDTH/8){
+                ||funcBtnHeightUnit !=Resource.SCREEN_HEIGHT/9 ||itemBtnHeightUnit != Resource.SCREEN_HEIGHT/6){
             System.out.println("different size");
             funcBtnWidthUnit = Resource.SCREEN_WIDTH/12;//functionBtn的一個單位寬大小
             funcBtnHeightUnit = Resource.SCREEN_HEIGHT/9;//functionBtn的一個單位高

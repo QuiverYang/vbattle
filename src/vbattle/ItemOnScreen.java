@@ -62,6 +62,7 @@ public class ItemOnScreen {
     }
     
     public void paint(Graphics g) {
+        
         g.drawImage(img, x, y, x+this.width, y+this.height,0,0,img.getWidth(),img.getHeight(), null);
     }
 

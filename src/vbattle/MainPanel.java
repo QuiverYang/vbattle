@@ -127,13 +127,13 @@ public class MainPanel extends JPanel {
 //                return new StageScene(gsChangeListener);
             }
             case STAGE_SCENE:
-                if(this.stageScene == null){
-                    this.stageScene = new StageScene(gsChangeListener);
-                } 
+//                if(this.stageScene == null){
+//                    this.stageScene = new StageScene(gsChangeListener);
+//                } 
                 if(SaveScene.saveSceneCheck){  //如果使用到儲存畫面，則回傳上一刻的實體
                      return this.stageScene;
                 }
-                return new StageScene(gsChangeListener);
+                return this.stageScene = new StageScene(gsChangeListener);
 
             case SELL_SCENE:
                 return new SellScene(gsChangeListener);

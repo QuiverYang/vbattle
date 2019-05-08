@@ -39,6 +39,7 @@ public class StageScene extends Scene{
     private int hp,mp;
     private int maxHp;      //存取玩家原始hp
     private int maxMp;
+    private int cash;
     private BufferedReader br;
     private ArrayList<Integer> delay = new ArrayList<>();
     private ArrayList<Integer> type = new ArrayList<>();
@@ -48,7 +49,6 @@ public class StageScene extends Scene{
     
     //物件控制
     private int battleAreaY[] ={600,450,300};//可放置的路
-    private BombA bombContainer;
     private ArrayList<ArrayList<Stuff>> stuffList = new ArrayList<>();
     private ArrayList<Stuff> dieStuff = new ArrayList<>();
     private ArrayList<Coin> coins = new ArrayList(); 
@@ -60,9 +60,7 @@ public class StageScene extends Scene{
     private int[] iconNum = new int[5];
     private int iconSize = 100;
     private boolean[] dragable = new boolean[5];
-    interface CollisionMethod{
-        void collision(ArrayList<Stuff> stuff1,ArrayList<Stuff> stuff2);
-    }
+    private BombA bombContainer;
     
     //場景元件
     private ImgResource rc;
@@ -73,7 +71,8 @@ public class StageScene extends Scene{
 
     private BufferedImage winImg;
     private BufferedImage loseImg;
-    private BufferedImage energy;
+    private BufferedImage energyIng;
+    private BufferedImage coinImg;
     private AudioClip clickSound;
     private AudioClip winSound;
     private AudioClip loseSound;
@@ -96,8 +95,8 @@ public class StageScene extends Scene{
         background = rc.tryGetImage("/resources/background5.png");
         winImg = rc.tryGetImage("/resources/win.png");
         loseImg = rc.tryGetImage("/resources/lose.png");
-        energy = rc.tryGetImage("/resources/energy.png");
-        
+        energyIng = rc.tryGetImage("/resources/energy.png");
+        coinImg = rc.tryGetImage("/resources/coin.png");
         fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 23);
         priceFontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 45);
         gameFontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 37);
@@ -112,7 +111,7 @@ public class StageScene extends Scene{
         }catch(Exception ex){
             ex.printStackTrace();
         }
-        
+        cash = 0;
         player = Player.getPlayerInstane();
         hp = player.getHp();
         mp = player.getMp();
@@ -188,6 +187,7 @@ public class StageScene extends Scene{
                     if(Coin.isOnCoin(e, coins.get(i))){
                         Coin.CoinClicked(getClass().getResource("/resources/coin.wav"));
                         coins.remove(i);
+                        cash += 10;
                         player.increaseCash(10);//設定每隻怪物增加10元
                     }
                 }
@@ -217,6 +217,7 @@ public class StageScene extends Scene{
                     SaveScene.nextScene = MainPanel.STORE_SCENE;     //設定儲存後場景為商店
                     gsChangeListener.changeScene(MainPanel.SAVE_SCENE);
                 }
+                
                 for (int i = 0; i < 5; i++) {
                     if (dragable[i]) {
                         dragable[i] = false;
@@ -238,11 +239,16 @@ public class StageScene extends Scene{
                     gameOverBtn.setImgState(0);
                     gameOverBtn.setIsClicked(false);
                 }
+                
                 if(Button.isOnBtn(e,returnBtn)&&returnBtn.getClickState()){
                     gsChangeListener.changeScene(MainPanel.STORE_SCENE);
                 }
+                
                 if (gameOver && Button.isOnBtn(e, gameOverBtn) && gameOverBtn.getClickState()) {
                     gsChangeListener.changeScene(MainPanel.STORE_SCENE);
+                    for(int i=0; i<player.getFp().size(); i++){
+                        player.getFp().get(i).changeValue();
+                    }
                 }
                 
                 for (int i = 0; i < 5; i++) {
@@ -297,18 +303,23 @@ public class StageScene extends Scene{
         }
         
         //金錢
-         int sw = fm.stringWidth( money + "/" + MAX_MONEY);
-         g.setColor(lightGray);
+        int sw = fm.stringWidth( money + "/" + MAX_MONEY);
+        g.setColor(lightGray);
         g.fillRect( Resource.SCREEN_WIDTH/12*9, Resource.SCREEN_HEIGHT / 9 - 80, 290, 50);
         g.setFont(this.fontBit);
         g.setColor(Color.white);
-        g.drawString(money + "/" + MAX_MONEY, Resource.SCREEN_WIDTH-(int)(sw*2.3), Resource.SCREEN_HEIGHT / 9 - 40);
+        g.drawString(money + "/" + MAX_MONEY, Resource.SCREEN_WIDTH-(int)(sw*2.2), Resource.SCREEN_HEIGHT / 9 - 40);
        
-        g.drawImage(this.energy, Resource.SCREEN_WIDTH/12*9-15, Resource.SCREEN_HEIGHT / 9 - 70, 80, 80, null);
+        g.drawImage(this.energyIng, Resource.SCREEN_WIDTH/12*9-30, Resource.SCREEN_HEIGHT / 9 - 90, 80, 80, null);
+        
         //cash
-        g.setFont(this.fontBit);
-        g.setColor(Color.white);
-        sw = fm.stringWidth( money + "/" + MAX_MONEY);
+        g.setColor(lightGray);
+        g.fillRect( Resource.SCREEN_WIDTH/12*9, Resource.SCREEN_HEIGHT / 9 , 290, 50);
+        g.drawImage(this.coinImg, Resource.SCREEN_WIDTH/12*9-30, Resource.SCREEN_HEIGHT / 9-18, Resource.SCREEN_WIDTH/12*9-30+80, Resource.SCREEN_HEIGHT / 9+80-18, 0, 0, this.coinImg.getWidth()/6, this.coinImg.getHeight(), null);
+        g.setColor(Color.WHITE);
+        
+        sw = fm.stringWidth(cash+"");
+        g.drawString(cash+"", Resource.SCREEN_WIDTH-(int)(sw*3), Resource.SCREEN_HEIGHT / 9+40);
         
         this.returnBtn.paintBtn(g);
         
@@ -393,6 +404,9 @@ public class StageScene extends Scene{
                 stuffList.get(i).get(j).refreshCd();
                 //刷新每隻怪物的cd時間與mp的關係
 //                stuffList.get(i).get(j).setCdTime(100*50/this.maxMp);
+                
+                stuffList.get(i).get(j).setCdTime(500-(int)((double)(9/2)*mp));
+                
                 System.out.println("cdtime: "+ stuffList.get(i).get(j).getCdTime());
             }
             for (int j = 0; j < stuffList.get(i+3).size(); j++) {
@@ -479,9 +493,6 @@ public class StageScene extends Scene{
             hp = mp = 0;
             player.setHp(hp);   //存回player內
             player.setMp(mp);
-            for(int i=0; i<player.getFp().size(); i++){
-                player.getFp().get(i).changeValue();
-            }
             this.loseSound.play();
             gameOverBtn = new Button("/resources/clickBtn.png",Resource.SCREEN_WIDTH / 12*8, (int) (Resource.SCREEN_HEIGHT / 9 * 6), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
 //            gameOverBtn.setLabel("CONTINUE");

@@ -112,6 +112,7 @@ public class SaveScene extends Scene {
                         System.out.println("player can't save game");
                     }
                     gsChangeListener.changeScene(nextScene);
+                    MainPanel.backgroundSound.loop();
                 }
                 if (e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, noBtn) && noBtn.getClickState()) {
                     noBtn.setImgState(0);
@@ -174,6 +175,7 @@ public class SaveScene extends Scene {
             this.backBtn.reset(Resource.SCREEN_WIDTH / 2 - Resource.SCREEN_WIDTH / 12 * 5 / 2 -  (int)(Resource.SCREEN_WIDTH*0.054) + Resource.SCREEN_WIDTH / 12 * 5, (int) (Resource.SCREEN_HEIGHT * 0.278f) - 50, Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT / 9);  //遊戲說明按鈕
             this.yesBtn.reset( Resource.SCREEN_WIDTH / 2 - Resource.SCREEN_WIDTH / 12 * 5 / 2 + (int)(Resource.SCREEN_WIDTH*0.025f), Resource.SCREEN_HEIGHT / 2, Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9);
             this.noBtn.reset(Resource.SCREEN_WIDTH / 2 - Resource.SCREEN_WIDTH / 12 * 5 / 2 + (int)(Resource.SCREEN_WIDTH*0.217f), Resource.SCREEN_HEIGHT / 2, Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9);
+            font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 30);
         }
     }
 

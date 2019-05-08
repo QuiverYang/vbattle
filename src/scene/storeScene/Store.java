@@ -52,7 +52,7 @@ public abstract class Store extends Scene{
     protected int counter;//按鍵左右去計算的counter
     protected Font fontBit,fontBit2,fontBitSmall;
     protected Font fontC,fontSmall;
-    protected final AudioClip backgroundSound;
+//    protected final AudioClip backgroundSound;
     
     public interface ButtomCode {
         int BACK_BTN = 0;
@@ -65,7 +65,7 @@ public abstract class Store extends Scene{
     
     public Store(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
-        backgroundSound = Applet.newAudioClip(getClass().getResource("/resources/storeMusic.wav"));
+//        backgroundSound = Applet.newAudioClip(getClass().getResource("/resources/storeMusic.wav"));
 //        backgroundSound.loop();
         productOnScreen = new Product[3];
         player = Player.getPlayerInstane();

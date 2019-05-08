@@ -39,6 +39,7 @@ public class StageScene extends Scene{
     private int hp,mp;
     private int maxHp;      //存取玩家原始hp
     private int maxMp;
+    private int cash;
     private BombA a;
     private BombA b;
     private BufferedReader br;
@@ -72,7 +73,8 @@ public class StageScene extends Scene{
 
     private BufferedImage winImg;
     private BufferedImage loseImg;
-    private BufferedImage energy;
+    private BufferedImage energyIng;
+    private BufferedImage coinImg;
     private AudioClip clickSound;
     private AudioClip winSound;
     private AudioClip loseSound;
@@ -95,8 +97,8 @@ public class StageScene extends Scene{
         background = rc.tryGetImage("/resources/background5.png");
         winImg = rc.tryGetImage("/resources/win.png");
         loseImg = rc.tryGetImage("/resources/lose.png");
-        energy = rc.tryGetImage("/resources/energy.png");
-        
+        energyIng = rc.tryGetImage("/resources/energy.png");
+        coinImg = rc.tryGetImage("/resources/coin.png");
         fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 23);
         priceFontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 45);
         gameFontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 37);
@@ -111,7 +113,7 @@ public class StageScene extends Scene{
         }catch(Exception ex){
             ex.printStackTrace();
         }
-        
+        cash = 0;
         player = Player.getPlayerInstane();
         hp = player.getHp();
         mp = player.getMp();
@@ -186,6 +188,7 @@ public class StageScene extends Scene{
                     if(Coin.isOnCoin(e, coins.get(i))){
                         Coin.CoinClicked(getClass().getResource("/resources/coin.wav"));
                         coins.remove(i);
+                        cash += 10;
                         player.increaseCash(10);//設定每隻怪物增加10元
                     }
                 }
@@ -313,18 +316,23 @@ public class StageScene extends Scene{
         }
         
         //金錢
-         int sw = fm.stringWidth( money + "/" + MAX_MONEY);
-         g.setColor(lightGray);
+        int sw = fm.stringWidth( money + "/" + MAX_MONEY);
+        g.setColor(lightGray);
         g.fillRect( Resource.SCREEN_WIDTH/12*9, Resource.SCREEN_HEIGHT / 9 - 80, 290, 50);
         g.setFont(this.fontBit);
         g.setColor(Color.white);
-        g.drawString(money + "/" + MAX_MONEY, Resource.SCREEN_WIDTH-(int)(sw*2.3), Resource.SCREEN_HEIGHT / 9 - 40);
+        g.drawString(money + "/" + MAX_MONEY, Resource.SCREEN_WIDTH-(int)(sw*2.2), Resource.SCREEN_HEIGHT / 9 - 40);
        
-        g.drawImage(this.energy, Resource.SCREEN_WIDTH/12*9-15, Resource.SCREEN_HEIGHT / 9 - 70, 80, 80, null);
+        g.drawImage(this.energyIng, Resource.SCREEN_WIDTH/12*9-30, Resource.SCREEN_HEIGHT / 9 - 90, 80, 80, null);
+        
         //cash
-        g.setFont(this.fontBit);
-        g.setColor(Color.white);
-        sw = fm.stringWidth( money + "/" + MAX_MONEY);
+        g.setColor(lightGray);
+        g.fillRect( Resource.SCREEN_WIDTH/12*9, Resource.SCREEN_HEIGHT / 9 , 290, 50);
+        g.drawImage(this.coinImg, Resource.SCREEN_WIDTH/12*9-30, Resource.SCREEN_HEIGHT / 9-18, Resource.SCREEN_WIDTH/12*9-30+80, Resource.SCREEN_HEIGHT / 9+80-18, 0, 0, this.coinImg.getWidth()/6, this.coinImg.getHeight(), null);
+        g.setColor(Color.WHITE);
+        
+        sw = fm.stringWidth(cash+"");
+        g.drawString(cash+"", Resource.SCREEN_WIDTH-(int)(sw*3), Resource.SCREEN_HEIGHT / 9+40);
         
         this.returnBtn.paintBtn(g);
         

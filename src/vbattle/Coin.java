@@ -49,7 +49,8 @@ public class Coin extends ItemOnScreen{
             xf = singleImgWidth * (change++%6);
         }
         counter++;
-        
+        x = Resource.SCREEN_WIDTH*this.rateX;
+        y = Resource.SCREEN_HEIGHT*this.rateY;
         g.drawImage(img, x, y, x+this.width, y+this.height,xf,0,xf+singleImgWidth,singleImgWidth, null);
     }
     

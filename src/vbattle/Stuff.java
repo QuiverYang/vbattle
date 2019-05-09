@@ -29,7 +29,9 @@ public class Stuff {
     private int type; // 判斷正反角 (1-->我方角 , -1-->敵方)
     private int range;
     private int imgSize;
-    private BombA bombContainer;
+    private int attackType = 3;
+    private Bomb bombContainer;
+    private BombC justPaint;
     
     //腳色變動屬性
 //    private boolean clickState;
@@ -68,8 +70,8 @@ public class Stuff {
         this.y1 = y0 + imgHeight;
         this.characterNumY0 = characterNum*32;
         this.characterNumY1 = characterNumY0+32;
-        this.cdTime = 20;
-        this.attackedTime = 20;
+        this.cdTime = 30;
+        this.attackedTime = 30;
         this.txtpath = txtpath;
         //設定建構子參數
         //讀取參數txt檔
@@ -189,7 +191,7 @@ public class Stuff {
         this.cdTime = cdTime;
     }
     
-    public BombA getBomb(){
+    public Bomb getBomb(){
         return bombContainer;
     }
     
@@ -230,7 +232,17 @@ public class Stuff {
                 frame = 3;
                 
                 if(range > 0 ){
-                    bombContainer = new BombA(x0,y0,32,Math.abs(x0 - attacked.x0));
+                    switch(attackType){
+                        case 1:
+                            bombContainer = new BombA(this,Math.abs(x0+imgWidth/2-attacked.x0 + attacked.imgWidth/2));
+                            break;
+                        case 2:
+                            bombContainer = new BombB(this,Math.abs(x0+imgWidth/2-attacked.x0 + attacked.imgWidth/2));
+                            break;
+                        case 3:
+                            bombContainer = new BombC(this,0);
+                            break;
+                    }
                 }
             }
             
@@ -249,7 +261,11 @@ public class Stuff {
         }
     }
     
-    public BombA animation(){
+    public void jc(){
+        
+    }
+    
+    public Bomb animation(){
         if(bombContainer != null){
             bombContainer.move();
             return bombContainer;
@@ -320,7 +336,7 @@ public class Stuff {
             g.fillRect(x0 + (int)(imgWidth*1/4f), this.getY0() - 5, (int) (this.getImgWidth() * this.getHpPercent()*(1/2f)), 5);
             //角色顯示
             g.drawImage(img,x0,y0,x1,y1,(int)frame*32,characterNumY0, ((int)frame+1)*32,characterNumY1,null);
-        }else if(this.hp<=0){
+        }else if(this.hp <= 0){
             if(this.type==1){
                 g.drawImage(this.ghostImg, x0, y0 , x0+imgWidth, y1 , (int)frame*32, 0, (((int)frame+1)*32), this.ghostImg.getHeight(), null);
             }else{

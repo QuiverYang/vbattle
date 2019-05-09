@@ -6,8 +6,12 @@
 package scene.storeScene;
 
 
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import scene.storeScene.product.finProduct.FinProduct;
 import java.io.IOException;
+import scene.storeScene.product.stuffLvUp.StuffLevel;
 import vbattle.Button;
 import vbattle.MainPanel;
 import vbattle.MainPanel.GameStatusChangeListener;
@@ -167,20 +171,27 @@ public class SellScene extends Store{
         }
     }
     
-//    protected void paintHpMp(Graphics g){
-//        FontMetrics fm = g.getFontMetrics();
-//        String pHp = this.player.getHp()+"";
-//        int sw = fm.stringWidth(pHp);
-//        //=============畫出 hp=========================
-//        g.drawString(pHp, (int)(Resource.SCREEN_WIDTH*0.9)-sw, Resource.SCREEN_HEIGHT/13);
-//        
-//        //=============畫出 mp=========================
-//        String pMp = this.player.getMp()+"";
-//        g.drawString(pMp, (int)(Resource.SCREEN_WIDTH*0.9)-sw, Resource.SCREEN_HEIGHT/6);
-//    }
-    
+    @Override
+    public void paintProductInfo(Graphics g){
+        FontMetrics fm = g.getFontMetrics();
+        g.setFont(fontSmall);
+        int sw;
+        int sa = fm.getAscent();
+        if(products != null && products.length>1){
+            if(products[counter] instanceof FinProduct){
+                int y = Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.25f);
+                int sh = g.getFontMetrics().getHeight();//換行使用
+                FinProduct temp = (FinProduct)products[counter];
+                String info1 = "目前可增加最大HP值:" +temp.getPlusHp();
+                String info2 = "目前可增加最大MP值:" +temp.getPlusMp();
+                sw = fm.stringWidth(info1);
+                g.drawString(info1, (int)(Resource.SCREEN_WIDTH*0.5)-sw/4,y);
+                g.drawString(info2, (int)(Resource.SCREEN_WIDTH*0.5)-sw/4,y+2*sh);
+                
 
+            }  
+        }
+    }
 
-  
 }
 

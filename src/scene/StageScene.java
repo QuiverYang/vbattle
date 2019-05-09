@@ -413,7 +413,7 @@ public class StageScene extends Scene {
                 //刷新每隻怪物的cd時間與mp的關係
 //                stuffList.get(i).get(j).setCdTime(100*50/this.maxMp);
                 
-//                stuffList.get(i).get(j).setCdTime(500-(int)((double)(9/2)*mp));
+                stuffList.get(i).get(j).setCdTime(10-(int)((double)(9/100)*mp));
                 
 //                System.out.println("cdtime: "+ stuffList.get(i).get(j).getCdTime());
             }

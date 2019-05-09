@@ -13,9 +13,9 @@ import scene.storeScene.product.finProduct.FinProduct;
  */
 public class Medicine extends FinProduct{
     
-    public static final int PRODUCT_MEDICINE_PRICE = 600;
+    public static final int PRODUCT_MEDICINE_PRICE = 500;
 
-    public final String PRODUCT_MEDICINE_INFO = "抗生藥品:每一回合  有7成機會最大體力增加30  3成機會減少30";
+    public final String PRODUCT_MEDICINE_INFO = "抗生藥品:$600  有7成機會最大體力增加30  3成機會減少30(每回)";
     
 
     public Medicine() {

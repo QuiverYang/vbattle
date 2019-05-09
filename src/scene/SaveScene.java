@@ -111,13 +111,22 @@ public class SaveScene extends Scene {
                         ex.printStackTrace();
                         System.out.println("player can't save game");
                     }
+                    if(currentScene == 4){
+                        StageScene.stageBgm.stop();
+                        MainPanel.backgroundSound.loop();
+                    }
                     gsChangeListener.changeScene(nextScene);
-                    MainPanel.backgroundSound.loop();
+                    
                 }
                 if (e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, noBtn) && noBtn.getClickState()) {
                     noBtn.setImgState(0);
                     noBtn.setClickState(false);
+                    if(currentScene == 4){
+                        StageScene.stageBgm.stop();
+                        MainPanel.backgroundSound.loop();
+                    }
                     gsChangeListener.changeScene(nextScene);
+                    
                 }
 
                 if (e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, backBtn) && backBtn.getClickState()) {

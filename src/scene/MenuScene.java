@@ -78,8 +78,6 @@ public class MenuScene extends Scene {
         playerName = "";
         
         font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 25);
-        
-        
     }
 
     @Override

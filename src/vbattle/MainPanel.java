@@ -109,6 +109,7 @@ public class MainPanel extends JPanel {
                 return new IntroScene(gsChangeListener);
             case STORE_SCENE:
                 if(SaveScene.saveSceneCheck){  //如果使用到儲存畫面，則回傳上一刻的實體
+                    SaveScene.saveSceneCheck = false;
                     return this.buyScene;
                 }
                 return this.buyScene = new BuyScene(gsChangeListener);  
@@ -131,6 +132,7 @@ public class MainPanel extends JPanel {
 //                    this.stageScene = new StageScene(gsChangeListener);
 //                } 
                 if(SaveScene.saveSceneCheck){  //如果使用到儲存畫面，則回傳上一刻的實體
+                    SaveScene.saveSceneCheck = false;
                      return this.stageScene;
                 }
                 return  this.stageScene = new StageScene(gsChangeListener);

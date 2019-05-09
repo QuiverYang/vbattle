@@ -16,7 +16,7 @@ public class Robot extends FinProduct{
     
     public static final int PRODUCT_ROBOT_PRICE = 700;
 
-    public final String PRODUCT_ROBOT_INFO  = "生化元素:每一回合  有6成機會最大體力增加50  4成機會減少50";
+    public final String PRODUCT_ROBOT_INFO  = "生化元素:$700  6成機會最大體力增加50  4成機會減少50(每回)";
 
     
     public Robot() {

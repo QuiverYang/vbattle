@@ -30,8 +30,8 @@ public class Stuff {
     private int type; // 判斷正反角 (1-->我方角 , -1-->敵方)
     private int range;
     private int imgSize;
-    private BombA a;
-
+    private BombA bombContainer;
+    
     //腳色變動屬性
 //    private boolean clickState;
     private int hp, mp;
@@ -67,10 +67,10 @@ public class Stuff {
         this.imgHeight = imgHeight;
         this.x1 = x0 + imgWidth;
         this.y1 = y0 + imgHeight;
-        this.characterNumY0 = characterNum * 32;
-        this.characterNumY1 = characterNumY0 + 32;
-        this.cdTime = 40;
-        this.attackedTime = 5;
+        this.characterNumY0 = characterNum*32;
+        this.characterNumY1 = characterNumY0+32;
+        this.cdTime = 20;
+        this.attackedTime = 20;
         this.txtpath = txtpath;
         //設定建構子參數
         //讀取參數txt檔
@@ -210,11 +210,16 @@ public class Stuff {
     public void setCdTime(int cdTime) {
         this.cdTime = cdTime;
     }
-
-    //內建GETTER SETTER
-    public void setCoordinate(int x, int y) {
-        this.x0 = x - imgWidth / 2;
-        this.y0 = y - imgHeight / 2;
+    
+    public BombA getBomb(){
+        return bombContainer;
+    }
+    
+    //GETTER SETTER
+    
+    public void setCoordinate(int x,int y){
+        this.x0 = x - imgWidth/2;
+        this.y0 = y - imgHeight/2;
         this.x1 = x0 + imgWidth;
         this.y1 = y0 + imgHeight;
     }
@@ -230,8 +235,8 @@ public class Stuff {
     //腳色方法
     public void walkFrame() {
         //控制更新範圍：0~3
-        frame++;
-        if (frame == 3) {
+        frame ++;
+        if (frame >= 3) {
             frame = 0;
         }
     }
@@ -244,13 +249,12 @@ public class Stuff {
     }
 
     public void attack(Stuff attacked) {
-        if (attackCd) {//cd中不進攻擊狀態
-            if (frame < 3 || frame > 6) { //進入攻擊狀態：防止重複初始化frame;
+        if(attackCd && attacked.attackedCd){//cd中不進攻擊狀態
+            if(frame < 3 || frame > 6){ //進入攻擊狀態：防止重複初始化frame;
                 frame = 3;
-
-                if (range > 0) {
-                    a = new BombA(x0, y0, 32, Math.abs(x0 - attacked.x0));
-
+                
+                if(range > 0 ){
+                    bombContainer = new BombA(x0,y0,32,Math.abs(x0 - attacked.x0));
                 }
             }
 
@@ -259,33 +263,32 @@ public class Stuff {
             if (frame >= 5) {//動畫完成觸發攻擊效果
                 if (range < 1) {
                     attacked.back(this);
-                } else {
+                }else{
+                    frame = 0;
                 }
-                frame = 0;
                 attackCd = false;
             }
-
-        } else {
+        }else{
             walkFrame();
         }
     }
-
-    public BombA animation() {
-        if (a != null) {
-            a.move();
-            return a;
+    
+    public BombA animation(){
+        if(bombContainer != null){
+            bombContainer.move();
+            return bombContainer;
         }
         return null;
     }
 
     public void back(Stuff attacker) {
-        if (attackCd) {
+        if(attackedCd){
             hp = hp - attacker.atk;
             frame = 0;
             x0 = x0 - 100 * type;
             this.x1 = x0 + imgWidth;
             hit.play();
-            attackCd = false;
+            attackedCd = false;
         }
     }
 
@@ -310,7 +313,7 @@ public class Stuff {
         }
         if (!attackedCd) {
             attackedCdCounter++;
-            if (attackedCdCounter == attackedTime) {
+            if(attackedCdCounter == attackedTime){
                 attackedCd = true;
                 attackedCdCounter = 0;
             }
@@ -322,7 +325,7 @@ public class Stuff {
             if (type == 1 && this.x0 < actor.get(i).x1 && this.x1 + (range * type) > actor.get(i).x0) {
                 return actor.get(i);
             }
-            if (type == -1 && this.x0 + (range * type) < actor.get(i).x1 && this.x1 + (range * imgWidth * type) > actor.get(i).x0) {
+            if(type == -1 && this.x0 + (range*type) <actor.get(i).x1 && this.x1 > actor.get(i).x0){
                 return actor.get(i);
             }
         }
@@ -351,9 +354,9 @@ public class Stuff {
                 g.drawImage(this.devilImg, x0, y0, x0 + imgWidth, y1, (int) frame * 32, 0, (((int) frame + 1) * 32), this.devilImg.getHeight(), null);
             }
         }
-
-        if (a != null) {
-            a.paint(g);
+        
+        if(bombContainer != null){
+            bombContainer.paint(g);
         }
     }
 

@@ -47,8 +47,10 @@ public class FinProduct extends Product{
     public void changeValue(){
         if(Math.random()>risk){
             plusHp += profit;
+            plusMp += profit;
         }else{
             plusHp -= profit;
+            plusMp -= profit;
         }
     }
 

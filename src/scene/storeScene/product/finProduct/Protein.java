@@ -13,7 +13,7 @@ import scene.storeScene.product.finProduct.FinProduct;
  */
 public class Protein extends FinProduct{
 
-    public final int PRODUCT_PORTEIN_PRICE = 500;
+    public final int PRODUCT_PORTEIN_PRICE = 600;
 
     public final String PRODUCT_PORTEIN_INFO  = "健康食品:$500  8成機會最大體力增加10  2成機會減少10(每回)";
     

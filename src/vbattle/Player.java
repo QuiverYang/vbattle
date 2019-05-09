@@ -160,23 +160,25 @@ public class Player {
     }
 
     public void save() throws IOException {  //存檔方法
-        //(playerName,inventory,stage,onlock0,onlock1,onlock2,onlock3,onlock4,hp,mp,cash)
-        //(0         ,1        ,2    ,3      ,4      ,5      ,6      ,7      ,8 ,9 ,10)
+        //(playerName,inventory,stage,onlock0,onlock1,onlock2,onlock3,onlock4,hp,mp,cash,hpmax.mpmax,fp...)
+        //(0         ,-        ,1    ,2      ,3      ,4      ,5      ,6      ,7 ,8 ,9   ,10   ,11   ,12...)
 
         //暫存當前玩家資料
-        int countFp = 13;
-        String[] info = new String[13 + this.fp.size() * 3];
+        int countFp = 12;
+        String[] info = new String[12 + this.fp.size() * 3];
         info[0] = this.playerName;
-        info[1] = String.valueOf(this.inventory);
-        info[2] = String.valueOf(this.stage);
+//        info[1] = String.valueOf(this.inventory);
+        info[1] = String.valueOf(this.stage);
         for (int k = 0; k < 5; k++) {
-            info[k + 3] = String.valueOf(this.unlock[k]);
+            info[k + 2] = String.valueOf(this.unlock[k]);
         }
-        info[8] = String.valueOf(this.hp);
-        info[9] = String.valueOf(this.mp);
-        info[10] = String.valueOf(this.cash);
-        info[12] = String.valueOf(this.hpMax);
+        info[7] = String.valueOf(this.hp);
+        info[8] = String.valueOf(this.mp);
+        
+        info[9] = String.valueOf(this.cash);
+        info[10] = String.valueOf(this.hpMax);
         info[11] = String.valueOf(this.mpMax);
+        
         for (int i = 0; i < this.fp.size(); i++) {
             info[countFp++] = String.valueOf(this.fp.get(i).getName());
             info[countFp++] = String.valueOf(this.fp.get(i).getPlusHp());
@@ -186,6 +188,7 @@ public class Player {
         if (this.playerIndex == -1 && this.playerInfo.size() >= 6) { //若為新玩家且當前玩家數>=6，則刪除最舊玩家，新增新玩家
             this.playerInfo.remove(0);
             this.playerInfo.add(info);
+            this.playerIndex = this.playerInfo.size()-1;
         } else if (this.playerIndex == -1 && this.playerInfo.size() < 6) {  //若為新玩家且當前玩家數<6，則存入陣列
             this.playerInfo.add(info);
             this.playerIndex = this.playerInfo.size()-1;
@@ -213,31 +216,35 @@ public class Player {
 
     //設定當前玩家資料
     public void loadPlayer(int index) throws IOException { //載入方法
+        //(playerName,inventory,stage,onlock0,onlock1,onlock2,onlock3,onlock4,hp,mp,cash,hpmax.mpmax,fp...)
+        //(0         ,-        ,1    ,2      ,3      ,4      ,5      ,6      ,7 ,8 ,9   ,10   ,11   ,12...)
         playerIndex = index;
         
         String status[] = playerInfo.get(index);
         this.playerName = status[0];
         
-        this.stage = Integer.parseInt(status[2]);
+        this.stage = Integer.parseInt(status[1]);
         for (int i = 0; i < unlock.length; i++) {
-            this.unlock[i] = Integer.parseInt(status[i + 3]);
+            this.unlock[i] = Integer.parseInt(status[i + 2]);
             if(this.stage >=1 && this.stage<4 && this.unlock[stage+1]==0){ //設定stage與unlock間的關係
                 this.unlock[this.stage+1] = 1;
             }
         }
-        this.hp = Integer.parseInt(status[8]);
-        this.mp = Integer.parseInt(status[9]);
-        this.cash = Integer.parseInt(status[10]);
-        this.inventory = this.cash;
-        
+        this.hp = Integer.parseInt(status[7]);
+        this.mp = Integer.parseInt(status[8]);
+        this.cash = Integer.parseInt(status[9]);
+//        this.inventory = this.cash;
+        this.hpMax = Integer.parseInt(status[10]);
+        this.mpMax = Integer.parseInt(status[11]);
         this.fp.clear(); //先刪除fp list內所有物件（以防後面讀存重複加入）
         
         //如果玩家有金融商品
-        if (status.length > 11 ) {
-            int countFp = 11;
+        if (status.length > 12 ) {
+            int countFp = 12;
+            int indexFp = 0;
             int indexOfRisk, indexOfProfit,profit;
             double risk;
-            for (int i = 0; i < (status.length - 11) / 2; i++) {
+            for (int i = 0; i < (status.length - 12) / 3; i++) {
                 
                 switch (status[countFp++]) {
                     case "抗生藥品":
@@ -246,8 +253,10 @@ public class Player {
                         indexOfProfit = stockInfo.indexOf("利潤");
                         risk = Double.parseDouble(stockInfo.substring(indexOfRisk + 2, indexOfRisk + 4));
                         profit = Integer.parseInt(stockInfo.substring(indexOfProfit + 2, indexOfProfit + 4));
-                        countFp++;
+                        
                         this.fp.add(new FinProduct(FinProduct.PRODUCT_STOCK_PATH, "抗生藥品", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, stockInfo));
+                        this.fp.get(indexFp).setPlusHp(Integer.parseInt(status[countFp++]));
+                        this.fp.get(indexFp++).setPlusMp(Integer.parseInt(status[countFp++]));
                         break;
                         
                     case "健康食品":
@@ -256,8 +265,9 @@ public class Player {
                         indexOfProfit = fundInfo.indexOf("利潤");
                         risk = Double.parseDouble(fundInfo.substring(indexOfRisk + 2, indexOfRisk + 4));
                         profit = Integer.parseInt(fundInfo.substring(indexOfProfit + 2, indexOfProfit + 4));
-                        countFp++;
                         this.fp.add(new FinProduct(FinProduct.PRODUCT_FUND_PATH, "健康食品", FinProduct.PRODUCT_FUND_PRICE, risk, profit, fundInfo));
+                        this.fp.get(indexFp).setPlusHp(Integer.parseInt(status[countFp++]));
+                        this.fp.get(indexFp++).setPlusMp(Integer.parseInt(status[countFp++]));
                         break;
                         
                     case "生化元素":
@@ -266,13 +276,15 @@ public class Player {
                         indexOfProfit = futureInfo.indexOf("利潤");
                         risk = Double.parseDouble(futureInfo.substring(indexOfRisk + 2, indexOfRisk + 4));
                         profit = Integer.parseInt(futureInfo.substring(indexOfProfit + 2, indexOfProfit + 4));
-                        countFp++;
                         this.fp.add(new FinProduct(FinProduct.PRODUCT_FUTURES_PATH, "生化元素", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, futureInfo));
+                        this.fp.get(indexFp).setPlusHp(Integer.parseInt(status[countFp++]));
+                        this.fp.get(indexFp++).setPlusMp(Integer.parseInt(status[countFp++]));
                         break;
                 }
                 
             }
         }
+        
     }
 
 
@@ -281,6 +293,7 @@ public class Player {
         this.hp = this.hpMax = 100;
         this.mp = this.mpMax = 100;
         this.inventory = this.cash = 6000;
+        this.unlock = new int[]{1,1,0,0,0};
         this.fp.clear();
     }
 
@@ -320,6 +333,12 @@ public class Player {
             System.out.println(playerNameList[i]);
         }
     }
+    
+//    public void printFp(){
+//        for(int i=0; i<fp.size(); i++){
+//            System.out.println(i+" ):"+fp.get(i).getName()+" :(hp)"+fp.get(i).getPlusHp()+ "(mp):" + fp.get(i).getPlusMp());
+//        }
+//    }
     
    
 

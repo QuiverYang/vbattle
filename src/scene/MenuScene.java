@@ -5,6 +5,8 @@
  */
 package scene;
 
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -51,6 +53,9 @@ public class MenuScene extends Scene {
     private final int SCREEN_WIDTH = Resource.SCREEN_WIDTH;
     private final int SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
     
+
+    
+    
     public MenuScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
         rc = ImgResource.getInstance();
@@ -73,6 +78,8 @@ public class MenuScene extends Scene {
         playerName = "";
         
         font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 25);
+        
+        
     }
 
     @Override
@@ -216,6 +223,7 @@ public class MenuScene extends Scene {
             newGameBtn.reset(Resource.SCREEN_WIDTH / 12 * 5, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
             loadBtn.reset(Resource.SCREEN_WIDTH / 12 * 9, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
             enterPlayerNameBtn.reset(Resource.SCREEN_WIDTH / 12 * 5, Resource.SCREEN_HEIGHT / 2, Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9);
+            font = Fontes.getBitFont(Resource.SCREEN_WIDTH / 25);
         }
     }
 

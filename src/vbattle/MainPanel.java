@@ -42,7 +42,8 @@ public class MainPanel extends JPanel {
 
     private StageScene stageScene; //暫存stage實體（for暫停使用）
     private BuyScene buyScene;  //暫存stage實體 （for暫停使用）
-
+    public static AudioClip backgroundSound;
+    
     public interface GameStatusChangeListener {
 
         void changeScene(int sceneId);
@@ -74,6 +75,9 @@ public class MainPanel extends JPanel {
             }
         });
         t1.start();
+        
+        backgroundSound = Applet.newAudioClip(getClass().getResource("/resources/storeMusic.wav"));
+        backgroundSound.loop();
     }
 
     private void changeCurrentScene(Scene scene) {
@@ -104,14 +108,10 @@ public class MainPanel extends JPanel {
             case INTRO_SCENE:
                 return new IntroScene(gsChangeListener);
             case STORE_SCENE:
-                if(this.buyScene == null){
-                    this.buyScene = new BuyScene(gsChangeListener); 
-                    return this.buyScene;
-                }
                 if(SaveScene.saveSceneCheck){  //如果使用到儲存畫面，則回傳上一刻的實體
                     return this.buyScene;
                 }
-                return new BuyScene(gsChangeListener);  
+                return this.buyScene = new BuyScene(gsChangeListener);  
 //            case NEW_GAME_SCENE:
 //                return new NewGameScene(gsChangeListener);
             case LOAD_GAME_SCENE: {
@@ -133,7 +133,7 @@ public class MainPanel extends JPanel {
                 if(SaveScene.saveSceneCheck){  //如果使用到儲存畫面，則回傳上一刻的實體
                      return this.stageScene;
                 }
-                return this.stageScene = new StageScene(gsChangeListener);
+                return  this.stageScene = new StageScene(gsChangeListener);
 
             case SELL_SCENE:
                 return new SellScene(gsChangeListener);

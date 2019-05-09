@@ -25,9 +25,11 @@ public class Stuff {
     private int hpRate,atkRate,hpBase,atkBase;//基礎參數...存入參數txt檔
     private float speed = 1/16f; //角色移動速度：測試速度1/16f 角色寬
     private int cdTime;//CD時間：單位是FPS倍數週期
+    private int attackedTime;//CD時間:被攻擊後的無敵時間
     private int type; // 判斷正反角 (1-->我方角 , -1-->敵方)
     private int range;
-    private BombA a;
+    private int imgSize;
+    private BombA bombContainer;
     
     //腳色變動屬性
 //    private boolean clickState;
@@ -39,7 +41,9 @@ public class Stuff {
     private float frame;  //第 int frame 偵：紀錄載入圖片X座標
     private int characterNumY0,characterNumY1;//角色編號：紀錄載入圖片Y座標
     private boolean attackCd = true;//CD狀態：初始化true
+    private boolean attackedCd = true;
     private int cdCounter = 0;//CD計數器：單位是FPS倍數週期
+    private int attackedCdCounter = 0;
     private static AudioClip hit;
     private boolean clickState;
     
@@ -47,11 +51,11 @@ public class Stuff {
     private BufferedImage devilImg;
     private int price;
     
-    public static final int ACTOR1_PRICE = 50;
-    public static final int ACTOR2_PRICE = 100;
-    public static final int ACTOR3_PRICE = 200;
-    public static final int ACTOR4_PRICE = 300;
-    public static final int ACTOR5_PRICE = 500;
+    public static final int ACTOR1_PRICE = 1;
+    public static final int ACTOR2_PRICE = 1;
+    public static final int ACTOR3_PRICE = 1;
+    public static final int ACTOR4_PRICE = 1;
+    public static final int ACTOR5_PRICE = 1;
     
     public Stuff(int type,int x0,int y0,int imgWidth,int imgHeight, int characterNum,String txtpath) throws IOException{
         //設定建構子參數
@@ -64,7 +68,8 @@ public class Stuff {
         this.y1 = y0 + imgHeight;
         this.characterNumY0 = characterNum*32;
         this.characterNumY1 = characterNumY0+32;
-        this.cdTime = 10;
+        this.cdTime = 20;
+        this.attackedTime = 20;
         this.txtpath = txtpath;
         //設定建構子參數
         //讀取參數txt檔
@@ -184,7 +189,11 @@ public class Stuff {
         this.cdTime = cdTime;
     }
     
-    //內建GETTER SETTER
+    public BombA getBomb(){
+        return bombContainer;
+    }
+    
+    //GETTER SETTER
     
     public void setCoordinate(int x,int y){
         this.x0 = x - imgWidth/2;
@@ -205,7 +214,7 @@ public class Stuff {
     public void walkFrame(){
         //控制更新範圍：0~3
         frame ++;
-        if (frame == 3) {
+        if (frame >= 3) {
             frame = 0;
         }
     }
@@ -216,45 +225,47 @@ public class Stuff {
         this.x1 = x0 +imgWidth;
     }
     public void attack(Stuff attacked) {
-        if(attackCd){//cd中不進攻擊狀態
+        if(attackCd && attacked.attackedCd){//cd中不進攻擊狀態
             if(frame < 3 || frame > 6){ //進入攻擊狀態：防止重複初始化frame;
                 frame = 3;
+                
+                if(range > 0 ){
+                    bombContainer = new BombA(x0,y0,32,Math.abs(x0 - attacked.x0));
+                }
             }
             
             frame += 1/4f;//播放動畫
-            
-            if(range > 0 ){
-                a = new BombA(x0,y0,y0,150);
-            }
 
             if(frame >=5){//動畫完成觸發攻擊效果
                 if(range < 1){
                     attacked.back(this);
                 }else{
+                    frame = 0;
                 }
-                frame = 0;
                 attackCd = false;
             }
-            
-            
         }else{
             walkFrame();
         }
     }
     
-    public BombA animationX(){
-        if(a != null){
-            a.move();
-            return a;
+    public BombA animation(){
+        if(bombContainer != null){
+            bombContainer.move();
+            return bombContainer;
         }
         return null;
     }
+    
     public void back(Stuff attacker) {
-        hp = hp - attacker.atk;
-        frame = 0;
-        x0 = x0 - 100 * type;
-        this.x1 = x0 +imgWidth;
-        hit.play();
+        if(attackedCd){
+            hp = hp - attacker.atk;
+            frame = 0;
+            x0 = x0 - 100 * type;
+            this.x1 = x0 +imgWidth;
+            hit.play();
+            attackedCd = false;
+        }
     }
     public void die(){
        frame += 1/2f;
@@ -274,22 +285,29 @@ public class Stuff {
                 cdCounter = 0;
             }
         }
+        if(!attackedCd){
+            attackedCdCounter++;
+            if(attackedCdCounter == attackedTime){
+                attackedCd = true;
+                attackedCdCounter = 0;
+            }
+        }
     }
     public Stuff collisionCheck(ArrayList<Stuff> actor) {
         for (int i = 0; i < actor.size(); i++) {
-            if(this.x0 + range<actor.get(i).x1 && this.x1 +range > actor.get(i).x0 ){
+            if(type == 1 && this.x0 <actor.get(i).x1 && this.x1 + (range*type) > actor.get(i).x0){
+                return actor.get(i);
+            }
+            if(type == -1 && this.x0 + (range*type) <actor.get(i).x1 && this.x1 > actor.get(i).x0){
                 return actor.get(i);
             }
         }
         return null;
     }
     
-    //腳色方法
-    
     public void lvup(){//商店購買等級使用
         this.lv+=1;
     }
-    
     
     public float getHpPercent(){
          return (float)this.hp/(float)this.maxHp;
@@ -310,8 +328,8 @@ public class Stuff {
             }
         }
         
-        if(a != null){
-            a.paint(g);
+        if(bombContainer != null){
+            bombContainer.paint(g);
         }
     }
 }

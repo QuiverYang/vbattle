@@ -37,7 +37,6 @@ public class LoadGameScene extends Scene {
     private String[] playerNameList;
 
     private BufferedImage background;
-    private Font font;
     private final int SCREEN_WIDTH = Resource.SCREEN_WIDTH;
     private final int SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
     

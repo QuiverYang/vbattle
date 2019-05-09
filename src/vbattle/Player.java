@@ -217,14 +217,18 @@ public class Player {
         
         String status[] = playerInfo.get(index);
         this.playerName = status[0];
-        this.inventory = Integer.parseInt(status[1]);
+        
         this.stage = Integer.parseInt(status[2]);
         for (int i = 0; i < unlock.length; i++) {
             this.unlock[i] = Integer.parseInt(status[i + 3]);
+            if(this.stage >=1 && this.stage<4 && this.unlock[stage+1]==0){ //設定stage與unlock間的關係
+                this.unlock[this.stage+1] = 1;
+            }
         }
         this.hp = Integer.parseInt(status[8]);
         this.mp = Integer.parseInt(status[9]);
         this.cash = Integer.parseInt(status[10]);
+        this.inventory = this.cash;
         
         this.fp.clear(); //先刪除fp list內所有物件（以防後面讀存重複加入）
         

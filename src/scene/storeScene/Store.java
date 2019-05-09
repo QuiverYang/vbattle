@@ -174,32 +174,33 @@ public abstract class Store extends Scene{
                 p.paint(g);
             }
         }
-        //=============畫player金錢========================= 
+
+        //=============畫出 cash=========================
         g.setFont(fontBit);
         g.setColor(Color.WHITE);
         FontMetrics fm = g.getFontMetrics();
-        String asset = String.valueOf(this.player.getInventory());
-        
-        //=============畫出 asset=========================
-        int sw = fm.stringWidth(asset);
-        int sa = fm.getAscent();
-        g.drawString(asset, (int)(Resource.SCREEN_WIDTH*0.85)-sw, (int)(Resource.SCREEN_HEIGHT*0.9));
-        
-        //=============畫出 cash=========================
         String cash = this.player.getCash()+"";
-        sw = fm.stringWidth(cash);
-        g.drawString(cash, (int)(Resource.SCREEN_WIDTH*0.4)-sw, (int)(Resource.SCREEN_HEIGHT*0.9));
+        int sw = fm.stringWidth(cash);
+        g.drawString(cash, (int)(Resource.SCREEN_WIDTH*0.9)-sw, (int)(Resource.SCREEN_HEIGHT/9));
+
         
-        //=============畫出 hpmp=========================
+        //=============畫出 hp=========================
         String pHp = this.player.getHp()+"";
         sw = fm.stringWidth(pHp);
-        //=============畫出 hp=========================
-        g.drawString(pHp, (int)(Resource.SCREEN_WIDTH*0.9)-sw, Resource.SCREEN_HEIGHT/13);
-        
+        g.drawString(pHp, (int)(Resource.SCREEN_WIDTH*0.4)-sw, Resource.SCREEN_HEIGHT/23*20);
+        //=============畫出 Maxhp=========================
+        String pMaxHp = this.player.getHpMax()+"";
+        sw = fm.stringWidth(pMaxHp);
+        g.drawString(pMaxHp, (int)(Resource.SCREEN_WIDTH*0.4)-sw, Resource.SCREEN_HEIGHT/23*22);
+
         //=============畫出 mp=========================
         String pMp = this.player.getMp()+"";
         sw = fm.stringWidth(pMp);
-        g.drawString(pMp, (int)(Resource.SCREEN_WIDTH*0.9)-sw, Resource.SCREEN_HEIGHT/6);
+        g.drawString(pMp, (int)(Resource.SCREEN_WIDTH*0.9)-sw, Resource.SCREEN_HEIGHT/23*20);
+        //=============畫出 Maxhp=========================
+        String pMaxMp = this.player.getMpMax()+"";
+        sw = fm.stringWidth(pMaxMp);
+        g.drawString(pMaxMp, (int)(Resource.SCREEN_WIDTH*0.9)-sw, Resource.SCREEN_HEIGHT/23*22);
         
         //=============畫出 info=========================
         paintProductInfo(g);
@@ -215,15 +216,10 @@ public abstract class Store extends Scene{
                 g.setFont(fontSmall);
                 int y = Resource.SCREEN_HEIGHT-sa-padding-(int)(Resource.SCREEN_HEIGHT*0.25f);
                 int sh = g.getFontMetrics().getHeight();//換行使用
-                int i = 0;
                 sw = fm.stringWidth(info.split("  ")[0]);
                 for (String line : info.split("  ")){
-                    g.drawString(line, (int)(Resource.SCREEN_WIDTH*0.51)-sw/4,y);
+                    g.drawString(line, (int)(Resource.SCREEN_WIDTH*0.5)-sw/3,y);
                     y += sh;
-//                    if(i ==1){
-//                        FinProduct temp = (FinProduct)products[counter];
-//                        g.drawString("剩餘價值:"+temp.getValue(), (int)(Resource.SCREEN_WIDTH*0.51)-sw/4,y);                    }
-//                    i++;
                 }
 
             }else{

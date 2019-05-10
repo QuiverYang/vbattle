@@ -15,40 +15,38 @@ import java.net.URL;
  *
  * @author menglinyang
  */
-public class Coin extends ItemOnScreen{
+public class Ghost extends ItemOnScreen{
     int xf,singleImgWidth,counter,change;
     private int rateX, rateY;
     
-    private static AudioClip coinSound;
+    private static AudioClip ghostSound;
     
-    public static void CoinClicked(URL url){
+    public static void ghostClicked(URL url){
         
-        coinSound = Applet.newAudioClip(url);
-        coinSound.play();
+        ghostSound = Applet.newAudioClip(url);
+        ghostSound.play();
     }
     
-    public Coin(int x, int y, int width, int height){
-        super("/resources/coin.png",x,y,width,height);
-        singleImgWidth = img.getWidth()/6;
+    public Ghost(int x, int y, int width, int height){
+        super("/resources/devil_1.png",x,y,width,height);
+        singleImgWidth = img.getWidth()/5;
         rateX = x/Resource.SCREEN_WIDTH;
         rateY = y/Resource.SCREEN_HEIGHT;
-        coinSound = Applet.newAudioClip(getClass().getResource("/resources/coin.wav"));
+        ghostSound = Applet.newAudioClip(getClass().getResource("/resources/pop.wav"));
     }
     
-    public static boolean isOnCoin(MouseEvent e, Coin coin) {
-        if (e.getX() >= coin.getX()
-                && e.getX() <= coin.getX() + coin.getWidth() && e.getY() >= coin.getY() && e.getY() <= coin.getY() + coin.getHeight()) {
+    public static boolean isOnGhost(MouseEvent e, Ghost ghost) {
+        if (e.getX() >= ghost.getX()
+                && e.getX() <= ghost.getX() + ghost.getWidth() && e.getY() >= ghost.getY() && e.getY() <= ghost.getY() + ghost.getHeight()) {
             return true;
         }
         return false;
     }
     
-    
-    
     @Override
     public void paint(Graphics g) {
         if(counter % 3 == 1){
-            xf = singleImgWidth * (change++%6);
+            xf = singleImgWidth * (change++%5);
         }
         counter++;
         

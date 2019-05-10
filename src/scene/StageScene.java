@@ -253,6 +253,7 @@ public class StageScene extends Scene {
                     MainPanel.backgroundSound.loop();
                     for (int i = 0; i < player.getFp().size(); i++) {
                         player.getFp().get(i).changeValue();
+                        System.out.println(player.getFp().get(i).getName());
                     }
                 }
 
@@ -484,7 +485,6 @@ public class StageScene extends Scene {
                         } else {
                             bombContainer.checkTouchGround();
                         }
-
                     }
                     bombContainer = null;
                 }

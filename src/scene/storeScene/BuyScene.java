@@ -207,8 +207,11 @@ public class BuyScene extends Store{
                         System.out.println("player save problem from StorceScene back to MenuScene");;
                     }
                     MainPanel.backgroundSound.stop();
-//                    backgroundSound.stop();
-                    gsChangeListener.changeScene(MainPanel.STAGE_SCENE);
+                    if(player.getStage()<=1){
+                        gsChangeListener.changeScene(MainPanel.DISPLAY_SCENE);
+                    }else{
+                        gsChangeListener.changeScene(MainPanel.STAGE_SCENE);
+                    }
                 }
                 
             }

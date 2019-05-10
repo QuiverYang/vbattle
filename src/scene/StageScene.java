@@ -257,7 +257,6 @@ public class StageScene extends Scene {
                     MainPanel.backgroundSound.loop();
                     for (int i = 0; i < player.getFp().size(); i++) {
                         player.getFp().get(i).changeValue();
-                        System.out.println(player.getFp().get(i).getName()+ " " + player.getFp().get(i).getPlusHp());
                     }
                 }
 
@@ -279,7 +278,11 @@ public class StageScene extends Scene {
         g.drawImage(this.background, 0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT, 0, 0, this.background.getWidth(), this.background.getHeight(),null);
         g.setFont(this.priceFontBit);
         FontMetrics fm = g.getFontMetrics();
-
+        if(drag!=-1){
+            paintShadow(g);
+        }
+        
+        g.setColor(Color.WHITE);
         //腳色
         for (int i = 0; i < 3; i++) {
             g.setColor(Color.white);
@@ -399,6 +402,17 @@ public class StageScene extends Scene {
         }
 
     }
+    
+    private void paintShadow(Graphics g){
+        g.setColor(lightGray);
+        if(dragY < battleAreaY[2]){
+            g.fillRect(dragX, battleAreaY[2]+(iconSize / 2), iconSize, iconSize);
+        }else if(dragY < battleAreaY[1]){
+            g.fillRect(dragX, battleAreaY[1]+(iconSize / 2), iconSize, iconSize);
+        }else if(dragY < battleAreaY[0]){
+            g.fillRect(dragX, battleAreaY[0]+(iconSize / 2), iconSize, iconSize);
+        }
+    }
 
     @Override
     public void logicEvent() {
@@ -511,7 +525,6 @@ public class StageScene extends Scene {
                         } else {
                             bombContainer.checkTouchGround();
                         }
-
                     }
                     bombContainer = null;
                 }

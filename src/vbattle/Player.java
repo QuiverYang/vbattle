@@ -254,9 +254,8 @@ public class Player {
                         risk = Double.parseDouble(stockInfo.substring(indexOfRisk + 2, indexOfRisk + 4));
                         profit = Integer.parseInt(stockInfo.substring(indexOfProfit + 2, indexOfProfit + 4));
                         
-                        this.fp.add(new FinProduct(FinProduct.PRODUCT_STOCK_PATH, "抗生藥品", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, stockInfo));
-                        this.fp.get(indexFp).setPlusHp(Integer.parseInt(status[countFp++]));
-                        this.fp.get(indexFp++).setPlusMp(Integer.parseInt(status[countFp++]));
+                        this.fp.add(new FinProduct(FinProduct.PRODUCT_STOCK_PATH, "抗生藥品", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, stockInfo,Integer.parseInt(status[countFp++]),Integer.parseInt(status[countFp++])));
+
                         break;
                         
                     case "健康食品":
@@ -265,9 +264,7 @@ public class Player {
                         indexOfProfit = fundInfo.indexOf("利潤");
                         risk = Double.parseDouble(fundInfo.substring(indexOfRisk + 2, indexOfRisk + 4));
                         profit = Integer.parseInt(fundInfo.substring(indexOfProfit + 2, indexOfProfit + 4));
-                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUND_PATH, "健康食品", FinProduct.PRODUCT_FUND_PRICE, risk, profit, fundInfo));
-                        this.fp.get(indexFp).setPlusHp(Integer.parseInt(status[countFp++]));
-                        this.fp.get(indexFp++).setPlusMp(Integer.parseInt(status[countFp++]));
+                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUND_PATH, "健康食品", FinProduct.PRODUCT_FUND_PRICE, risk, profit, fundInfo,Integer.parseInt(status[countFp++]),Integer.parseInt(status[countFp++])));
                         break;
                         
                     case "生化元素":
@@ -276,9 +273,7 @@ public class Player {
                         indexOfProfit = futureInfo.indexOf("利潤");
                         risk = Double.parseDouble(futureInfo.substring(indexOfRisk + 2, indexOfRisk + 4));
                         profit = Integer.parseInt(futureInfo.substring(indexOfProfit + 2, indexOfProfit + 4));
-                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUTURES_PATH, "生化元素", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, futureInfo));
-                        this.fp.get(indexFp).setPlusHp(Integer.parseInt(status[countFp++]));
-                        this.fp.get(indexFp++).setPlusMp(Integer.parseInt(status[countFp++]));
+                        this.fp.add(new FinProduct(FinProduct.PRODUCT_FUTURES_PATH, "生化元素", FinProduct.PRODUCT_FUTURES_PRICE, risk, profit, futureInfo,Integer.parseInt(status[countFp++]),Integer.parseInt(status[countFp++])));
                         break;
                 }
                 

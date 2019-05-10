@@ -38,10 +38,12 @@ public class MainPanel extends JPanel {
     public static final int STORE_SCENE = 5;
     public static final int SELL_SCENE = 6;
     public static final int SAVE_SCENE = 7;
+    public static final int DISPLAY_SCENE = 8;
 
 
     private StageScene stageScene; //暫存stage實體（for暫停使用）
     private BuyScene buyScene;  //暫存stage實體 （for暫停使用）
+    private DisplayScene displayScene;//暫存stage實體 （for暫停使用）
     public static AudioClip backgroundSound;
     
     public interface GameStatusChangeListener {
@@ -63,7 +65,7 @@ public class MainPanel extends JPanel {
 
         this.setBackground(Color.red);
 
-//        changeCurrentScene(genSceneById(STAGE_SCENE));
+//        changeCurrentScene(genSceneById(DISPLAY_SCENE));
         changeCurrentScene(genSceneById(MENU_SCENE));
 
         Timer t1 = new Timer(25, new ActionListener() {
@@ -113,24 +115,14 @@ public class MainPanel extends JPanel {
                     return this.buyScene;
                 }
                 return this.buyScene = new BuyScene(gsChangeListener);  
-//            case NEW_GAME_SCENE:
-//                return new NewGameScene(gsChangeListener);
             case LOAD_GAME_SCENE: {
                 try {
                     return new LoadGameScene(gsChangeListener);
                 } catch (IOException ex) {
                     ex.getStackTrace();
                 }
-
-//            case LOAD_GAME_SCENE:
-//                return LoadGameScene(gsChangeListener);
-//            case STAGE_SCENE: 
-//                return new StageScene(gsChangeListener);
             }
             case STAGE_SCENE:
-//                if(this.stageScene == null){
-//                    this.stageScene = new StageScene(gsChangeListener);
-//                } 
                 if(SaveScene.saveSceneCheck){  //如果使用到儲存畫面，則回傳上一刻的實體
                     SaveScene.saveSceneCheck = false;
                      return this.stageScene;
@@ -141,6 +133,9 @@ public class MainPanel extends JPanel {
                 return new SellScene(gsChangeListener);
             case SAVE_SCENE:
                 return new SaveScene(gsChangeListener);
+            case DISPLAY_SCENE:
+                return new DisplayScene(gsChangeListener);
+                
         }
         return null;
     }

@@ -30,7 +30,7 @@ public class Stuff {
     private int type; // 判斷正反角 (1-->我方角 , -1-->敵方)
     private int range;
     private int imgSize;
-    private int attackType = 3;
+    private int attackType = 1;
     private Bomb bombContainer;
     private BombC justPaint;
     
@@ -71,7 +71,7 @@ public class Stuff {
         this.y1 = y0 + imgHeight;
         this.characterNumY0 = characterNum*32;
         this.characterNumY1 = characterNumY0+32;
-        this.cdTime = 30;
+        this.cdTime = 50;
         this.attackedTime = 30;
         this.txtpath = txtpath;
         //設定建構子參數

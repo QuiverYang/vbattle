@@ -43,6 +43,8 @@ public class Coin extends ItemOnScreen{
         return false;
     }
     
+    
+    
     @Override
     public void paint(Graphics g) {
         if(counter % 3 == 1){
@@ -61,6 +63,5 @@ public class Coin extends ItemOnScreen{
     public void setHeight(int height){
         this.height = height;
     }
-    
-    
+
 }

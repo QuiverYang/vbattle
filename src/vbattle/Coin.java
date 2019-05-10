@@ -17,7 +17,7 @@ import java.net.URL;
  */
 public class Coin extends ItemOnScreen{
     int xf,singleImgWidth,counter,change;
-    private int rateX, rateY;
+    private double rateX, rateY;
     
     private static AudioClip coinSound;
     
@@ -30,8 +30,8 @@ public class Coin extends ItemOnScreen{
     public Coin(int x, int y, int width, int height){
         super("/resources/coin.png",x,y,width,height);
         singleImgWidth = img.getWidth()/6;
-        rateX = x/Resource.SCREEN_WIDTH;
-        rateY = y/Resource.SCREEN_HEIGHT;
+        rateX = x/(float)Resource.SCREEN_WIDTH;
+        rateY = y/(float)Resource.SCREEN_HEIGHT;
         coinSound = Applet.newAudioClip(getClass().getResource("/resources/coin.wav"));
     }
     
@@ -49,8 +49,8 @@ public class Coin extends ItemOnScreen{
             xf = singleImgWidth * (change++%6);
         }
         counter++;
-        x = Resource.SCREEN_WIDTH*this.rateX;
-        y = Resource.SCREEN_HEIGHT*this.rateY;
+        x = (int)(Resource.SCREEN_WIDTH*this.rateX);
+        y = (int)(Resource.SCREEN_HEIGHT*this.rateY);
         g.drawImage(img, x, y, x+this.width, y+this.height,xf,0,xf+singleImgWidth,singleImgWidth, null);
     }
     

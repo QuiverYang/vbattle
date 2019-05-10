@@ -14,9 +14,9 @@ public class FinProduct extends Product{
     public static final int PRODUCT_STOCK_PRICE = 600;
     public static final int PRODUCT_FUTURES_PRICE = 700;
     
-    public static final String PRODUCT_STOCK_PATH = "/resources/needle.jpg";
+    public static final String PRODUCT_STOCK_PATH = "/resources/medicine.jpg";
     public static final String PRODUCT_FUTURES_PATH = "/resources/robot.jpg";
-    public static final String PRODUCT_FUND_PATH = "/resources/medicine.jpg";
+    public static final String PRODUCT_FUND_PATH = "/resources/protein.jpg";
 
     public static final String PRODUCT_STOCK_INFO = "抗生藥品:購買一個抗生藥品  成長風險0.30/利潤10";
     public static final String PRODUCT_FUTURES_INFO  = "生化元素:購買一個生化藥劑  成長風險0.60/利潤50";

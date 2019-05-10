@@ -50,8 +50,8 @@ public class MenuScene extends Scene {
     private Player player;
     private Font font;
 
-    private final int SCREEN_WIDTH = Resource.SCREEN_WIDTH;
-    private final int SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
+    private int SCREEN_WIDTH = Resource.SCREEN_WIDTH;
+    private int SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
     
 
     
@@ -200,9 +200,17 @@ public class MenuScene extends Scene {
                     }
                 }
                 if (t == KeyEvent.VK_BACK_SPACE) {
-                    countChar--;
-                    if (countChar >= 0) {
-                        playerName = playerName.substring(0, countChar);
+                    if(countChar < 0){
+                        countChar = 0;
+                    }
+                    if (countChar > 0) {
+                        countChar--;
+                        try{
+                            playerName = playerName.substring(0, countChar);
+                        }catch(java.lang.StringIndexOutOfBoundsException ex){
+                            System.out.println("StringIndexOutOfBoundsExceptio from typing");
+                        }
+                        
                     }
                 }
             }
@@ -217,6 +225,8 @@ public class MenuScene extends Scene {
 
     public void resize() {
         if (SCREEN_WIDTH != Resource.SCREEN_WIDTH || SCREEN_HEIGHT != Resource.SCREEN_HEIGHT) {
+            SCREEN_WIDTH = Resource.SCREEN_WIDTH;
+            SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
             introBtn.reset(Resource.SCREEN_WIDTH / 12, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);  //遊戲說明按鈕
             newGameBtn.reset(Resource.SCREEN_WIDTH / 12 * 5, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
             loadBtn.reset(Resource.SCREEN_WIDTH / 12 * 9, (int) (Resource.SCREEN_HEIGHT / 9 * 6.5), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);

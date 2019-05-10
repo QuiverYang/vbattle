@@ -276,7 +276,11 @@ public class StageScene extends Scene {
         g.drawImage(this.background, 0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT, 0, 0, this.background.getWidth(), this.background.getHeight(),null);
         g.setFont(this.priceFontBit);
         FontMetrics fm = g.getFontMetrics();
-
+        if(drag!=-1){
+            paintShadow(g);
+        }
+        
+        g.setColor(Color.WHITE);
         //腳色
         for (int i = 0; i < 3; i++) {
             g.setColor(Color.white);
@@ -395,6 +399,17 @@ public class StageScene extends Scene {
             g.drawString("CONTINUE", gameOverBtn.getX() + gameOverBtn.getWidth() / 2 - sw1 / 2 - (int) (Resource.SCREEN_WIDTH*0.00833), gameOverBtn.getY() + (int) (Resource.SCREEN_HEIGHT * 0.0611));
         }
 
+    }
+    
+    private void paintShadow(Graphics g){
+        g.setColor(lightGray);
+        if(dragY < battleAreaY[2]){
+            g.fillRect(dragX, battleAreaY[2]+(iconSize / 2), iconSize, iconSize);
+        }else if(dragY < battleAreaY[1]){
+            g.fillRect(dragX, battleAreaY[1]+(iconSize / 2), iconSize, iconSize);
+        }else if(dragY < battleAreaY[0]){
+            g.fillRect(dragX, battleAreaY[0]+(iconSize / 2), iconSize, iconSize);
+        }
     }
 
     @Override

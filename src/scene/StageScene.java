@@ -95,7 +95,8 @@ public class StageScene extends Scene {
         }
 
         rc = ImgResource.getInstance();
-        icon = rc.tryGetImage("/resources/tinyCharacters.png");
+        iconTiny = rc.tryGetImage("/resources/tinyCharacters.png");
+        iconBig = rc.tryGetImage("/resources/bigCharacters.png");
         winImg = rc.tryGetImage("/resources/win.png");
         loseImg = rc.tryGetImage("/resources/lose.png");
         energyIng = rc.tryGetImage("/resources/energy.png");
@@ -122,7 +123,7 @@ public class StageScene extends Scene {
         hp = player.getHp();
         mp = player.getMp();
        
-        background = rc.tryGetImage("/resources/background"+player.getStage()+".png");
+        background = rc.tryGetImage("/resources/background"+(player.getStage()+1)+".png");
         try {
             br = new BufferedReader(new FileReader("src/stage"+player.getStage()+".txt"));
             while(br.ready()){

@@ -49,13 +49,13 @@ public class BombC extends Bomb{
             rotateAngle=90;
         }else if(showTimes%30<r&&showTimes%30>=r-5){
             rotateAngle+=18;
-            x+=10;
+            x+=screenUnitWidth*10;
         }else if(showTimes%30>r&&showTimes%30<=r+5){
             rotateAngle-=18;
-            x+=10;
+            x+=screenUnitWidth*10;
         }else{
             rotateAngle=0;
-            x+=10;
+            x+=screenUnitWidth*10;
         }
         for(int i = 0; i < water.size(); i++){
             if(water.get(i).isFinished()){

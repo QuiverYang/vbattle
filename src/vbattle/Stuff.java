@@ -55,13 +55,13 @@ public class Stuff {
     private BufferedImage devilImg;
     private int price;
 
-    public static final int ACTOR1_PRICE = 1;
+    public static final int ACTOR1_PRICE = 30;
     public static final int ACTOR2_PRICE = 1;
     public static final int ACTOR3_PRICE = 1;
     public static final int ACTOR4_PRICE = 1;
     public static final int ACTOR5_PRICE = 1;
 
-    public Stuff(int type, int x0, int y0, int imgWidth, int imgHeight, int characterNum, String txtpath) throws IOException {
+    public Stuff(int type, int x0, int y0, int imgWidth, int imgHeight, int characterNum, int lv, String txtpath) throws IOException {
         //設定建構子參數
         this.type = type;
         this.x0 = x0;
@@ -96,7 +96,8 @@ public class Stuff {
         this.characterNumY1 = characterNumY0+sourceHeight;
         //讀取參數txt檔
         //初始化腳色
-        this.lv = 1;
+        
+        this.lv = lv;
         this.maxHp = this.hp = hpRate * lv + this.hpBase;
         this.atk = atkRate * lv + this.atkBase;
         //初始化腳色
@@ -107,7 +108,7 @@ public class Stuff {
         }
         clickState = false;
     }
-
+    
     //內建GETTER SETTER
     public void setFrame(int value){
         this.frame = value;

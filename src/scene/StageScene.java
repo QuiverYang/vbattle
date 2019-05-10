@@ -142,8 +142,8 @@ public class StageScene extends Scene {
         } catch (Exception ex) {
         }
         try {
-            towerA = new Stuff(1,0,(int)(Resource.SCREEN_WIDTH*0.25),57*5,72*5,0,"towerA"+player.getStage());
-            towerB = new Stuff(-1,(int)(Resource.SCREEN_WIDTH*0.75),(int)(Resource.SCREEN_WIDTH*0.25),57*5,72*5,0,"towerB"+player.getStage());
+            towerA = new Stuff(1,0,(int)(Resource.SCREEN_WIDTH*0.25),57*5,72*5,0,1,"towerA"+player.getStage());
+            towerB = new Stuff(-1,(int)(Resource.SCREEN_WIDTH*0.75),(int)(Resource.SCREEN_WIDTH*0.25),57*5,72*5,0,1,"towerB"+player.getStage());
         } catch (IOException ex) {
         }
 //        towerA.setFrame(player.getStage());
@@ -523,9 +523,9 @@ public class StageScene extends Scene {
             }
             if(genCounter == delay.get(stageCounter)){
                 try {
-                    stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+1 ,"actor"+type.get(stageCounter)));
+                    stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+1 ,1,"actor"+type.get(stageCounter)));
                     while((delay.get(++stageCounter)) == 0){
-                        stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+1 ,"actor"+type.get(stageCounter)));
+                        stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+1 ,1,"actor"+type.get(stageCounter)));
                     }
                     genCounter = 0;
                 } catch (Exception e) {
@@ -537,7 +537,7 @@ public class StageScene extends Scene {
             try {
                 for (int i = 0; i < stuffList.size()/2; i++) {
                     if((float)(Math.random()) < genRate){
-                        stuffList.get(i+3).add(new Stuff(-1, Resource.SCREEN_WIDTH, battleAreaY[i] , iconSize, iconSize, 3, "actor2"));
+                        stuffList.get(i+3).add(new Stuff(-1, Resource.SCREEN_WIDTH, battleAreaY[i] , iconSize, iconSize, 3,1, "actor2"));
                     }
                 }
             } catch (IOException ex) {
@@ -659,10 +659,11 @@ public class StageScene extends Scene {
             if (e.getY() > battleAreaY[i] - iconSize && e.getY() < battleAreaY[i] + (iconSize / 2)&& e.getX() < Resource.SCREEN_WIDTH/2) {
                 try {
                     money -= checkActorPrice(drag);
+                    int[] unlock = player.getUnlock();
                     if(drag <3)
-                        stuffList.get(i).add(new Stuff(1, e.getX() - (iconSize / 2), battleAreaY[i], iconSize, iconSize, drag, "test" + drag));
+                         stuffList.get(i).add(new Stuff(1, e.getX() - (iconSize / 2), battleAreaY[i], iconSize, iconSize, drag,unlock[drag], "test" + drag));
                     if(drag >=3)
-                        stuffList.get(i).add(new Stuff(1, e.getX() - (iconSize / 2), battleAreaY[i], iconSize, iconSize, drag-3, "test" + drag));
+                        stuffList.get(i).add(new Stuff(1, e.getX() - (iconSize / 2), battleAreaY[i], iconSize, iconSize, drag-3, unlock[drag],"test" + drag));
                 } catch (IOException ex) {
                 }
             }

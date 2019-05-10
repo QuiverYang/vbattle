@@ -26,6 +26,7 @@ public class IntroScene extends Scene {
     private BufferedImage gradientImg;
     private ImgResource rc;
     private Button backBtn;
+    private Color darkBlue;
     private int introY;
     private int SCREEN_WIDTH = Resource.SCREEN_WIDTH;
     private int SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
@@ -33,9 +34,9 @@ public class IntroScene extends Scene {
     public IntroScene(MainPanel.GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
         rc = ImgResource.getInstance();
-        introImg = rc.tryGetImage("/resources/intro1.jpg");  //遊戲說明圖片 
+        introImg = rc.tryGetImage("/resources/intro.jpg");  //遊戲說明圖片 
         backBtn = new Button("/resources/return1.png",  (int)(Resource.SCREEN_WIDTH *0.842f), (int)(Resource.SCREEN_HEIGHT *0.778f), Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT / 9);//退回按鈕
-
+        darkBlue = new Color(21,25,54);
         this.introY = 0;
     }
 
@@ -74,10 +75,10 @@ public class IntroScene extends Scene {
 
     @Override
     public void paint(Graphics g) {
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, 1200, 900);
+        g.setColor(darkBlue);
+        g.fillRect(0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT);
         
-        g.drawImage(introImg, 0, this.introY+300, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT+this.introY+300, 0, 0, introImg.getWidth(), introImg.getHeight()-600, null);
+        g.drawImage(introImg, 0, this.introY+300, Resource.SCREEN_WIDTH, introImg.getHeight()+this.introY+300, 0, 0, introImg.getWidth(), introImg.getHeight(), null);
         backBtn.paintBtn(g);
 
     }

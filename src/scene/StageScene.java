@@ -28,7 +28,6 @@ import vbattle.Stuff;
  * @author anny,LC
  */
 public class StageScene extends Scene {
-
     //遊戲控制
     private int timeCount = 0; //倍數計時器：初始化
     private int eventTime = 100; // eventListener時間週期：大於0的常數
@@ -62,6 +61,7 @@ public class StageScene extends Scene {
     private int iconBigSize = 150;
     private boolean[] dragable = new boolean[5];
     private Bomb bombContainer;
+    private Stuff towerA,towerB;
     
     //場景元件
     private ImgResource rc;
@@ -78,9 +78,16 @@ public class StageScene extends Scene {
     private AudioClip winSound;
     private AudioClip loseSound;
     public static AudioClip stageBgm;
+    private boolean win = false;
 
-    private  int SCREEN_WIDTH = Resource.SCREEN_WIDTH;
-    private  int SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
+    private int SCREEN_WIDTH = Resource.SCREEN_WIDTH;
+    private int SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
+    
+    private float widthRate;
+    private float heightRate;
+    
+    
+    
 
     public StageScene(MainPanel.GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
@@ -134,7 +141,15 @@ public class StageScene extends Scene {
             }
         } catch (Exception ex) {
         }
-
+        try {
+            towerA = new Stuff(1,0,(int)(Resource.SCREEN_WIDTH*0.25),57*5,72*5,0,"towerA"+player.getStage());
+            towerB = new Stuff(-1,(int)(Resource.SCREEN_WIDTH*0.75),(int)(Resource.SCREEN_WIDTH*0.25),57*5,72*5,0,"towerB"+player.getStage());
+        } catch (IOException ex) {
+        }
+//        towerA.setFrame(player.getStage());
+//        towerB.setFrame(player.getStage());
+        towerA.setAttackedTime();
+        towerB.setAttackedTime();
     }
 
     //玩家控制
@@ -178,7 +193,7 @@ public class StageScene extends Scene {
                     }
                 }
 
-                if (gameOver && Button.isOnBtn(e, gameOverBtn)) {
+                if ((gameOver || win) && Button.isOnBtn(e, gameOverBtn)) {
                     gameOverBtn.setClickState(true);
                     gameOverBtn.setImgState(1);
                 }
@@ -202,11 +217,6 @@ public class StageScene extends Scene {
                         player.increaseCash(10);//設定每隻怪物增加10元
                     }
                 }
-//                
-//                if(e.getButton() == MouseEvent.BUTTON1){
-//                    a = new BombA(e.getX(),e.getY(),e.getY(),200);
-//                    b = new BombA(e.getX(),e.getY(),e.getY(),100);
-//                }
             }
 
             @Override
@@ -249,7 +259,26 @@ public class StageScene extends Scene {
                     gameOverBtn.setIsClicked(false);
                 }
 
-                if (gameOver && Button.isOnBtn(e, gameOverBtn) && gameOverBtn.getClickState()) {
+                if (win && Button.isOnBtn(e, gameOverBtn) && gameOverBtn.getClickState()) {
+                    gsChangeListener.changeScene(MainPanel.STORE_SCENE);
+                    
+                    MainPanel.backgroundSound.loop();
+                    for (int i = 0; i < player.getFp().size(); i++) {
+                        player.getFp().get(i).changeValue();
+                        System.out.println(player.getFp().get(i).getName()+ " " + player.getFp().get(i).getPlusHp());
+                    }
+                    
+                    if(player.getStage()+1 < 5){
+                        player.setStage(player.getStage()+1);
+                    }
+                    try {
+                        player.save();
+                    } catch (IOException ex) {
+                        System.out.print("error");
+                    }
+                }
+                
+                if (gameOver&& Button.isOnBtn(e, gameOverBtn) && gameOverBtn.getClickState()) {
                     gsChangeListener.changeScene(MainPanel.STORE_SCENE);
                     
                     MainPanel.backgroundSound.loop();
@@ -395,6 +424,27 @@ public class StageScene extends Scene {
             int sw1 = fm.stringWidth("CONTINUE");
             g.drawString("CONTINUE", gameOverBtn.getX() + gameOverBtn.getWidth() / 2 - sw1 / 2 - (int) (Resource.SCREEN_WIDTH*0.00833), gameOverBtn.getY() + (int) (Resource.SCREEN_HEIGHT * 0.0611));
         }
+        towerA.paint(g);
+        towerB.paint(g);
+        
+        if(towerB.getHp() < 0){
+            win = true;
+            winSound.play();
+        }
+        
+        if(win){
+            stageBgm.stop();
+            g.setColor(lightGray);
+            g.fillRect(0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT);
+            gameOverBtn.paintBtn(g);
+            
+            g.drawImage(this.winImg, Resource.SCREEN_WIDTH / 2 - (int) (Resource.SCREEN_WIDTH*0.502) / 2, Resource.SCREEN_HEIGHT / 2 - (int) (Resource.SCREEN_HEIGHT * 0.213)/ 2, (int) (Resource.SCREEN_WIDTH*0.502), (int) (Resource.SCREEN_HEIGHT * 0.213), null);
+//            g.drawString("GAMEOVER", Resource.SCREEN_WIDTH/5*2, Resource.SCREEN_HEIGHT/2);
+            g.setFont(gameFontBit);
+            g.setColor(Color.BLACK);
+            int sw1 = fm.stringWidth("CONTINUE");
+            g.drawString("CONTINUE", gameOverBtn.getX() + gameOverBtn.getWidth() / 2 - sw1 / 2 - (int) (Resource.SCREEN_WIDTH*0.00833), gameOverBtn.getY() + (int) (Resource.SCREEN_HEIGHT * 0.0611));
+        }
 
     }
 
@@ -444,45 +494,67 @@ public class StageScene extends Scene {
             for (int j = 0; j < stuffList.get(i + 3).size(); j++) {
                 stuffList.get(i + 3).get(j).refreshCd();
             }
+            towerA.refreshCd();
+            towerB.refreshCd();
         }
         ghostMethod(dieStuff);
     }
    
     private void stuffGen(){
-        if(stageCounter == delay.size()){
-            return;
-        }
-        if(genCounter == delay.get(stageCounter)){
-            try {
-                stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+1 ,"actor"+type.get(stageCounter)));
-                while((delay.get(++stageCounter)) == 0){
+        if(player.getStage() < 4){
+            if(stageCounter == delay.size()){
+                return;
+            }
+            if(genCounter == delay.get(stageCounter)){
+                try {
                     stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+1 ,"actor"+type.get(stageCounter)));
+                    while((delay.get(++stageCounter)) == 0){
+                        stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+1 ,"actor"+type.get(stageCounter)));
+                    }
+                    genCounter = 0;
+                } catch (Exception e) {
                 }
-                genCounter = 0;
-            } catch (Exception e) {
+            }
+            genCounter++;
+        }else{
+            this.genRate += 0.005f;
+            try {
+                for (int i = 0; i < stuffList.size()/2; i++) {
+                    if((float)(Math.random()) < genRate){
+                        stuffList.get(i+3).add(new Stuff(-1, Resource.SCREEN_WIDTH, battleAreaY[i] , iconSize, iconSize, 3, "actor2"));
+                    }
+                }
+            } catch (IOException ex) {
             }
         }
-        genCounter++;
-    
-
-        //隨機產生
-//        this.genRate += 0.005f;
-//        try {
-//            for (int i = 0; i < stuffList.size()/2; i++) {
-//                if((float)(Math.random()) < genRate){
-//                    stuffList.get(i+3).add(new Stuff(-1, Resource.SCREEN_WIDTH, battleAreaY[i] , iconSize, iconSize, 3, "actor2"));
-//                }
-//            }
-//        } catch (IOException ex) {
-//        }
     }
 
     private void collisionCheck(ArrayList<Stuff> stuff1, ArrayList<Stuff> stuff2) {
         Stuff tmp;
         for (int i = 0; i < stuff1.size(); i++) {
             if (stuff1.get(i).collisionCheck(stuff2) == null) {
-                stuff1.get(i).move();
+                
+                switch(stuff1.get(i).getType()){
+                    case 1:
+                        tmp = stuff1.get(i).collisionCheck(towerB);
+                        if(tmp != null && tmp.getHp() > 0 ) {
+                            stuff1.get(i).attack(tmp);
+                        }else{
+                            stuff1.get(i).move();
+                        }
+                    break;
+                        
+                    case -1:
+                        tmp = stuff1.get(i).collisionCheck(towerA);
+                        if(tmp != null && tmp.getHp() > 0 ) {
+                            stuff1.get(i).attack(tmp);
+                        }else{
+                            stuff1.get(i).move();
+                        }
+                    break;
+                }
             }
+            
             tmp = stuff1.get(i).collisionCheck(stuff2);
             if (tmp != null && tmp.getHp() > 0) {
                 stuff1.get(i).attack(tmp);
@@ -492,11 +564,14 @@ public class StageScene extends Scene {
                 coins.add(new Coin(tmp.getX0(), tmp.getY0(), tmp.getImgWidth(), tmp.getImgHeight()));
                 stuff2.remove(tmp);
             }
-            if(stuff1.get(i).getType() == 1 && stuff1.get(i).getX0() > Resource.SCREEN_WIDTH ){
-                stuff1.remove(i);
-            } 
+
+                
+            
+            
+            
         }
     }
+    
     
     private void bombCollision(){
         for (int i = 0; i < stuffList.size()/2; i++) {
@@ -505,8 +580,12 @@ public class StageScene extends Scene {
                 if (bombContainer != null) {
                     for (int k = 0; k < stuffList.get(i + 3).size(); k++) {
                         if (bombContainer.checkAttack(stuffList.get(i + 3).get(k)) == true) {
-                            stuffList.get(i + 3).get(k).back(stuffList.get(i).get(j));
-                        } else {
+                            stuffList.get(i + 3).get(k).attacked(stuffList.get(i).get(j));
+                        }
+                        else if(bombContainer.checkAttack(towerB) == true){
+                            towerB.attacked(stuffList.get(i).get(j));
+                        }
+                        else {
                             bombContainer.checkTouchGround();
                         }
 
@@ -562,10 +641,13 @@ public class StageScene extends Scene {
 
     private void assign(MouseEvent e) {
         for (int i = 0; i < stuffList.size() / 2; i++) {
-            if (e.getY() > battleAreaY[i] - iconSize && e.getY() < battleAreaY[i] + (iconSize / 2)) {
+            if (e.getY() > battleAreaY[i] - iconSize && e.getY() < battleAreaY[i] + (iconSize / 2)&& e.getX() < Resource.SCREEN_WIDTH/2) {
                 try {
                     money -= checkActorPrice(drag);
-                    stuffList.get(i).add(new Stuff(1, e.getX() - (iconSize / 2), battleAreaY[i], iconSize, iconSize, drag, "test" + drag));
+                    if(drag <3)
+                        stuffList.get(i).add(new Stuff(1, e.getX() - (iconSize / 2), battleAreaY[i], iconSize, iconSize, drag, "test" + drag));
+                    if(drag >=3)
+                        stuffList.get(i).add(new Stuff(1, e.getX() - (iconSize / 2), battleAreaY[i], iconSize, iconSize, drag-3, "test" + drag));
                 } catch (IOException ex) {
                 }
             }

@@ -29,10 +29,11 @@ public class Stuff {
     private int attackedTime;//CD時間:被攻擊後的無敵時間
     private int type; // 判斷正反角 (1-->我方角 , -1-->敵方)
     private int range;
-    private int imgSize;
-    private int attackType = 1;
+    private int sourceWidth;
+    private int sourceHeight;
+    private int attackType = 2;
     private Bomb bombContainer;
-    private BombC justPaint;
+    private boolean immovable = false;
     
     //腳色變動屬性
 //    private boolean clickState;
@@ -69,8 +70,6 @@ public class Stuff {
         this.imgHeight = imgHeight;
         this.x1 = x0 + imgWidth;
         this.y1 = y0 + imgHeight;
-        this.characterNumY0 = characterNum*32;
-        this.characterNumY1 = characterNumY0+32;
         this.cdTime = 50;
         this.attackedTime = 30;
         this.txtpath = txtpath;
@@ -87,9 +86,14 @@ public class Stuff {
         this.hpBase = Integer.parseInt(status[3]);
         this.atkBase = Integer.parseInt(status[4]);
         this.range = Integer.parseInt(status[5]);
+        this.sourceWidth = Integer.parseInt(status[7]);
+        this.sourceHeight = Integer.parseInt(status[8]);
         if (this.range > 0) {
             br.close();
         }
+        this.immovable = Boolean.parseBoolean(status[9]);
+        this.characterNumY0 = characterNum*sourceHeight;
+        this.characterNumY1 = characterNumY0+sourceHeight;
         //讀取參數txt檔
         //初始化腳色
         this.lv = 1;
@@ -105,6 +109,13 @@ public class Stuff {
     }
 
     //內建GETTER SETTER
+    public void setFrame(int value){
+        this.frame = value;
+    }
+    
+    public void setAttackedTime(){
+        this.attackedTime = 1;
+    }
     public int getX0() {
         return x0;
     }
@@ -217,6 +228,14 @@ public class Stuff {
         return bombContainer;
     }
     
+    public int getSourceHeight(){
+        return sourceHeight;
+    }
+    
+    public int getSourceWidth(){
+        return sourceWidth;
+    }
+    
     //GETTER SETTER
     
     public void setCoordinate(int x,int y){
@@ -258,10 +277,10 @@ public class Stuff {
                 if(range > 0 ){
                     switch(attackType){
                         case 1:
-                            bombContainer = new BombA(this,Math.abs(x0+imgWidth/2-attacked.x0 + attacked.imgWidth/2));
+                            bombContainer = new BombA(this,Math.abs(x0+imgWidth/2-(attacked.x0 + attacked.imgWidth/2)));
                             break;
                         case 2:
-                            bombContainer = new BombB(this,Math.abs(x0+imgWidth/2-attacked.x0 + attacked.imgWidth/2));
+                            bombContainer = new BombB(this,Math.abs(x0+imgWidth/2-(attacked.x0 + attacked.imgWidth/2)));
                             break;
                         case 3:
                             bombContainer = new BombC(this,0);
@@ -274,7 +293,7 @@ public class Stuff {
 
             if (frame >= 5) {//動畫完成觸發攻擊效果
                 if (range < 1) {
-                    attacked.back(this);
+                    attacked.attacked(this);
                 }else{
                     frame = 0;
                 }
@@ -285,10 +304,6 @@ public class Stuff {
         }
     }
     
-    public void jc(){
-        
-    }
-    
     public Bomb animation(){
         if(bombContainer != null){
             bombContainer.move();
@@ -297,14 +312,20 @@ public class Stuff {
         return null;
     }
 
-    public void back(Stuff attacker) {
+    public void attacked(Stuff attacker) {
         if(attackedCd){
             hp = hp - attacker.atk;
             frame = 0;
-            x0 = x0 - 100 * type;
-            this.x1 = x0 + imgWidth;
+            back();
             hit.play();
             attackedCd = false;
+        }
+    }
+    
+    public void back(){
+        if(!immovable){
+            x0 = x0 - 100 * type;
+            this.x1 = x0 + imgWidth;
         }
     }
 
@@ -347,6 +368,16 @@ public class Stuff {
         }
         return null;
     }
+    
+    public Stuff collisionCheck(Stuff tower){
+            if (type == 1 && this.x0 < tower.x1 && this.x1 + (range * type) > tower.x0) {
+                return tower;
+            }
+            if(type == -1 && this.x0 + (range*type) <tower.x1 && this.x1 > tower.x0){
+                return tower;
+            }
+        return null;
+    }
 
     public void lvup() {//商店購買等級使用
         this.lv += 1;
@@ -362,7 +393,7 @@ public class Stuff {
             g.setColor(Color.red);
             g.fillRect(x0 + (int) (imgWidth * 1 / 4f), this.getY0() - (int) (Resource.SCREEN_HEIGHT * 0.0056), (int) (this.getImgWidth() * this.getHpPercent() * (1 / 2f)), (int) (Resource.SCREEN_HEIGHT * 0.0056));
             //角色顯示
-            g.drawImage(img,x0,y0,x1,y1,(int)frame*32,characterNumY0, ((int)frame+1)*32,characterNumY1,null);
+            g.drawImage(img,x0,y0,x1,y1,(int)frame*this.sourceWidth,characterNumY0, ((int)frame+1)*this.sourceWidth,characterNumY1,null);
         }else if(this.hp <= 0){
             if(this.type==1){
                 g.drawImage(this.ghostImg, x0, y0 , x0+imgWidth, y1 , (int)frame*32, 0, (((int)frame+1)*32), this.ghostImg.getHeight(), null);

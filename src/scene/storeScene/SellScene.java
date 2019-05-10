@@ -36,15 +36,17 @@ public class SellScene extends Store{
         productsNum = player.getFp().size()+1;
         //建立產品
         products = new FinProduct[productsNum];
-        products[0] = new FinProduct("/resources/nothing.png","",0,0,0,"");
+        products[0] = new FinProduct("/resources/nothing.png","",0,0,0,"",0,0);
         for(int i = 1; i < productsNum; i++){
+            String path = player.getFp().get(i-1).getFileName();
             String pName = player.getFp().get(i-1).getName();
             int price = player.getFp().get(i-1).getPrice();
             String info = player.getFp().get(i-1).getInfo();
             double risk = player.getFp().get(i-1).getRisk();
             int profit = player.getFp().get(i-1).getProfit();
-            String path = player.getFp().get(i-1).getFileName();
-            products[i] = new FinProduct(path,pName,price,risk,profit,info);
+            int plusHp = player.getFp().get(i-1).getPlusHp();
+            int plusMp = player.getFp().get(i-1).getPlusHp();
+            products[i] = new FinProduct(path,pName,price,risk,profit,info,plusHp,plusMp);
         }
         counter = 1;
     }
@@ -78,6 +80,7 @@ public class SellScene extends Store{
                     FinProduct temp = (FinProduct)products[counter];
                     player.getFp().remove(--counter);
                     player.increaseHpMax(temp.getPlusHp());
+                    player.increaseMpMax(temp.getPlusMp());
                     setProduct();
                     initProductOnScreen();
                 }

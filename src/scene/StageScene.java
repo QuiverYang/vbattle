@@ -1,5 +1,6 @@
 package scene;
 
+import vbattle.Bomb;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.Color;
@@ -13,8 +14,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import vbattle.Bomb;
-import vbattle.BombA;
 import vbattle.Button;
 import vbattle.Coin;
 import vbattle.Fontes;
@@ -60,12 +59,13 @@ public class StageScene extends Scene {
     private int[] iconY = new int[5];
     private int[] iconNum = new int[5];
     private int iconSize = 100;
+    private int iconBigSize = 150;
     private boolean[] dragable = new boolean[5];
-    private BombA bombContainer;
-
+    private Bomb bombContainer;
+    
     //場景元件
     private ImgResource rc;
-    private BufferedImage icon, background;
+    private BufferedImage iconTiny,iconBig, background;
     private Button gameOverBtn, returnBtn;
     private Font fontBit, priceFontBit, gameFontBit;
     private Color lightGray;
@@ -95,8 +95,8 @@ public class StageScene extends Scene {
         }
 
         rc = ImgResource.getInstance();
-        icon = rc.tryGetImage("/resources/tinyCharacters.png");
-        background = rc.tryGetImage("/resources/background5.png");
+        iconTiny = rc.tryGetImage("/resources/tinyCharacters.png");
+        iconBig = rc.tryGetImage("/resources/bigCharacters.png");
         winImg = rc.tryGetImage("/resources/win.png");
         loseImg = rc.tryGetImage("/resources/lose.png");
         energyIng = rc.tryGetImage("/resources/energy.png");
@@ -122,15 +122,17 @@ public class StageScene extends Scene {
         player = Player.getPlayerInstane();
         hp = player.getHp();
         mp = player.getMp();
+       
+        background = rc.tryGetImage("/resources/background"+(player.getStage()+1)+".png");
         try {
-            br = new BufferedReader(new FileReader("stage1.txt"));
-            while (br.ready()) {
+            br = new BufferedReader(new FileReader("src/stage"+player.getStage()+".txt"));
+            while(br.ready()){
                 String str[] = br.readLine().split(",");
                 delay.add(Integer.parseInt(str[0]));
                 type.add(Integer.parseInt(str[1]));
                 areaI.add(Integer.parseInt(str[2]));
             }
-        } catch (Exception e) {
+        } catch (Exception ex) {
         }
 
     }
@@ -253,7 +255,6 @@ public class StageScene extends Scene {
                     MainPanel.backgroundSound.loop();
                     for (int i = 0; i < player.getFp().size(); i++) {
                         player.getFp().get(i).changeValue();
-                        System.out.println(player.getFp().get(i).getName());
                     }
                 }
 
@@ -272,15 +273,33 @@ public class StageScene extends Scene {
 
     @Override
     public void paint(Graphics g) {
-        g.drawImage(this.background, 0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT, null);
+        g.drawImage(this.background, 0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT, 0, 0, this.background.getWidth(), this.background.getHeight(),null);
         g.setFont(this.priceFontBit);
         FontMetrics fm = g.getFontMetrics();
 
         //腳色
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             g.setColor(Color.white);
             g.fillRect(iconX[i], iconY[i], (int)(Resource.SCREEN_WIDTH*0.092), (int)(Resource.SCREEN_HEIGHT*0.122));
-            g.drawImage(icon, iconX[i] + (int)(Resource.SCREEN_WIDTH*0.0083), iconY[i], iconX[i] + (int)(Resource.SCREEN_WIDTH*0.075), iconY[i] + (int)(Resource.SCREEN_HEIGHT*0.089), 0, iconNum[i] * 32, 32, (iconNum[i] + 1) * 32, null);
+            g.drawImage(iconTiny, iconX[i] + (int)(Resource.SCREEN_WIDTH*0.0083), iconY[i], iconX[i] + (int)(Resource.SCREEN_WIDTH*0.075), iconY[i] + (int)(Resource.SCREEN_HEIGHT*0.089), 0, iconNum[i] * 32, 32, (iconNum[i] + 1) * 32, null);
+//            if (this.money < checkActorPrice(i)) {
+//                g.setColor(lightGray);
+//                g.fillRect(iconX[i], iconY[i], (int)(Resource.SCREEN_WIDTH*0.092), (int)(Resource.SCREEN_HEIGHT*0.122));
+//            }
+//            //價格
+//            g.setColor(Color.BLACK);
+//            int sw = fm.stringWidth(checkActorPrice(i) + "");
+//            g.drawString(checkActorPrice(i) + "", iconX[i] + (int)(Resource.SCREEN_WIDTH*0.092) / 2 - sw / 2, iconY[i] + (int)(Resource.SCREEN_HEIGHT*0.113));
+
+        }
+        
+        for(int i =0; i<2; i++){
+            g.setColor(Color.white);
+            g.fillRect(iconX[i+3], iconY[i+3], (int)(Resource.SCREEN_WIDTH*0.092), (int)(Resource.SCREEN_HEIGHT*0.122));
+            g.drawImage(iconBig, iconX[i+3] + (int)(Resource.SCREEN_WIDTH*0.0083), iconY[i+3], iconX[i+3] + (int)(Resource.SCREEN_WIDTH*0.075), iconY[i+3] + (int)(Resource.SCREEN_HEIGHT*0.089), 0, iconNum[i] * 64, 64, (iconNum[i] + 1) * 64, null);
+            
+        }
+        for(int i=0; i<5; i++){
             if (this.money < checkActorPrice(i)) {
                 g.setColor(lightGray);
                 g.fillRect(iconX[i], iconY[i], (int)(Resource.SCREEN_WIDTH*0.092), (int)(Resource.SCREEN_HEIGHT*0.122));
@@ -289,7 +308,6 @@ public class StageScene extends Scene {
             g.setColor(Color.BLACK);
             int sw = fm.stringWidth(checkActorPrice(i) + "");
             g.drawString(checkActorPrice(i) + "", iconX[i] + (int)(Resource.SCREEN_WIDTH*0.092) / 2 - sw / 2, iconY[i] + (int)(Resource.SCREEN_HEIGHT*0.113));
-
         }
         //走路角色
         if (gameOver == false) {
@@ -312,7 +330,12 @@ public class StageScene extends Scene {
         }
 
         if (drag != -1) {
-            g.drawImage(icon, dragX, dragY, dragX + iconSize, dragY + iconSize, 0, drag * 32, 32, (drag + 1) * 32, null);
+            if(drag <3){
+                g.drawImage(iconTiny, dragX, dragY, dragX + iconSize, dragY + iconSize, 0, drag * 32, 32, (drag + 1) * 32, null);
+            }else {
+                g.drawImage(iconBig, dragX, dragY, dragX + iconBigSize, dragY + iconBigSize, 0, (drag-3) * 64, 64, (drag-3 + 1) * 64, null);
+
+            }
         }
 
         //金錢
@@ -423,34 +446,34 @@ public class StageScene extends Scene {
         }
         ghostMethod(dieStuff);
     }
-
-    private void stuffGen() {
-//        if(stageCounter == delay.size()){
-//            return;
-//        }
-//        if(genCounter == delay.get(stageCounter)){
-//            try {
-//                stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+1 ,"actor"+type.get(stageCounter)));
-//                while((delay.get(++stageCounter)) == 0){
-//                    stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+1 ,"actor"+type.get(stageCounter)));
-//                }
-//                genCounter = 0;
-//            } catch (Exception e) {
-//            }
-//        }
-//        genCounter++;
+   
+    private void stuffGen(){
+        if(stageCounter == delay.size()){
+            return;
+        }
+        if(genCounter == delay.get(stageCounter)){
+            try {
+                stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+1 ,"actor"+type.get(stageCounter)));
+                while((delay.get(++stageCounter)) == 0){
+                    stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+1 ,"actor"+type.get(stageCounter)));
+                }
+                genCounter = 0;
+            } catch (Exception e) {
+            }
+        }
+        genCounter++;
+    
 
         //隨機產生
-        this.genRate += 0.005f;
-        try {
-            for (int i = 0; i < stuffList.size() / 2; i++) {
-                if ((float) (Math.random()) < genRate) {
-                    stuffList.get(i + 3).add(new Stuff(-1, Resource.SCREEN_WIDTH, battleAreaY[i], iconSize, iconSize, 3, "actor2"));
-                }
-            }
-        } catch (IOException ex) {
-        }
-
+//        this.genRate += 0.005f;
+//        try {
+//            for (int i = 0; i < stuffList.size()/2; i++) {
+//                if((float)(Math.random()) < genRate){
+//                    stuffList.get(i+3).add(new Stuff(-1, Resource.SCREEN_WIDTH, battleAreaY[i] , iconSize, iconSize, 3, "actor2"));
+//                }
+//            }
+//        } catch (IOException ex) {
+//        }
     }
 
     private void collisionCheck(ArrayList<Stuff> stuff1, ArrayList<Stuff> stuff2) {
@@ -473,9 +496,9 @@ public class StageScene extends Scene {
             } 
         }
     }
-
-    private void bombCollision() {
-        for (int i = 0; i < stuffList.size(); i++) {
+    
+    private void bombCollision(){
+        for (int i = 0; i < stuffList.size()/2; i++) {
             for (int j = 0; j < stuffList.get(i).size(); j++) {
                 bombContainer = stuffList.get(i).get(j).animation();
                 if (bombContainer != null) {
@@ -548,48 +571,49 @@ public class StageScene extends Scene {
     }
 
     public void resize() {
-        
         if (SCREEN_WIDTH != Resource.SCREEN_WIDTH || SCREEN_HEIGHT != Resource.SCREEN_HEIGHT) {
             SCREEN_WIDTH = Resource.SCREEN_WIDTH ;
             SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
-            
+            //按鈕
             returnBtn.reset(20, 20, Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT / 9);
             gameOverBtn.reset(Resource.SCREEN_WIDTH / 12 * 8, (int) (Resource.SCREEN_HEIGHT / 9 * 6), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
-
+            //字體
             fontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 23);
             priceFontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 45);
             gameFontBit = Fontes.getBitFont(Resource.SCREEN_WIDTH / 37);
-            
+            //下方角色欄
             for (int i = 0; i < 5; i++) {
             iconX[i] = (int) (Resource.SCREEN_WIDTH * (0.1f * i) + Resource.SCREEN_WIDTH * (0.3f));
             iconY[i] = (int) (Resource.SCREEN_HEIGHT * 0.8f);
              }
+            //icon大小
             iconSize = Resource.SCREEN_WIDTH/12;
+            iconBigSize = (int)(Resource.SCREEN_WIDTH*0.125);
+            //路線y軸
             battleAreaY[0] = Resource.SCREEN_WIDTH/2;
             battleAreaY[1] = (int)(Resource.SCREEN_WIDTH*0.375);
             battleAreaY[2] = (int)(Resource.SCREEN_WIDTH*0.25);
-            
+            //全部角色大小
             for(int i=0; i<stuffList.size(); i++){
-            for(int j=0; j<stuffList.get(i).size(); j++){
+                for(int j=0; j<stuffList.get(i).size(); j++){
                 stuffList.get(i).get(j).resize();
-                }
-              }
+                 }
+             }
+            //我方角y軸
             for (int i = 0; i < stuffList.size()/2; i++) {
                 for(int j=0; j<stuffList.get(i).size(); j++){
                     stuffList.get(i).get(j).setY0(battleAreaY[i]);
                 }
-                
-                for(int j=0; j<stuffList.get(i+3).size(); j++){
+            //敵方角y軸
+            for(int j=0; j<stuffList.get(i+3).size(); j++){
                     stuffList.get(i+3).get(j).setY0(battleAreaY[i]);
                 }
             }
-            
+            //coin大小
             for(int i=0; i<coins.size(); i++){
                 coins.get(i).setHeight(iconSize);
                 coins.get(i).setWidth(iconSize);
             }
-                
-            
         }
     }
 }

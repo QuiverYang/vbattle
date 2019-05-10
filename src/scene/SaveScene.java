@@ -45,8 +45,8 @@ public class SaveScene extends Scene {
     public static int nextScene;  //儲存場景
     public static int currentScene;  //返回產景
 
-    private final int SCREEN_WIDTH = Resource.SCREEN_WIDTH;
-    private final int SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
+    private int SCREEN_WIDTH = Resource.SCREEN_WIDTH;
+    private int SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
 
     public SaveScene(MainPanel.GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
@@ -181,6 +181,8 @@ public class SaveScene extends Scene {
 
     public void resize() {
         if (SCREEN_WIDTH != Resource.SCREEN_WIDTH || SCREEN_HEIGHT != Resource.SCREEN_HEIGHT) {
+            SCREEN_WIDTH = Resource.SCREEN_WIDTH;
+            SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
             this.backBtn.reset(Resource.SCREEN_WIDTH / 2 - Resource.SCREEN_WIDTH / 12 * 5 / 2 -  (int)(Resource.SCREEN_WIDTH*0.054) + Resource.SCREEN_WIDTH / 12 * 5, (int) (Resource.SCREEN_HEIGHT * 0.278f) - 50, Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT / 9);  //遊戲說明按鈕
             this.yesBtn.reset( Resource.SCREEN_WIDTH / 2 - Resource.SCREEN_WIDTH / 12 * 5 / 2 + (int)(Resource.SCREEN_WIDTH*0.025f), Resource.SCREEN_HEIGHT / 2, Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9);
             this.noBtn.reset(Resource.SCREEN_WIDTH / 2 - Resource.SCREEN_WIDTH / 12 * 5 / 2 + (int)(Resource.SCREEN_WIDTH*0.217f), Resource.SCREEN_HEIGHT / 2, Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_HEIGHT / 9);

@@ -8,21 +8,34 @@ package vbattle;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import vbattle.Stuff;
 
 /**
  *
  * @author menglinyang
  */
 public class BombA extends Bomb{
-    
-    public BombA(int x, int y, int toGroundDist, int dist){
-        this.x = this.xStartLine = x;
-        this.y = this.yStartLine = y;
-        scaleFactor = 0.2;
-        this.yGround = y+toGroundDist;//ground
+    //          stuff myself enemy distance
+    public BombA(Stuff me, int dist){
+        
+        try{
+            img  = ImageIO.read(getClass().getResource("/capsule.png"));
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        try {
+            fireAtt = ImageIO.read(getClass().getResource("/Fire3.png"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        weaponHeight = img.getHeight();
+        singleImageWidth = fireAtt.getWidth()/5;
+        singleImageHeight = fireAtt.getHeight()/6;
+        this.x = this.xStartLine = me.getX0();
+        this.y = this.yStartLine = me.getY0()-img.getHeight();
+        this.yGround = me.getY1();//ground
         
         vx = 20;//x方向速度
         
@@ -43,24 +56,13 @@ public class BombA extends Bomb{
             ga = 1;
         }
         vy = -ga*dist/2/vx;//y方向速度
-        
-        try{
-            img  = ImageIO.read(getClass().getResource("/capsule.png"));
-        }catch(IOException e){
-            e.printStackTrace();
-        }
-        try {
-            fireAtt = ImageIO.read(getClass().getResource("/Fire3.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        
+
         af = AffineTransform.getTranslateInstance(x, y);
     }
-
+    
+    
     @Override
     public boolean move(){
-        
         //未碰撞
         if(boundTimes == 0){
             x =  x + vx;
@@ -68,11 +70,6 @@ public class BombA extends Bomb{
             y = vy + y;
             vy = vy + ga;
             return false;
-        }else{
-            vx = 0;
-            vy = 0;
-            x = xStartLine+dist;
-            y = yGround;
         }
         return true;
  
@@ -81,7 +78,6 @@ public class BombA extends Bomb{
     @Override
     public void paint(Graphics g){
         af.setToTranslation(x, y);
-        af.scale(scaleFactor, scaleFactor);
         af.rotate(Math.toRadians(rotateAngle),img.getWidth()/2,img.getHeight()/2);
         Graphics2D g2d = (Graphics2D)g;
         
@@ -89,8 +85,8 @@ public class BombA extends Bomb{
         //發生碰撞的話
         if(boundTimes >= 1){
             //只給fire這張圖檔使用的（300*360）
-            int singleImageWidth = img.getWidth()/5;
-            int singleImageHeight = img.getHeight()/6;
+            singleImageWidth = img.getWidth()/5;
+            singleImageHeight = img.getHeight()/6;
             xf = singleImageWidth*(seq%5);
             yf = singleImageHeight*((seq++/6));
             img = fireAtt;
@@ -101,15 +97,31 @@ public class BombA extends Bomb{
         }
     }
 
-    
-    
     //判斷碰撞
+
+    @Override
+    public boolean checkTouchGround(){
+        int bottom = y+weaponHeight+vy;
+        int bottom2 = this.yGround;
+        if(bottom > bottom2){
+            y = this.yGround-singleImageHeight;
+            boundTimes++;
+            if(boundTimes > 20){
+                finished = true;
+            }
+            return true;
+        }else{
+            return false;
+        }
+
+    }
+    
     @Override
     public boolean checkAttack(Stuff em){
         int left,right,top,bottom;
         int left2,right2,top2,bottom2;
         left = x;
-        right = x+(int)(img.getWidth()*scaleFactor);
+        right = x+img.getWidth();
         top = y;
         bottom = y;//設定要子彈上方碰到敵方上方才爆炸(子彈整個進入敵人身體)
         left2 = em.getX0();
@@ -122,26 +134,9 @@ public class BombA extends Bomb{
         if(left > right2) return false;
         boundTimes++;
         if(boundTimes > 20){
-            System.out.println("finish");
             finished = true;
             return false;
         }
         return true;
-    }
-    @Override
-    public boolean checkTouchGround(){
-        int bottom = y+(int)(img.getHeight()*scaleFactor);
-        int bottom2 = this.yGround;
-        if(bottom > bottom2){
-            boundTimes++;
-            if(boundTimes > 20){
-                System.out.println("finish");
-                finished = true;
-            }
-            return true;
-        }else{
-            return false;
-        }
-
-    }
+    };
 }

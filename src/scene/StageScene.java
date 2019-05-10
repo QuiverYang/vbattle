@@ -95,7 +95,8 @@ public class StageScene extends Scene {
         }
 
         rc = ImgResource.getInstance();
-        icon = rc.tryGetImage("/resources/tinyCharacters.png");
+        iconTiny = rc.tryGetImage("/resources/tinyCharacters.png");
+        iconBig = rc.tryGetImage("/resources/bigCharacters.png");
         winImg = rc.tryGetImage("/resources/win.png");
         loseImg = rc.tryGetImage("/resources/lose.png");
         energyIng = rc.tryGetImage("/resources/energy.png");
@@ -122,7 +123,7 @@ public class StageScene extends Scene {
         hp = player.getHp();
         mp = player.getMp();
        
-        background = rc.tryGetImage("/resources/background"+player.getStage()+".png");
+        background = rc.tryGetImage("/resources/background"+(player.getStage()+1)+".png");
         try {
             br = new BufferedReader(new FileReader("src/stage"+player.getStage()+".txt"));
             while(br.ready()){
@@ -190,6 +191,8 @@ public class StageScene extends Scene {
                 for (int i = 0; i < dieStuff.size(); i++) {
                     if (e.getButton() == MouseEvent.BUTTON1 && isOnDevilPic(e, dieStuff.get(i))) {
                         dieStuff.get(i).setClickState(true);
+                        clickSound.play();
+                        dieStuff.remove(i);
                     }
                 }
 
@@ -235,13 +238,13 @@ public class StageScene extends Scene {
                 }
 
 
-                //判斷點擊惡魔
-                for (int i = 0; i < dieStuff.size(); i++) {
-                    if (isOnDevilPic(e, dieStuff.get(i)) && dieStuff.get(i).getClickState()) {  //如果點擊惡魔成功，將此惡魔物件刪除
-                        clickSound.play();
-                        dieStuff.remove(i);
-                    }
-                }
+//                //判斷點擊惡魔
+//                for (int i = 0; i < dieStuff.size(); i++) {
+//                    if (isOnDevilPic(e, dieStuff.get(i)) && dieStuff.get(i).getClickState()) {  //如果點擊惡魔成功，將此惡魔物件刪除
+//                        clickSound.play();
+//                        dieStuff.remove(i);
+//                    }
+//                }
 
                 if (gameOver) {
                     gameOverBtn.setImgState(0);
@@ -564,7 +567,11 @@ public class StageScene extends Scene {
             if (e.getY() > battleAreaY[i] - iconSize && e.getY() < battleAreaY[i] + (iconSize / 2)) {
                 try {
                     money -= checkActorPrice(drag);
-                    stuffList.get(i).add(new Stuff(1, e.getX() - (iconSize / 2), battleAreaY[i], iconSize, iconSize, drag, "test" + drag));
+                    if(drag < 3){
+                        stuffList.get(i).add(new Stuff(1, e.getX() - (iconSize / 2), battleAreaY[i], iconSize, iconSize, drag, "test" + drag));
+                    }else{
+                        stuffList.get(i).add(new Stuff(1, e.getX() - (iconBigSize / 2), battleAreaY[i], iconBigSize, iconBigSize, drag, "test" + drag));
+                    }
                 } catch (IOException ex) {
                 }
             }

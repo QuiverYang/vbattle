@@ -31,9 +31,12 @@ public class Stuff {
     private int range;
     private int sourceWidth;
     private int sourceHeight;
-    private int attackType = 2;
+    private int attackType = 1;
     private Bomb bombContainer;
     private boolean immovable = false;
+    private BufferedImage ghostImg;
+    private BufferedImage devilImg;
+    private int price;
     
     //腳色變動屬性
 //    private boolean clickState;
@@ -50,10 +53,6 @@ public class Stuff {
     private int attackedCdCounter = 0;
     private static AudioClip hit;
     private boolean clickState;
-
-    private BufferedImage ghostImg;
-    private BufferedImage devilImg;
-    private int price;
 
     public static final int ACTOR1_PRICE = 30;
     public static final int ACTOR2_PRICE = 1;

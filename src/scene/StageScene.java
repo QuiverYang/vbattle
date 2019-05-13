@@ -261,6 +261,8 @@ public class StageScene extends Scene {
                         player.setStage(player.getStage()+1);
                     }
                     try {
+                        player.setHp(hp);   //存回player內
+                        player.setMp(mp);
                         player.save();
                     } catch (IOException ex) {
                         System.out.print("error");
@@ -420,11 +422,11 @@ public class StageScene extends Scene {
 
         g.setColor(Color.red);
         g.drawString("HP", (int) (Resource.SCREEN_WIDTH * 4 / 30f), (int) (Resource.SCREEN_HEIGHT * 2 / 32f));
-        g.fillRect((int) (Resource.SCREEN_WIDTH * 1 / 5f), (int) (Resource.SCREEN_HEIGHT * 1 / 32f), (int) (Resource.SCREEN_WIDTH * 1 / 2f) * hp / 100, 10);
+        g.fillRect((int) (Resource.SCREEN_WIDTH * 1 / 5f), (int) (Resource.SCREEN_HEIGHT * 1 / 32f), (int) (Resource.SCREEN_WIDTH * 1 / 2f) * hp / player.getHpMax(), 10);
 
         g.setColor(Color.blue);
         g.drawString("MP", (int) (Resource.SCREEN_WIDTH * 4 / 30f), (int) (Resource.SCREEN_HEIGHT * 4 / 32f));
-        g.fillRect((int) (Resource.SCREEN_WIDTH * 1 / 5f), (int) (Resource.SCREEN_HEIGHT * 3 / 32f), (int) (Resource.SCREEN_WIDTH * 1 / 2f) * mp / 100, 10);
+        g.fillRect((int) (Resource.SCREEN_WIDTH * 1 / 5f), (int) (Resource.SCREEN_HEIGHT * 3 / 32f), (int) (Resource.SCREEN_WIDTH * 1 / 2f) * mp / player.getMpMax(), 10);
     }
     
     private void paintGameOver(Graphics g){

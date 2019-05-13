@@ -40,8 +40,9 @@ public abstract class Bomb extends ItemOnScreen{
     }
     
     public void resize(Stuff me, int dist){
-        this.screenUnitWidth = Resource.SCREEN_WIDTH/1200;
-        this.screenUnitHeight = Resource.SCREEN_HEIGHT/900;
+        this.screenUnitWidth = (double)(Resource.SCREEN_WIDTH)/1200;
+        this.screenUnitHeight = (double)(Resource.SCREEN_HEIGHT)/900;
+        
     };
     
 }

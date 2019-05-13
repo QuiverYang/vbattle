@@ -47,6 +47,7 @@ public class BombB extends Bomb{
     public boolean move() {
         //未碰撞
         if(boundTimes == 0){
+
             x +=(int)(screenUnitWidth*15);
             return false;
         }

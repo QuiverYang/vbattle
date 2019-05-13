@@ -43,7 +43,7 @@ public class Coin extends ItemOnScreen{
         return false;
     }
     
-    
+
     
     @Override
     public void paint(Graphics g) {
@@ -56,12 +56,5 @@ public class Coin extends ItemOnScreen{
         g.drawImage(img, x, y, x+this.width, y+this.height,xf,0,xf+singleImgWidth,singleImgWidth, null);
     }
     
-    public void setWidth(int width){
-        this.width = width;
-    }
-    
-    public void setHeight(int height){
-        this.height = height;
-    }
 
 }

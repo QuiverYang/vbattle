@@ -64,9 +64,9 @@ public class BombA extends Bomb{
         weaponHeight = img.getHeight();
         this.x = this.xStartLine = me.getX0();
         this.y = this.yStartLine = me.getY0()-img.getHeight();
+        
         this.yGround = me.getY1();//ground
         this.dist = dist;//投擲距離
-        
         //設定螢幕範圍內拋物線比較好看到的重力加速度ga
         if(dist < screenUnitWidth*200){
             ga = (int)(screenUnitHeight*10);
@@ -81,9 +81,8 @@ public class BombA extends Bomb{
         }else{
             ga = (int)(screenUnitHeight*10);
         }
-        vx = (int)(screenUnitWidth*20);//x方向速度
+        vx = screenUnitWidth*20;//x方向速度
         vy = -ga*dist/2/vx;//y方向速度
-
         af = AffineTransform.getTranslateInstance(x, y);
     }
     

@@ -27,8 +27,8 @@ public class ItemOnScreen {
     public ItemOnScreen(){
         this.rc = ImgResource.getInstance();
         this.isShown = true;
-        this.screenUnitWidth = Resource.SCREEN_WIDTH/1200;
-        this.screenUnitHeight = Resource.SCREEN_HEIGHT/900;
+        this.screenUnitWidth = (double)(Resource.SCREEN_WIDTH)/1200;
+        this.screenUnitHeight = (double)(Resource.SCREEN_HEIGHT)/900;
     }
     
     public ItemOnScreen(String fileName){

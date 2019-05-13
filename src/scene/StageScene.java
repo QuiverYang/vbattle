@@ -455,33 +455,35 @@ public class StageScene extends Scene {
     
     @Override
     public void logicEvent() {
-        timeCount++;//倍數計時器：FPS為底的時間倍數
-        if (gameOver  == false || win == false) {
-            if (timeCount % 2 == 0) {
-                eventlistener();
-            }
-            if (timeCount % 100 == 0) {
-                mp--;
-            }
-            if (timeCount % 2 == 0) {
-                if (money < MAX_MONEY) {
-                    money += 1;
+        if(!win && !gameOver){
+             timeCount++;//倍數計時器：FPS為底的時間倍數
+            if (gameOver  == false || win == false) {
+                if (timeCount % 2 == 0) {
+                    eventlistener();
+                }
+                if (timeCount % 100 == 0) {
+                    mp--;
+                }
+                if (timeCount % 2 == 0) {
+                    if (money < MAX_MONEY) {
+                        money += 1;
+                    }
+                }
+                if (timeCount % 25 == 0) {
+                    stuffRandom();
                 }
             }
-            if (timeCount % 25 == 0) {
-                stuffRandom();
-            }
-        }
 
-        if (timeCount == eventTime) {
-            timeCount = 0;
-        }
-        bombCollision();
-        resize();
-        
-        if(towerB.getHp() < 0){
-            win = true;
-            winSound.play();
+            if (timeCount == eventTime) {
+                timeCount = 0;
+            }
+            bombCollision();
+            resize();
+
+            if(towerB.getHp() < 0){
+                win = true;
+                winSound.play();
+            }
         }
     }
 

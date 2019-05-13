@@ -18,7 +18,7 @@ public class BombB extends Bomb{
     //         Stuff myself,  dist 0
     public BombB(Stuff me,int dist){
         try{
-            img  = ImageIO.read(getClass().getResource("/needle3.png"));
+            img  = ImageIO.read(getClass().getResource("/needle.png"));
         }catch(IOException e){
             e.printStackTrace();
         }

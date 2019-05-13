@@ -31,6 +31,11 @@ public class Water extends Bomb{
         }
     }
     
+    @Override
+    public void resize(Stuff me, int dist){
+        
+    }
+    
     public Water(int x, int y, int yGround){
         this();
         this.x = x;

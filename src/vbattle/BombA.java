@@ -36,7 +36,6 @@ public class BombA extends Bomb{
         this.y = this.yStartLine = me.getY0()-img.getHeight();
         this.yGround = me.getY1();//ground
         
-        vx = (int)(screenUnitWidth*20);//x方向速度
         
         this.dist = dist;//投擲距離
         
@@ -54,19 +53,47 @@ public class BombA extends Bomb{
         }else{
             ga = (int)(screenUnitHeight*10);
         }
+        vx = (int)(screenUnitWidth*20);//x方向速度
+        vy = -ga*dist/2/vx;//y方向速度
+
+        af = AffineTransform.getTranslateInstance(x, y);
+    }
+    @Override
+    public void resize(Stuff me, int dist){
+        super.resize(me, dist);
+        weaponHeight = img.getHeight();
+        this.x = this.xStartLine = me.getX0();
+        this.y = this.yStartLine = me.getY0()-img.getHeight();
+        this.yGround = me.getY1();//ground
+        this.dist = dist;//投擲距離
+        
+        //設定螢幕範圍內拋物線比較好看到的重力加速度ga
+        if(dist < screenUnitWidth*200){
+            ga = (int)(screenUnitHeight*10);
+        }else if(dist< screenUnitWidth*300){
+            ga = (int)(screenUnitHeight*8);
+        }else if(dist< screenUnitWidth*400){
+            ga = (int)(screenUnitHeight*5);
+        }else if(dist< screenUnitWidth*600){
+            ga = (int)(screenUnitHeight*3);
+        }else if(dist< screenUnitWidth*800){
+            ga = (int)(screenUnitHeight*2);
+        }else{
+            ga = (int)(screenUnitHeight*10);
+        }
+        vx = (int)(screenUnitWidth*20);//x方向速度
         vy = -ga*dist/2/vx;//y方向速度
 
         af = AffineTransform.getTranslateInstance(x, y);
     }
     
-    
     @Override
     public boolean move(){
         //未碰撞
         if(boundTimes == 0){
-            x =  x + vx;
+            x =  x + (int)vx;
             rotateAngle+=36;
-            y = vy + y;
+            y = (int)vy + y;
             vy = vy + ga;
             return false;
         }
@@ -100,7 +127,7 @@ public class BombA extends Bomb{
 
     @Override
     public boolean checkTouchGround(){
-        int bottom = y+weaponHeight+vy;
+        int bottom = y+weaponHeight+(int)vy;
         int bottom2 = this.yGround;
         if(bottom > bottom2){
             y = this.yGround-singleImageHeight;

@@ -124,7 +124,6 @@ public class ItemOnScreen {
         this.img = img;
     }
 
-  
 }
 
 

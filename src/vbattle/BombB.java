@@ -6,6 +6,7 @@
 package vbattle;
 
 import java.awt.Graphics;
+import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import vbattle.Stuff;
@@ -34,6 +35,12 @@ public class BombB extends Bomb{
         this.y = (me.getY0()+me.getY1())/2-weaponWidth/2;
         
         
+    }
+    @Override
+    public void resize(Stuff me, int dist){
+        super.resize(me, dist);
+        this.x = me.getX1();
+        this.y = (me.getY0()+me.getY1())/2-weaponWidth/2;
     }
 
     @Override

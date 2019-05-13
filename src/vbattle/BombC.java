@@ -38,6 +38,11 @@ public class BombC extends Bomb{
         
     }
     @Override
+    public void resize(Stuff me, int dist){
+        
+    }
+    
+    @Override
     public boolean move() {
         
         y = y - (int)slope;

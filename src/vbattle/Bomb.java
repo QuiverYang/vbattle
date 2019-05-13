@@ -16,13 +16,14 @@ import vbattle.Stuff;
  */
 public abstract class Bomb extends ItemOnScreen{
     protected BufferedImage fireAtt;
-    protected int rotateAngle,vx,vy,xStartLine,yGround,ga,boundTimes,toGround,yStartLine;
+    protected int rotateAngle,xStartLine,yGround,ga,boundTimes,toGround,yStartLine;
     protected int xf,yf,seq;//爆炸畫面使用之sub-image 需要用到的屬性
     protected int dist;
     protected AffineTransform af;
     protected boolean finished;
     protected int singleImageWidth,weaponHeight,weaponWidth;
     protected int singleImageHeight;
+    protected double vx,vy;
     
     
     public boolean isFinished() {
@@ -37,5 +38,10 @@ public abstract class Bomb extends ItemOnScreen{
     public void setyGround(int yGround) {
         this.yGround = yGround;
     }
+    
+    public void resize(Stuff me, int dist){
+        this.screenUnitWidth = Resource.SCREEN_WIDTH/1200;
+        this.screenUnitHeight = Resource.SCREEN_HEIGHT/900;
+    };
     
 }

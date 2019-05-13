@@ -740,6 +740,16 @@ public class StageScene extends Scene {
                 coins.get(i).setHeight(iconSize);
                 coins.get(i).setWidth(iconSize);
             }
+            
+            //bomb大小
+            for (int i = 0; i < stuffList.size(); i++) {
+                for (int j = 0; j < stuffList.get(i).size(); j++) {
+                    if(stuffList.get(i).get(j).getBomb() != null){
+                        stuffList.get(i).get(j).getBomb().resize(stuffList.get(i).get(j), 0);
+                    }
+                }
+            }
+            
         }
     }
 

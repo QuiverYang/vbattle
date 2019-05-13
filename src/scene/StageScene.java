@@ -127,6 +127,8 @@ public class StageScene extends Scene {
         }
         cash = 0;
         player = Player.getPlayerInstane();
+        maxHp = player.getHpMax();
+        maxMp = player.getMpMax();
         hp = player.getHp();
         mp = player.getMp();
        
@@ -698,8 +700,12 @@ public class StageScene extends Scene {
 
     public void resize() {
         if (SCREEN_WIDTH != Resource.SCREEN_WIDTH || SCREEN_HEIGHT != Resource.SCREEN_HEIGHT) {
+            widthRate =  (float)Resource.SCREEN_WIDTH /(float)SCREEN_WIDTH ;
+            heightRate = (float)Resource.SCREEN_HEIGHT/(float)SCREEN_HEIGHT;
             SCREEN_WIDTH = Resource.SCREEN_WIDTH ;
             SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
+            
+            
             //按鈕
             returnBtn.reset(20, 20, Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT / 9);
             gameOverBtn.reset(Resource.SCREEN_WIDTH / 12 * 8, (int) (Resource.SCREEN_HEIGHT / 9 * 6), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
@@ -722,23 +728,26 @@ public class StageScene extends Scene {
             //全部角色大小
             for(int i=0; i<stuffList.size(); i++){
                 for(int j=0; j<stuffList.get(i).size(); j++){
-                stuffList.get(i).get(j).resize();
-                 }
-             }
-            //我方角y軸
-            for (int i = 0; i < stuffList.size()/2; i++) {
-                for(int j=0; j<stuffList.get(i).size(); j++){
-                    stuffList.get(i).get(j).setY0(battleAreaY[i]);
-                }
-            //敵方角y軸
-            for(int j=0; j<stuffList.get(i+3).size(); j++){
-                    stuffList.get(i+3).get(j).setY0(battleAreaY[i]);
+                    stuffList.get(i).get(j).setX0((int)(stuffList.get(i).get(j).getX0()*widthRate));
+                    stuffList.get(i).get(j).setX1((int)(stuffList.get(i).get(j).getX1()*widthRate));
+                    stuffList.get(i).get(j).setY0((int)(stuffList.get(i).get(j).getY0()*heightRate));
+                    stuffList.get(i).get(j).setY1((int)(stuffList.get(i).get(j).getY1()*heightRate));
                 }
             }
+            //塔x軸
+            towerA.setX0((int)(towerA.getX0()*widthRate));
+            towerB.setX0((int)(towerB.getX0()*widthRate));
+            towerA.setX1((int)(towerA.getX1()*widthRate));
+            towerB.setX1((int)(towerB.getX1()*widthRate));
+            //塔y軸
+            towerA.setY0((int)(towerA.getY0()*heightRate));
+            towerB.setY0((int)(towerB.getY0()*heightRate));
+            towerA.setY1((int)(towerA.getY1()*heightRate));
+            towerB.setY1((int)(towerB.getY1()*heightRate));
             //coin大小
             for(int i=0; i<coins.size(); i++){
-                coins.get(i).setHeight(iconSize);
-                coins.get(i).setWidth(iconSize);
+                coins.get(i).setHeight((int)(coins.get(i).getHeight()*heightRate));
+                coins.get(i).setWidth((int)(coins.get(i).getWidth()*widthRate));
             }
             
             //bomb大小

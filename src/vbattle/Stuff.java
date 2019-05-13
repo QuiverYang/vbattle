@@ -23,7 +23,7 @@ public class Stuff {
     private String imgpath;//圖片路徑...存入參數txt檔
     private BufferedImage img;//角色圖片
     private int hpRate, atkRate, hpBase, atkBase;//基礎參數...存入參數txt檔
-    private float speed = 1 / 16f; //角色移動速度：測試速度1/16f 角色寬
+    private float speed; //角色移動速度：預設速度1/16f 角色寬
     private int cdTime;//CD時間：單位是FPS倍數週期
     private int attackedTime;//CD時間:被攻擊後的無敵時間
     private int type; // 判斷正反角 (1-->我方角 , -1-->敵方)
@@ -403,12 +403,5 @@ public class Stuff {
         if(bombContainer != null){
             bombContainer.paint(g);
         }
-    }
-
-    public void resize() {
-        imgWidth = imgHeight = Resource.SCREEN_WIDTH / 12;
-        this.x1 = x0 + imgWidth;
-        this.y1 = y0 + imgHeight;
-
     }
 }

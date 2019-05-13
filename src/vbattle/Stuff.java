@@ -22,7 +22,6 @@ public class Stuff {
     private String txtpath;//參數txt路徑
     private String imgpath;//圖片路徑...存入參數txt檔
     private BufferedImage img;//角色圖片
-    private BufferedImage throwimg;//投擲
     private int hpRate, atkRate, hpBase, atkBase;//基礎參數...存入參數txt檔
     private float speed = 1 / 16f; //角色移動速度：測試速度1/16f 角色寬
     private int cdTime;//CD時間：單位是FPS倍數週期
@@ -69,7 +68,6 @@ public class Stuff {
         this.imgHeight = imgHeight;
         this.x1 = x0 + imgWidth;
         this.y1 = y0 + imgHeight;
-        this.cdTime = 50;
         this.attackedTime = 30;
         this.txtpath = txtpath;
         //設定建構子參數
@@ -85,14 +83,15 @@ public class Stuff {
         this.hpBase = Integer.parseInt(status[3]);
         this.atkBase = Integer.parseInt(status[4]);
         this.range = Integer.parseInt(status[5]);
-        this.sourceWidth = Integer.parseInt(status[7]);
-        this.sourceHeight = Integer.parseInt(status[8]);
-        if (this.range > 0) {
-            br.close();
-        }
-        this.immovable = Boolean.parseBoolean(status[9]);
+        this.attackType = Integer.parseInt(status[6]);
+        this.cdTime = Integer.parseInt(status[7]);
+        this.speed = Float.parseFloat(status[8]);
+        this.sourceWidth = Integer.parseInt(status[9]);
+        this.sourceHeight = Integer.parseInt(status[10]);
+        this.immovable = Boolean.parseBoolean(status[11]);
         this.characterNumY0 = characterNum*sourceHeight;
         this.characterNumY1 = characterNumY0+sourceHeight;
+        br.close();
         //讀取參數txt檔
         //初始化腳色
         
@@ -113,9 +112,6 @@ public class Stuff {
         this.frame = value;
     }
     
-    public void setAttackedTime(){
-        this.attackedTime = 1;
-    }
     public int getX0() {
         return x0;
     }
@@ -276,6 +272,8 @@ public class Stuff {
                 
                 if(range > 0 ){
                     switch(attackType){
+                        case 0:
+                            break;
                         case 1:
                             bombContainer = new BombA(this,Math.abs(x0+imgWidth/2-(attacked.x0 + attacked.imgWidth/2)));
                             break;

@@ -22,11 +22,13 @@ public class ItemOnScreen {
     protected BufferedImage img;
     protected ImgResource rc;
     protected String fileName;
+    protected double screenUnitWidth,screenUnitHeight;
     
     public ItemOnScreen(){
         this.rc = ImgResource.getInstance();
-        this.img = rc.tryGetImage(fileName);
         this.isShown = true;
+        this.screenUnitWidth = Resource.SCREEN_WIDTH/1200;
+        this.screenUnitHeight = Resource.SCREEN_HEIGHT/900;
     }
     
     public ItemOnScreen(String fileName){

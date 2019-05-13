@@ -10,7 +10,6 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import vbattle.Stuff;
 
 /**
  *
@@ -37,23 +36,23 @@ public class BombA extends Bomb{
         this.y = this.yStartLine = me.getY0()-img.getHeight();
         this.yGround = me.getY1();//ground
         
-        vx = 20;//x方向速度
+        vx = (int)(screenUnitWidth*20);//x方向速度
         
         this.dist = dist;//投擲距離
         
         //設定螢幕範圍內拋物線比較好看到的重力加速度ga
-        if(dist < 200){
-            ga = 10;
-        }else if(dist< 300){
-            ga = 8;
-        }else if(dist< 400){
-            ga = 5;
-        }else if(dist< 600){
-            ga = 3;
-        }else if(dist< 800){
-            ga = 2;
+        if(dist < screenUnitWidth*200){
+            ga = (int)(screenUnitHeight*10);
+        }else if(dist< screenUnitWidth*300){
+            ga = (int)(screenUnitHeight*8);
+        }else if(dist< screenUnitWidth*400){
+            ga = (int)(screenUnitHeight*5);
+        }else if(dist< screenUnitWidth*600){
+            ga = (int)(screenUnitHeight*3);
+        }else if(dist< screenUnitWidth*800){
+            ga = (int)(screenUnitHeight*2);
         }else{
-            ga = 1;
+            ga = (int)(screenUnitHeight*10);
         }
         vy = -ga*dist/2/vx;//y方向速度
 
@@ -90,7 +89,7 @@ public class BombA extends Bomb{
             xf = singleImageWidth*(seq%5);
             yf = singleImageHeight*((seq++/6));
             img = fireAtt;
-            g2d.drawImage(img,x,y,x+60,y+60,xf,yf,xf+singleImageWidth,yf+singleImageWidth,null);
+            g2d.drawImage(img,x,y,x+(int)(screenUnitWidth*60),(int)(y+screenUnitWidth*60),xf,yf,xf+singleImageWidth,yf+singleImageWidth,null);
             
         }else{
             g2d.drawImage(img, af, null);

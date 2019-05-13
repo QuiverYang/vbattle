@@ -26,11 +26,6 @@ import vbattle.Resource;
  * @author menglinyang
  */
 public class BuyScene extends Store{
-    
-
-
-
-                        
 
     public BuyScene(GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
@@ -99,11 +94,11 @@ public class BuyScene extends Store{
                         player.getFp().add((FinProduct)products[counter]);
                        
                     }else if(products[counter] instanceof Food){//判斷是否為食物
-                        if(!(player.getMp()>=100 && player.getHp()>=100)){
+                        if(!(player.getMp()>=player.getMpMax() && player.getHp()>=player.getHpMax())){
                             Food temp = (Food)products[counter];
                             int tempHp = temp.getHp();
                             int tempMp = temp.getMp();
-                            if(!(player.getHp()>=100&&tempMp==0)||(player.getMp()>=100&&tempHp==0)){
+                            if(!(player.getHp()>=player.getMpMax()&&tempMp==0)||(player.getMp()>=player.getHpMax()&&tempHp==0)){
                                 costCash += products[counter].getPrice();
                                 hpUp += temp.getHp();
                                 mpUp += temp.getMp();

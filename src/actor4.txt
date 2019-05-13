@@ -1,1 +1,1 @@
-/resources/tinyCharacters.png,4,1,30,5,0,none,32,32,false
+/resources/bigCharacters.png,4,1,30,5,0,0,50,0.03125,64,64,false

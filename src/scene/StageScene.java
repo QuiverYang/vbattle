@@ -145,6 +145,8 @@ public class StageScene extends Scene {
         }
         try {
             towerA = new Stuff(1,0,(int)(Resource.SCREEN_WIDTH*0.25),57*5,72*5,0,1,"towerA"+player.getStage());
+            towerA.setHp(hp);
+            towerA.setMaxHp(maxHp);
             towerB = new Stuff(-1,(int)(Resource.SCREEN_WIDTH*0.75),(int)(Resource.SCREEN_WIDTH*0.25),57*5,72*5,0,1,"towerB"+player.getStage());
         } catch (IOException ex) {
         }
@@ -172,7 +174,7 @@ public class StageScene extends Scene {
                 if (e.getX() >= dieStuff.getX0()
                         && e.getX() <= dieStuff.getX0() + dieStuff.getImgWidth()
                         && e.getY() >= dieStuff.getY0()
-                        && e.getY() <= dieStuff.getY0() + dieStuff.getImgHeight()) {
+                        && e.getY() <= dieStuff.getY0() + dieStuff.getImgHeight() && dieStuff.getType()!=1) {
                     return true;
                 }
                 return false;
@@ -296,8 +298,7 @@ public class StageScene extends Scene {
     @Override
     public void paint(Graphics g) {
         g.drawImage(this.background, 0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT, 0, 0, this.background.getWidth(), this.background.getHeight(),null);
-        towerA.paint(g);
-        towerB.paint(g);
+        
         g.setFont(this.priceFontBit);
         FontMetrics fm = g.getFontMetrics();
         if(drag!=-1){
@@ -307,10 +308,12 @@ public class StageScene extends Scene {
         g.setColor(Color.WHITE);
         paintIcon(g);
         paintStuff(g);
-        
+        towerA.paint(g);
+        towerB.paint(g);
         paintDrag(g);
         paintMoney(g);
         paintCash(g);
+        paintStage(g);
         this.returnBtn.paintBtn(g);
 
         for (Coin coin : coins) {
@@ -324,6 +327,13 @@ public class StageScene extends Scene {
         if (win){
             paintWin(g);
         }
+    }
+    
+    public void paintStage(Graphics g){
+        g.setColor(Color.WHITE);
+        g.setFont(fontBit);
+        String stage = "STAGE:"+this.player.getStage()+"";
+        g.drawString(stage, (int)(Resource.SCREEN_WIDTH/17), (int)(Resource.SCREEN_HEIGHT/9*7.9));
     }
     
     private void paintShadow(Graphics g){
@@ -425,7 +435,7 @@ public class StageScene extends Scene {
 
         g.setColor(Color.red);
         g.drawString("HP", (int) (Resource.SCREEN_WIDTH * 4 / 30f), (int) (Resource.SCREEN_HEIGHT * 2 / 32f));
-        g.fillRect((int) (Resource.SCREEN_WIDTH * 1 / 5f), (int) (Resource.SCREEN_HEIGHT * 1 / 32f), (int) (Resource.SCREEN_WIDTH * 1 / 2f) * hp / player.getHpMax(), 10);
+        g.fillRect((int) (Resource.SCREEN_WIDTH * 1 / 5f), (int) (Resource.SCREEN_HEIGHT * 1 / 32f), (int) (Resource.SCREEN_WIDTH * 1 / 2f) * towerA.getHp() / player.getHpMax(), 10);
 
         g.setColor(Color.blue);
         g.drawString("MP", (int) (Resource.SCREEN_WIDTH * 4 / 30f), (int) (Resource.SCREEN_HEIGHT * 4 / 32f));
@@ -647,10 +657,9 @@ public class StageScene extends Scene {
                 stuff.remove(i);
             }
         }
-        if (hp <= 0) {
-            hp = mp = 0;
-            player.setHp(hp);   //存回player內
-            player.setMp(mp);
+        if (towerA.getHp() <= 0) {
+            player.setHp(0);   //存回player內
+            player.setMp(0);
             this.loseSound.play();
 //            gameOverBtn.setLabel("CONTINUE");
             this.gameOver = true;
@@ -661,7 +670,7 @@ public class StageScene extends Scene {
         for (int i = 0; i < ghost.size(); i++) {
             ghost.get(i).die();
             if (ghost.get(i).getY0() < 0 && ghost.get(i).getType() != 1) {
-                hp -= 2;    //如果沒有點擊到惡魔則減少hp
+                towerA.setHp(towerA.getHp()-2);    //如果沒有點擊到惡魔則減少hp
                 ghost.remove(i);
             }
         }

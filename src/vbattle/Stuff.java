@@ -159,6 +159,10 @@ public class Stuff {
     public void setY1(int y1) {
         this.y1 = y1;
     }
+    
+    public void setMaxHp(int hp) {
+    this.maxHp = hp;
+    }
 
     public BufferedImage getImg() {
         return img;

@@ -265,7 +265,10 @@ public class StageScene extends Scene {
                         player.setStage(player.getStage()+1);
                     }
                     try {
-                        player.setHp(hp);   //存回player內
+                        player.setHp(towerA.getHp());   //存回player內
+                        if(mp<0){
+                            mp = 0;
+                        }
                         player.setMp(mp);
                         player.save();
                     } catch (IOException ex) {

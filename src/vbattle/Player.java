@@ -129,10 +129,19 @@ public class Player {
     //GETTER SETTER
     
     public void increaseMpMax(int num){
-        this.mpMax += num;
+        if(num<0 && this.mpMax+num<0){
+            this.mpMax = 0;
+        }else{
+            this.mpMax += num;
+        }
     }
     public void increaseHpMax(int num){
-        this.hpMax += num;
+        if(num<0 && this.hpMax+num<0){
+            this.hpMax = 0;
+        }else {
+             this.hpMax += num;
+        }
+       
     }
     
     public void setPlayerName(String name) {

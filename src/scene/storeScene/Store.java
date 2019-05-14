@@ -293,7 +293,7 @@ public abstract class Store extends Scene{
                     funcBtnWidthUnit*2, funcBtnHeightUnit);
             this.functionBtns[BuyScene.ButtomCode.SELL_BTN].reset(Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
                     funcBtnWidthUnit*2, funcBtnHeightUnit);
-            this.functionBtns[ButtomCode.ALMANAC_BTN].reset(functionBtns[ButtomCode.BACK_BTN].getWidth()+functionBtns[ButtomCode.START_BTN].getWidth()+padding*3,padding+5,funcBtnWidthUnit, funcBtnWidthUnit);
+            this.functionBtns[BuyScene.ButtomCode.ALMANAC_BTN].reset(functionBtns[ButtomCode.BACK_BTN].getWidth()+functionBtns[ButtomCode.START_BTN].getWidth()+padding*3,padding+5,funcBtnWidthUnit, funcBtnWidthUnit);
             for(Button btn : functionBtns){
                 btn.setLabelSize(btn.getWidth());
             }

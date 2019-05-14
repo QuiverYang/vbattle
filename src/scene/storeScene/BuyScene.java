@@ -14,7 +14,6 @@ import scene.SaveScene;
 import scene.storeScene.product.finProduct.*;
 import scene.storeScene.product.hpmp.*;
 import scene.storeScene.product.stuffLvUp.*;
-import sun.audio.*;
 import vbattle.Button;
 import vbattle.Button.Callback;
 import vbattle.MainPanel;

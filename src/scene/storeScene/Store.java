@@ -168,6 +168,11 @@ public abstract class Store extends Scene{
         for(Button btn:functionBtns){
             btn.paintBtn(g);
         }
+        //=============畫選單最中間匡起來的選項匡========================= 
+//        if(products.length >1){
+//            g.setColor(Color.red);
+//            g.fillRect(productOnScreen[1].getX()-5, productOnScreen[1].getY()-5, productOnScreen[1].getWidth()+10, productOnScreen[1].getHeight()+10);
+//        }
         //=============畫選單========================= 
         for(Product p:productOnScreen){
             if(p != null){

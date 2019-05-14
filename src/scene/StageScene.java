@@ -338,6 +338,7 @@ public class StageScene extends Scene {
     }
     
     private void paintIcon(Graphics g) {
+        int[] unlock = player.getUnlock();
         for (int i = 0; i < 3; i++) {
             g.setColor(Color.white);
             g.fillRect(iconX[i], iconY[i], (int)(Resource.SCREEN_WIDTH*0.092), (int)(Resource.SCREEN_HEIGHT*0.122));
@@ -352,7 +353,7 @@ public class StageScene extends Scene {
             
         }
         for(int i=0; i<5; i++){
-            if (this.money < checkActorPrice(i)) {
+            if (this.money < checkActorPrice(i) || unlock[i]==0) {
                 g.setColor(lightGray);
                 g.fillRect(iconX[i], iconY[i], (int)(Resource.SCREEN_WIDTH*0.092), (int)(Resource.SCREEN_HEIGHT*0.122));
             }
@@ -413,7 +414,7 @@ public class StageScene extends Scene {
         g.drawImage(this.coinImg, Resource.SCREEN_WIDTH / 12 * 9 - (int)(Resource.SCREEN_WIDTH*0.025), Resource.SCREEN_HEIGHT / 9 - (int)(Resource.SCREEN_HEIGHT*0.02), Resource.SCREEN_WIDTH / 12 * 9 - (int)(Resource.SCREEN_WIDTH*0.025) + (int)(Resource.SCREEN_HEIGHT*0.09f), Resource.SCREEN_HEIGHT / 9 + (int)(Resource.SCREEN_HEIGHT*0.09f) -  (int)(Resource.SCREEN_HEIGHT*0.02), 0, 0, this.coinImg.getWidth() / 6, this.coinImg.getHeight(), null);
         g.setColor(Color.WHITE);
         int sw = fm.stringWidth(cash + "");
-        g.drawString(cash + "", Resource.SCREEN_WIDTH - (int) (sw * 3), Resource.SCREEN_HEIGHT / 9 + (int)(Resource.SCREEN_HEIGHT*0.044));
+        g.drawString(cash + "", Resource.SCREEN_WIDTH - sw-40, Resource.SCREEN_HEIGHT / 9 + (int)(Resource.SCREEN_HEIGHT*0.044));
     }
     
     private void paintHpMp(Graphics g){
@@ -606,7 +607,7 @@ public class StageScene extends Scene {
             }
             if (tmp != null && tmp.getHp() <= 0) {
                 dieStuff.add(tmp);
-                coins.add(new Coin(tmp.getX0(), tmp.getY0(), tmp.getImgWidth(), tmp.getImgHeight()));
+                coins.add(new Coin(tmp.getX0(), tmp.getY0(), iconSize, iconSize));
                 stuff2.remove(tmp);
             }
         }
@@ -684,10 +685,11 @@ public class StageScene extends Scene {
 
     private void assign(MouseEvent e) {
         for (int i = 0; i < stuffList.size() / 2; i++) {
-            if (e.getY() > battleAreaY[i] - iconSize && e.getY() < battleAreaY[i] + (iconSize / 2)&& e.getX() < Resource.SCREEN_WIDTH/2) {
+            int[] unlock = player.getUnlock();
+            if (e.getY() > battleAreaY[i] - iconSize && e.getY() < battleAreaY[i] + (iconSize / 2)&& e.getX() < Resource.SCREEN_WIDTH/2 && unlock[drag]!=0) {
                 try {
                     money -= checkActorPrice(drag);
-                    int[] unlock = player.getUnlock();
+                    
                     if(drag <3)
                          stuffList.get(i).add(new Stuff(1, e.getX() - (iconSize / 2), battleAreaY[i], iconSize, iconSize, drag,unlock[drag], "test" + drag));
                     if(drag >=3)

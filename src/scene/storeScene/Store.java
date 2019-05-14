@@ -61,6 +61,7 @@ public abstract class Store extends Scene{
         int RIGHT_BTN = 3;
         int START_BTN = 4;
         int SELL_BTN = 5;
+        int ALMANAC_BTN = 6;
     }
     
     public Store(GameStatusChangeListener gsChangeListener) {
@@ -186,7 +187,7 @@ public abstract class Store extends Scene{
         FontMetrics fm = g.getFontMetrics();
         String cash = this.player.getCash()+"";
         int sw = fm.stringWidth(cash);
-        g.drawString(cash, (int)(Resource.SCREEN_WIDTH*0.9)-sw, (int)(Resource.SCREEN_HEIGHT/9));
+        g.drawString(cash, (int)(Resource.SCREEN_WIDTH*0.95)-sw, (int)(Resource.SCREEN_HEIGHT/9));
 
         
         //=============畫出 hp=========================
@@ -209,6 +210,11 @@ public abstract class Store extends Scene{
         
         //=============畫出 info=========================
         paintProductInfo(g);
+        //=============畫出 STAGE=========================
+        g.setFont(fontBit);
+        String stage = "STAGE:"+this.player.getStage()+"";
+        sw = fm.stringWidth(stage);
+        g.drawString(stage, (int)(Resource.SCREEN_WIDTH*0.95)-sw, (int)(Resource.SCREEN_HEIGHT/9*2.5));
     }
     
     public void paintProductInfo(Graphics g){
@@ -287,6 +293,7 @@ public abstract class Store extends Scene{
                     funcBtnWidthUnit*2, funcBtnHeightUnit);
             this.functionBtns[BuyScene.ButtomCode.SELL_BTN].reset(Resource.SCREEN_WIDTH-funcBtnWidthUnit*2-padding , Resource.SCREEN_HEIGHT-funcBtnWidthUnit-padding-(int)(Resource.SCREEN_HEIGHT*0.22f),//(int)(Resource.SCREEN_HEIGHT*0.133f是螢幕索引吃掉的部分
                     funcBtnWidthUnit*2, funcBtnHeightUnit);
+            this.functionBtns[ButtomCode.ALMANAC_BTN].reset(functionBtns[ButtomCode.BACK_BTN].getWidth()+functionBtns[ButtomCode.START_BTN].getWidth()+padding*3,padding+5,funcBtnWidthUnit, funcBtnWidthUnit);
             for(Button btn : functionBtns){
                 btn.setLabelSize(btn.getWidth());
             }

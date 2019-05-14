@@ -60,7 +60,7 @@ public class BuyScene extends Store{
     public void setFunctionBtns(){
         
         //初始化並放置functionBtns 位置
-        this.functionBtns = new Button[6];
+        this.functionBtns = new Button[7];
         
         //===============back buttom==================
         this.functionBtns[ButtomCode.BACK_BTN] = new Button("/resources/return_blue.png",padding,padding,
@@ -223,6 +223,16 @@ public class BuyScene extends Store{
                 } catch (IOException ex) {
                     System.out.println("player save problem from StorceScene back to MenuScene");;
                 }
+            }
+        });
+        
+        //===============sell buttom==================
+        this.functionBtns[ButtomCode.ALMANAC_BTN] = new Button("/resources/almanacBtn.png",functionBtns[ButtomCode.BACK_BTN].getWidth()+functionBtns[ButtomCode.START_BTN].getWidth()+padding*3,padding+5,
+                funcBtnWidthUnit, funcBtnWidthUnit);
+        this.functionBtns[ButtomCode.ALMANAC_BTN].setCallback(new Callback() {
+            @Override
+            public void doSomthing() {
+                gsChangeListener.changeScene(MainPanel.STUFFLIST_SCENE);
             }
         });
     }

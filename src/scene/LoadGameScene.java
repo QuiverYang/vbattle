@@ -103,7 +103,7 @@ public class LoadGameScene extends Scene {
                         try {
                             player.loadPlayer(i);
                             playerBtn[i].setClickState(false);
-                            gsChangeListener.changeScene(MainPanel.STUFFLIST_SCENE);
+                            gsChangeListener.changeScene(MainPanel.STORE_SCENE);
                         } catch (IOException ex) {
                             System.out.println("player not found!");
 

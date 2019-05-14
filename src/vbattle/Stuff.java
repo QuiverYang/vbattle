@@ -25,6 +25,7 @@ public class Stuff {
     private int hpRate, atkRate, hpBase, atkBase;//基礎參數...存入參數txt檔
     private float speed; //角色移動速度：預設速度1/16f 角色寬
     private int cdTime;//CD時間：單位是FPS倍數週期
+    private int baseCd;
     private int attackedTime;//CD時間:被攻擊後的無敵時間
     private int type; // 判斷正反角 (1-->我方角 , -1-->敵方)
     private int range;
@@ -54,10 +55,10 @@ public class Stuff {
     private boolean clickState;
 
     public static final int ACTOR1_PRICE = 30;
-    public static final int ACTOR2_PRICE = 1;
-    public static final int ACTOR3_PRICE = 1;
-    public static final int ACTOR4_PRICE = 1;
-    public static final int ACTOR5_PRICE = 1;
+    public static final int ACTOR2_PRICE = 40;
+    public static final int ACTOR3_PRICE = 50;
+    public static final int ACTOR4_PRICE = 60;
+    public static final int ACTOR5_PRICE = 70;
 
     public Stuff(int type, int x0, int y0, int imgWidth, int imgHeight, int characterNum, int lv, String txtpath) throws IOException {
         //設定建構子參數
@@ -68,7 +69,7 @@ public class Stuff {
         this.imgHeight = imgHeight;
         this.x1 = x0 + imgWidth;
         this.y1 = y0 + imgHeight;
-        this.attackedTime = 30;
+        this.attackedTime = 20;
         this.txtpath = txtpath;
         //設定建構子參數
         //讀取參數txt檔
@@ -84,7 +85,7 @@ public class Stuff {
         this.atkBase = Integer.parseInt(status[4]);
         this.range = Integer.parseInt(status[5]);
         this.attackType = Integer.parseInt(status[6]);
-        this.cdTime = Integer.parseInt(status[7]);
+        this.cdTime = this.baseCd = Integer.parseInt(status[7]);
         this.speed = Float.parseFloat(status[8]);
         this.sourceWidth = Integer.parseInt(status[9]);
         this.sourceHeight = Integer.parseInt(status[10]);
@@ -217,11 +218,11 @@ public class Stuff {
     }
 
     public int getCdTime() {
-        return cdTime;
+        return baseCd;
     }
 
     public void setCdTime(int cdTime) {
-        this.cdTime = cdTime;
+        this.baseCd = baseCd;
     }
     
     public Bomb getBomb(){
@@ -274,7 +275,7 @@ public class Stuff {
             if(frame < 3 || frame > 6){ //進入攻擊狀態：防止重複初始化frame;
                 frame = 3;
                 
-                if(range > 0 ){
+                if(attackType > 0 ){
                     switch(attackType){
                         case 0:
                             break;
@@ -294,7 +295,7 @@ public class Stuff {
             frame += 1 / 4f;//播放動畫
 
             if (frame >= 5) {//動畫完成觸發攻擊效果
-                if (range < 1) {
+                if (attackType < 1) {
                     attacked.attacked(this);
                 }else{
                     frame = 0;
@@ -326,7 +327,7 @@ public class Stuff {
     
     public void back(){
         if(!immovable){
-            x0 = x0 - 100 * type;
+            x0 = x0 - 40 * type;
             this.x1 = x0 + imgWidth;
         }
     }
@@ -407,5 +408,9 @@ public class Stuff {
         if(bombContainer != null){
             bombContainer.paint(g);
         }
+    }
+    
+    public void range(float widthRate){
+        range *= widthRate;
     }
 }

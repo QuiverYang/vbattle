@@ -164,6 +164,10 @@ public class Stuff {
     public void setMaxHp(int hp) {
     this.maxHp = hp;
     }
+    
+    public int getMaxHp(){
+        return this.maxHp;
+    }
 
     public BufferedImage getImg() {
         return img;

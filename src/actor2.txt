@@ -1,1 +1,1 @@
-/resources/bigCharacters.png,2,1,30,5,0,1,500,0.03125,64,64,false,大腸桿菌
+/resources/bigCharacters.png,2,1,40,15,0,0,500,0.03125,64,64,false,大腸桿菌

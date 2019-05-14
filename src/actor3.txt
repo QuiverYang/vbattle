@@ -1,1 +1,1 @@
-/resources/bigCharacters.png,3,1,30,5,0,0,50,0.03125,64,64,false,樹突細胞
+/resources/bigCharacters.png,3,1,30,5,0,0,50,0.03125,64,64,false,肺炎球菌

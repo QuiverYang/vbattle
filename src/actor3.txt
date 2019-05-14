@@ -1,1 +1,1 @@
-/resources/bigCharacters.png,3,1,30,5,0,0,50,0.03125,64,64,false,è‚ºç‚çƒèŒ
+/resources/bigCharacters.png,3,1,30,7,0,0,10,0.03125,64,64,false,”x‰Š‹…‹Û

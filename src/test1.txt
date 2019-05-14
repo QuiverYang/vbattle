@@ -1,2 +1,2 @@
-/resources/tinyCharacters.png,2,1,80,15,400,2,50,0.0625,32,32,false,NK細胞
+/resources/tinyCharacters.png,2,1,30,6,400,2,60,0.0625,32,32,false,NK�זE
 

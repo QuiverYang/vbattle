@@ -81,6 +81,12 @@ public class SellScene extends Store{
                     player.getFp().remove(--counter);
                     player.increaseHpMax(temp.getPlusHp());
                     player.increaseMpMax(temp.getPlusMp());
+                    if(player.getHpMax()<player.getHp()){
+                        player.setHp(player.getHpMax());
+                    }
+                    if(player.getMpMax()<player.getMp()){
+                        player.setMp(player.getHpMax());
+                    }
                     setProduct();
                     initProductOnScreen();
                 }

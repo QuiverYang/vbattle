@@ -164,6 +164,13 @@ public class Player {
         //(0         ,-        ,1    ,2      ,3      ,4      ,5      ,6      ,7 ,8 ,9   ,10   ,11   ,12...)
 
         //暫存當前玩家資料
+        for (int i = 0; i < unlock.length; i++) {
+            if(this.stage >=1 && this.stage<4  && this.unlock[stage+1]==0){ //設定stage與unlock間的關係
+                this.unlock[this.stage+1] = 1;
+                
+            }
+            System.out.println(unlock[i]);
+        }
         int countFp = 12;
         String[] info = new String[12 + this.fp.size() * 3];
         info[0] = this.playerName;
@@ -226,9 +233,6 @@ public class Player {
         this.stage = Integer.parseInt(status[1]);
         for (int i = 0; i < unlock.length; i++) {
             this.unlock[i] = Integer.parseInt(status[i + 2]);
-            if(this.stage >=1 && this.stage<4 && this.unlock[stage+1]==0){ //設定stage與unlock間的關係
-                this.unlock[this.stage+1] = 1;
-            }
         }
         this.hp = Integer.parseInt(status[7]);
         this.mp = Integer.parseInt(status[8]);

@@ -67,14 +67,6 @@ public class SaveScene extends Scene {
         player = Player.getPlayerInstane();
         
     }
-
-//    public void setPrevous(int i){
-//        this.nextScene = i;
-//    }
-//    
-//    public void setCurrent(int i){
-//        this.currentScene = i;
-//    }
     @Override
     public MouseAdapter genMouseAdapter() {
         return new MouseAdapter() {

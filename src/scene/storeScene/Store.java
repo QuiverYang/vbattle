@@ -211,6 +211,7 @@ public abstract class Store extends Scene{
         //=============畫出 info=========================
         paintProductInfo(g);
         //=============畫出 STAGE=========================
+        g.setColor(Color.WHITE);
         g.setFont(fontBit);
         String stage = "STAGE:"+this.player.getStage()+"";
         sw = fm.stringWidth(stage);

@@ -19,7 +19,7 @@ public class Protein extends FinProduct{
     
     
     public Protein() {
-        super("/resources/protein.jpg");
+        super("/resources/protein.png");
         this.name = "健康食品";
         this.price = PRODUCT_PORTEIN_PRICE;
         this.risk = 0.2d;

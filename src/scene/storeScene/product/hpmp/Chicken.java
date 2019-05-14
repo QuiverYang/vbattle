@@ -11,7 +11,7 @@ package scene.storeScene.product.hpmp;
  */
 public class Chicken extends Food{
     public Chicken(){
-        super("/resources/chiken.jpg");
+        super("/resources/chiken.png");
         this.price = 300;
         this.mp =0;
         this.hp = 40;

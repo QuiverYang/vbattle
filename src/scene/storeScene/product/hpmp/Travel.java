@@ -11,7 +11,7 @@ package scene.storeScene.product.hpmp;
  */
 public class Travel extends Food{
     public Travel(){
-        super("/resources/travel.jpg");
+        super("/resources/travel.png");
         this.name = "旅遊";
         this.price = 400;
         this.mp =30;

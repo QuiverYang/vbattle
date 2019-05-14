@@ -20,7 +20,7 @@ public class Robot extends FinProduct{
 
     
     public Robot() {
-        super("/resources/robot.jpg");
+        super("/resources/robot.png");
         this.name = "生化元素";
         this.price = PRODUCT_ROBOT_PRICE;
         this.risk = 0.6d;

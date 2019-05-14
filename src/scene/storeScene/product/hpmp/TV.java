@@ -11,7 +11,7 @@ package scene.storeScene.product.hpmp;
  */
 public class TV extends Food{
     public TV(){
-        super("/resources/tv.jpg");
+        super("/resources/tv.png");
         this.name = "電視";
         this.price = 400;
         this.mp =20;

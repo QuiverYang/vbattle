@@ -14,15 +14,12 @@ import java.awt.Graphics;
 public class Yellow extends StuffLevel{
     
     public Yellow(){
-        super("/resources/tinyCharacters.jpg");
+        super("/resources/yellow.png");
         level = 1;
         this.price = 300;
         this.name = "Ｔ細胞";
         this.info = "Ｔ細胞 level+";
     }
     
-    @Override
-    public void paint(Graphics g) {
-        g.drawImage(img, x, y, x+this.width, y+this.height,128,64,161,96, null);
-    }
+
 }

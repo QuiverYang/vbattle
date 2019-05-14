@@ -19,7 +19,7 @@ public class Medicine extends FinProduct{
     
 
     public Medicine() {
-        super("/resources/medicine.jpg");
+        super("/resources/medicine.png");
         this.name = "抗生藥品";
         this.price = PRODUCT_MEDICINE_PRICE;
         this.risk = 0.3d;

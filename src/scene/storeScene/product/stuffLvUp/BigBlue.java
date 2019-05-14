@@ -13,15 +13,11 @@ import java.awt.Graphics;
  */
 public class BigBlue extends StuffLevel{
     public BigBlue(){
-        super("/resources/bigCharacters.jpg");
+        super("/resources/bigBlue.png");
         level = 1;
         this.price = 1500;
         this.name = "樹突細胞";
         this.info = "樹突細胞 level+";
     }
     
-    @Override
-    public void paint(Graphics g) {
-        g.drawImage(img, x, y, x+this.width, y+this.height,256,62,321,127, null);
-    }
 }

@@ -53,7 +53,7 @@ public class BombA extends Bomb{
         }else{
             ga = (int)(screenUnitHeight*10);
         }
-        vx = (int)(screenUnitWidth*20);//x方向速度
+        vx = screenUnitWidth*20;//x方向速度
         vy = -ga*dist/2/vx;//y方向速度
 
         af = AffineTransform.getTranslateInstance(x, y);

@@ -12,7 +12,7 @@ package scene.storeScene.product.hpmp;
 public class Noodle extends Food{
     
     public Noodle(){
-        super("/resources/noodle.jpg");
+        super("/resources/noodle.png");
         this.name = "麵食";
         this.price = 200;
         this.mp =0;

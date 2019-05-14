@@ -290,6 +290,7 @@ public class Player {
         this.inventory = this.cash = 6000;
         this.unlock = new int[]{1,1,0,0,0};
         this.fp.clear();
+        this.stage = 0;
     }
 
     //儲存所有玩家資料，方便後續作儲存

@@ -39,6 +39,7 @@ public class MainPanel extends JPanel {
     public static final int SELL_SCENE = 6;
     public static final int SAVE_SCENE = 7;
     public static final int DISPLAY_SCENE = 8;
+    public static final int STUFFLIST_SCENE = 9;
 
 
     private StageScene stageScene; //暫存stage實體（for暫停使用）
@@ -135,7 +136,8 @@ public class MainPanel extends JPanel {
                 return new SaveScene(gsChangeListener);
             case DISPLAY_SCENE:
                 return new DisplayScene(gsChangeListener);
-                
+            case STUFFLIST_SCENE:
+                return new StuffListScene(gsChangeListener);
         }
         return null;
     }

@@ -28,7 +28,7 @@ public class DisplayScene extends StageScene{
     private String hint1,typing,mainHint;
     private int counter,mouseCounter,sw;
     private  Font fontC,fontMain;
-    private  BufferedImage mouseImg,redImg;
+    private  BufferedImage mouseImg,redImg,comicImg;
     private  ImgResource rc;
     private int x0,y0,movingIconX,movingIconY,step,width;
     private boolean animationFinished;
@@ -44,9 +44,10 @@ public class DisplayScene extends StageScene{
         rc = ImgResource.getInstance();
         mouseImg = rc.tryGetImage("/resources/mouse.png");
         redImg = rc.tryGetImage("/resources/tinyCharacters.png");
+        comicImg = rc.tryGetImage("/resources/comic.png");
         movingIconX = x0 = (int)(Resource.SCREEN_WIDTH * 0.3f);
         movingIconY = y0 = (int) (Resource.SCREEN_HEIGHT * 0.8f);
-        step = 1;
+        step = 0;
         width = Resource.SCREEN_WIDTH/12;
         coin = new Coin(Resource.SCREEN_WIDTH/5*4,Resource.SCREEN_HEIGHT/5*3,width,width);
         ghost = new Ghost(Resource.SCREEN_WIDTH/5*3,Resource.SCREEN_HEIGHT/5*3,width,width);
@@ -58,6 +59,9 @@ public class DisplayScene extends StageScene{
         return new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
+                if(step == 0){
+                    animationFinished = true;
+                }
                 if(Coin.isOnCoin(e, coin)){
                     Coin.CoinClicked(getClass().getResource("/resources/coin.wav"));
                     animationFinished = true;
@@ -85,7 +89,7 @@ public class DisplayScene extends StageScene{
         g.setFont(fontMain);
         g.setColor(Color.WHITE);
         FontMetrics fm2 = g.getFontMetrics();
-        if(step <4){
+        if(step <4 && step >0){
             mainHint = "操作說明";
         }else{
             mainHint = "準備完成";
@@ -93,6 +97,9 @@ public class DisplayScene extends StageScene{
         int sw2 = fm2.stringWidth(mainHint);
         g.drawString(mainHint, Resource.SCREEN_WIDTH/2-sw2/2, Resource.SCREEN_HEIGHT/3);
         switch(step){
+            case 0:
+                paintComic(g);
+                break;
             case 1:
                 paintDraging(g);
                 break;
@@ -171,6 +178,10 @@ public class DisplayScene extends StageScene{
         int sa = fm.getHeight();
         g.drawString("點擊後遊戲開始", Resource.SCREEN_WIDTH/2-sw2/2, Resource.SCREEN_HEIGHT/3+sa);
         animationFinished = true;
+    }
+    
+    public void paintComic(Graphics g){
+        g.drawImage(comicImg, 0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT, null);
     }
     
     @Override

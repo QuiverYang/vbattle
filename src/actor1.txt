@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 /resources/tinyCharacters.png,1,1,25,12,0,0,50,0.12,32,32,false,é‡‘é»ƒè‰²è‘¡è„çƒèŒ
+=======
+/resources/tinyCharacters.png,3,2,30,5,0,0,50,0.12,32,32,false,‹àF•’“¸‹…‹Û
+>>>>>>> master

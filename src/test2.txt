@@ -1,2 +1,1 @@
 /resources/tinyCharacters.png,2,1,10,15,500,/resources/capsule.png,32,32,false,大腸桿菌
-

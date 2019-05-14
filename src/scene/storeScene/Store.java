@@ -305,8 +305,8 @@ public abstract class Store extends Scene{
             int increseSpeed = 2;//每針加血的速度
             hpUp-=increseSpeed;
             player.increaseHp(increseSpeed);
-            if(player.getHp()>100){
-                player.setHp(100);
+            if(player.getHp()>player.getHpMax()){
+                player.setHp(player.getHpMax());
             }
         }
     }
@@ -316,8 +316,8 @@ public abstract class Store extends Scene{
             int increaseSpeed = 2;
             mpUp-=increaseSpeed;
             player.increaseMp(increaseSpeed);
-            if(player.getMp()>100){
-                player.setMp(100);
+            if(player.getMp()>player.getMpMax()){
+                player.setMp(player.getMpMax());
             }
         }
     }

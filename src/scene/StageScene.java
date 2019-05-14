@@ -127,6 +127,8 @@ public class StageScene extends Scene {
         }
         cash = 0;
         player = Player.getPlayerInstane();
+        maxHp = player.getHpMax();
+        maxMp = player.getMpMax();
         hp = player.getHp();
         mp = player.getMp();
        
@@ -146,10 +148,6 @@ public class StageScene extends Scene {
             towerB = new Stuff(-1,(int)(Resource.SCREEN_WIDTH*0.75),(int)(Resource.SCREEN_WIDTH*0.25),57*5,72*5,0,1,"towerB"+player.getStage());
         } catch (IOException ex) {
         }
-//        towerA.setFrame(player.getStage());
-//        towerB.setFrame(player.getStage());
-        towerA.setAttackedTime();
-        towerB.setAttackedTime();
     }
 
     //玩家控制
@@ -247,15 +245,6 @@ public class StageScene extends Scene {
                     }
                 }
 
-
-//                //判斷點擊惡魔
-//                for (int i = 0; i < dieStuff.size(); i++) {
-//                    if (isOnDevilPic(e, dieStuff.get(i)) && dieStuff.get(i).getClickState()) {  //如果點擊惡魔成功，將此惡魔物件刪除
-//                        clickSound.play();
-//                        dieStuff.remove(i);
-//                    }
-//                }
-
                 if (gameOver) {
                     gameOverBtn.setImgState(0);
                     gameOverBtn.setIsClicked(false);
@@ -305,6 +294,8 @@ public class StageScene extends Scene {
     @Override
     public void paint(Graphics g) {
         g.drawImage(this.background, 0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT, 0, 0, this.background.getWidth(), this.background.getHeight(),null);
+        towerA.paint(g);
+        towerB.paint(g);
         g.setFont(this.priceFontBit);
         FontMetrics fm = g.getFontMetrics();
         if(drag!=-1){
@@ -312,19 +303,43 @@ public class StageScene extends Scene {
         }
         
         g.setColor(Color.WHITE);
-        //腳色
+        paintIcon(g);
+        paintStuff(g);
+        
+        paintDrag(g);
+        paintMoney(g);
+        paintCash(g);
+        this.returnBtn.paintBtn(g);
+
+        for (Coin coin : coins) {
+            coin.paint(g);
+        }
+        paintHpMp(g);
+        
+        if (gameOver) {
+            paintGameOver(g);
+        }
+        if (win){
+            paintWin(g);
+        }
+    }
+    
+    private void paintShadow(Graphics g){
+        g.setColor(lightGray);
+        if(dragY < battleAreaY[2] && dragX+(iconSize) < Resource.SCREEN_WIDTH/2){
+            g.fillRect(dragX, battleAreaY[2]+(iconSize / 2), iconSize, iconSize);
+        }else if(dragY < battleAreaY[1]&& dragX+(iconSize) < Resource.SCREEN_WIDTH/2){
+            g.fillRect(dragX, battleAreaY[1]+(iconSize / 2), iconSize, iconSize);
+        }else if(dragY < battleAreaY[0]&& dragX+(iconSize) < Resource.SCREEN_WIDTH/2){
+            g.fillRect(dragX, battleAreaY[0]+(iconSize / 2), iconSize, iconSize);
+        }
+    }
+    
+    private void paintIcon(Graphics g) {
         for (int i = 0; i < 3; i++) {
             g.setColor(Color.white);
             g.fillRect(iconX[i], iconY[i], (int)(Resource.SCREEN_WIDTH*0.092), (int)(Resource.SCREEN_HEIGHT*0.122));
             g.drawImage(iconTiny, iconX[i] + (int)(Resource.SCREEN_WIDTH*0.0083), iconY[i], iconX[i] + (int)(Resource.SCREEN_WIDTH*0.075), iconY[i] + (int)(Resource.SCREEN_HEIGHT*0.089), 0, iconNum[i] * 32, 32, (iconNum[i] + 1) * 32, null);
-//            if (this.money < checkActorPrice(i)) {
-//                g.setColor(lightGray);
-//                g.fillRect(iconX[i], iconY[i], (int)(Resource.SCREEN_WIDTH*0.092), (int)(Resource.SCREEN_HEIGHT*0.122));
-//            }
-//            //價格
-//            g.setColor(Color.BLACK);
-//            int sw = fm.stringWidth(checkActorPrice(i) + "");
-//            g.drawString(checkActorPrice(i) + "", iconX[i] + (int)(Resource.SCREEN_WIDTH*0.092) / 2 - sw / 2, iconY[i] + (int)(Resource.SCREEN_HEIGHT*0.113));
 
         }
         
@@ -341,11 +356,14 @@ public class StageScene extends Scene {
             }
             //價格
             g.setColor(Color.BLACK);
+            FontMetrics fm = g.getFontMetrics();
             int sw = fm.stringWidth(checkActorPrice(i) + "");
             g.drawString(checkActorPrice(i) + "", iconX[i] + (int)(Resource.SCREEN_WIDTH*0.092) / 2 - sw / 2, iconY[i] + (int)(Resource.SCREEN_HEIGHT*0.113));
         }
-        //走路角色
-        if (gameOver == false) {
+    }
+    
+    private void paintStuff(Graphics g){
+        if (gameOver == false || win == false)  {
             for (int i = 0; i < stuffList.size(); i++) {
                 for (int j = 0; j < stuffList.get(i).size(); j++) {
                     stuffList.get(i).get(j).paint(g);
@@ -363,46 +381,40 @@ public class StageScene extends Scene {
         for (int i = 0; i < dieStuff.size(); i++) {
             dieStuff.get(i).paint(g);
         }
-
+    }
+    
+    private void paintDrag(Graphics g){
         if (drag != -1) {
             if(drag <3){
                 g.drawImage(iconTiny, dragX, dragY, dragX + iconSize, dragY + iconSize, 0, drag * 32, 32, (drag + 1) * 32, null);
             }else {
                 g.drawImage(iconBig, dragX, dragY, dragX + iconBigSize, dragY + iconBigSize, 0, (drag-3) * 64, 64, (drag-3 + 1) * 64, null);
-
             }
         }
+    }
 
-        //金錢
+    private void paintMoney(Graphics g){
+        FontMetrics fm = g.getFontMetrics();
         int sw = fm.stringWidth(money + "/" + MAX_MONEY);
         g.setColor(lightGray);
         g.fillRect(Resource.SCREEN_WIDTH / 12 * 9, Resource.SCREEN_HEIGHT / 9 - (int)(Resource.SCREEN_HEIGHT*0.089), (int)(Resource.SCREEN_WIDTH*0.242), (int)(Resource.SCREEN_HEIGHT*0.055f));
         g.setFont(this.fontBit);
         g.setColor(Color.white);
         g.drawString(money + "/" + MAX_MONEY, Resource.SCREEN_WIDTH - (int) (sw * 2.2), Resource.SCREEN_HEIGHT / 9 - (int)(Resource.SCREEN_HEIGHT*0.044));
-
         g.drawImage(this.energyIng, Resource.SCREEN_WIDTH / 12 * 9 - (int)(Resource.SCREEN_WIDTH*0.025), Resource.SCREEN_HEIGHT / 9 - (int)(Resource.SCREEN_HEIGHT*0.1), (int)(Resource.SCREEN_WIDTH*0.066f), (int)(Resource.SCREEN_HEIGHT*0.08f), null);
-
-        //cash
+    }
+    
+    private void paintCash(Graphics g){
+        FontMetrics fm = g.getFontMetrics();
         g.setColor(lightGray);
         g.fillRect(Resource.SCREEN_WIDTH / 12 * 9, Resource.SCREEN_HEIGHT / 9, (int)(Resource.SCREEN_WIDTH*0.242), (int)(Resource.SCREEN_HEIGHT*0.055f));
         g.drawImage(this.coinImg, Resource.SCREEN_WIDTH / 12 * 9 - (int)(Resource.SCREEN_WIDTH*0.025), Resource.SCREEN_HEIGHT / 9 - (int)(Resource.SCREEN_HEIGHT*0.02), Resource.SCREEN_WIDTH / 12 * 9 - (int)(Resource.SCREEN_WIDTH*0.025) + (int)(Resource.SCREEN_HEIGHT*0.09f), Resource.SCREEN_HEIGHT / 9 + (int)(Resource.SCREEN_HEIGHT*0.09f) -  (int)(Resource.SCREEN_HEIGHT*0.02), 0, 0, this.coinImg.getWidth() / 6, this.coinImg.getHeight(), null);
         g.setColor(Color.WHITE);
-
-        sw = fm.stringWidth(cash + "");
+        int sw = fm.stringWidth(cash + "");
         g.drawString(cash + "", Resource.SCREEN_WIDTH - (int) (sw * 3), Resource.SCREEN_HEIGHT / 9 + (int)(Resource.SCREEN_HEIGHT*0.044));
-
-        this.returnBtn.paintBtn(g);
-
-        //WIN畫面
-//        g.drawImage(this.winImg, Resource.SCREEN_WIDTH/2-(int)(this.winImg.getWidth()*1.5)/2, Resource.SCREEN_HEIGHT/2-(int)(this.winImg.getHeight()*1.5)/2, (int)(this.winImg.getWidth()*1.5), (int)(this.winImg.getHeight()*1.5), null);
-        //lose畫面
-//        g.drawImage(this.loseImg, Resource.SCREEN_WIDTH/2-(int)(this.loseImg.getWidth()*1.2)/2, Resource.SCREEN_HEIGHT/2-(int)(this.loseImg.getHeight()*1.2)/2, (int)(this.loseImg.getWidth()*1.2), (int)(this.loseImg.getHeight()*1.2), null);
-        for (Coin coin : coins) {
-            coin.paint(g);
-        }
-        this.returnBtn.paintBtn(g);
-
+    }
+    
+    private void paintHpMp(Graphics g){
         g.setColor(Color.white);
         g.setFont(this.fontBit);
         g.fillRect((int) (Resource.SCREEN_WIDTH * 1 / 5f), (int) (Resource.SCREEN_HEIGHT * 1 / 32f - 2), (int) (Resource.SCREEN_WIDTH * 1 / 2f), 14);
@@ -410,85 +422,71 @@ public class StageScene extends Scene {
 
         g.setColor(Color.red);
         g.drawString("HP", (int) (Resource.SCREEN_WIDTH * 4 / 30f), (int) (Resource.SCREEN_HEIGHT * 2 / 32f));
-        g.fillRect((int) (Resource.SCREEN_WIDTH * 1 / 5f), (int) (Resource.SCREEN_HEIGHT * 1 / 32f), (int) (Resource.SCREEN_WIDTH * 1 / 2f) * hp / 100, 10);
+        g.fillRect((int) (Resource.SCREEN_WIDTH * 1 / 5f), (int) (Resource.SCREEN_HEIGHT * 1 / 32f), (int) ((Resource.SCREEN_WIDTH * 1 / 2f) * hp /maxHp), 10);
 
         g.setColor(Color.blue);
         g.drawString("MP", (int) (Resource.SCREEN_WIDTH * 4 / 30f), (int) (Resource.SCREEN_HEIGHT * 4 / 32f));
-        g.fillRect((int) (Resource.SCREEN_WIDTH * 1 / 5f), (int) (Resource.SCREEN_HEIGHT * 3 / 32f), (int) (Resource.SCREEN_WIDTH * 1 / 2f) * mp / 100, 10);
-
-        if (gameOver == true) {
-            stageBgm.stop();
-            g.setColor(lightGray);
-            g.fillRect(0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT);
-            gameOverBtn.paintBtn(g);
-
-            g.drawImage(this.loseImg, Resource.SCREEN_WIDTH / 2 - (int) (Resource.SCREEN_WIDTH*0.502) / 2, Resource.SCREEN_HEIGHT / 2 - (int) (Resource.SCREEN_HEIGHT * 0.213)/ 2, (int) (Resource.SCREEN_WIDTH*0.502), (int) (Resource.SCREEN_HEIGHT * 0.213), null);
-//            g.drawString("GAMEOVER", Resource.SCREEN_WIDTH/5*2, Resource.SCREEN_HEIGHT/2);
-            g.setFont(gameFontBit);
-            g.setColor(Color.BLACK);
-            int sw1 = fm.stringWidth("CONTINUE");
-            g.drawString("CONTINUE", gameOverBtn.getX() + gameOverBtn.getWidth() / 2 - sw1 / 2 - (int) (Resource.SCREEN_WIDTH*0.00833), gameOverBtn.getY() + (int) (Resource.SCREEN_HEIGHT * 0.0611));
-        }
-        towerA.paint(g);
-        towerB.paint(g);
-        
-        if(towerB.getHp() < 0){
-            win = true;
-            winSound.play();
-        }
-        
-        if(win){
-            stageBgm.stop();
-            g.setColor(lightGray);
-            g.fillRect(0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT);
-            gameOverBtn.paintBtn(g);
-            
-            g.drawImage(this.winImg, Resource.SCREEN_WIDTH / 2 - (int) (Resource.SCREEN_WIDTH*0.502) / 2, Resource.SCREEN_HEIGHT / 2 - (int) (Resource.SCREEN_HEIGHT * 0.213)/ 2, (int) (Resource.SCREEN_WIDTH*0.502), (int) (Resource.SCREEN_HEIGHT * 0.213), null);
-//            g.drawString("GAMEOVER", Resource.SCREEN_WIDTH/5*2, Resource.SCREEN_HEIGHT/2);
-            g.setFont(gameFontBit);
-            g.setColor(Color.BLACK);
-            int sw1 = fm.stringWidth("CONTINUE");
-            g.drawString("CONTINUE", gameOverBtn.getX() + gameOverBtn.getWidth() / 2 - sw1 / 2 - (int) (Resource.SCREEN_WIDTH*0.00833), gameOverBtn.getY() + (int) (Resource.SCREEN_HEIGHT * 0.0611));
-        }
-
+        g.fillRect((int) (Resource.SCREEN_WIDTH * 1 / 5f), (int) (Resource.SCREEN_HEIGHT * 3 / 32f), (int) ((Resource.SCREEN_WIDTH * 1 / 2f) * mp / maxMp), 10);
     }
     
-    private void paintShadow(Graphics g){
+    private void paintGameOver(Graphics g){
+        stageBgm.stop();
         g.setColor(lightGray);
-        if(dragY < battleAreaY[2]){
-            g.fillRect(dragX, battleAreaY[2]+(iconSize / 2), iconSize, iconSize);
-        }else if(dragY < battleAreaY[1]){
-            g.fillRect(dragX, battleAreaY[1]+(iconSize / 2), iconSize, iconSize);
-        }else if(dragY < battleAreaY[0]){
-            g.fillRect(dragX, battleAreaY[0]+(iconSize / 2), iconSize, iconSize);
-        }
+        g.fillRect(0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT);
+        gameOverBtn.paintBtn(g);
+        g.drawImage(this.loseImg, Resource.SCREEN_WIDTH / 2 - (int) (Resource.SCREEN_WIDTH*0.502) / 2, Resource.SCREEN_HEIGHT / 2 - (int) (Resource.SCREEN_HEIGHT * 0.213)/ 2, (int) (Resource.SCREEN_WIDTH*0.502), (int) (Resource.SCREEN_HEIGHT * 0.213), null);
+        g.setFont(gameFontBit);
+        FontMetrics fm = g.getFontMetrics();
+        g.setColor(Color.BLACK);
+        int sw = fm.stringWidth("CONTINUE");
+        g.drawString("CONTINUE", gameOverBtn.getX() + gameOverBtn.getWidth() / 2 - sw / 2 , gameOverBtn.getY() + (int) (Resource.SCREEN_HEIGHT * 0.0611));
     }
-
+    
+    private void paintWin(Graphics g){
+        stageBgm.stop();
+        g.setColor(lightGray);
+        g.fillRect(0, 0, Resource.SCREEN_WIDTH, Resource.SCREEN_HEIGHT);
+        gameOverBtn.paintBtn(g);
+        g.drawImage(this.winImg, Resource.SCREEN_WIDTH / 2 - (int) (Resource.SCREEN_WIDTH*0.502) / 2, Resource.SCREEN_HEIGHT / 2 - (int) (Resource.SCREEN_HEIGHT * 0.213)/ 2, (int) (Resource.SCREEN_WIDTH*0.502), (int) (Resource.SCREEN_HEIGHT * 0.213), null);
+        g.setFont(gameFontBit);
+        FontMetrics fm = g.getFontMetrics();
+        g.setColor(Color.BLACK);
+        int sw1 = fm.stringWidth("CONTINUE");
+        g.drawString("CONTINUE", gameOverBtn.getX() + gameOverBtn.getWidth() / 2 - sw1 / 2 , gameOverBtn.getY() + (int) (Resource.SCREEN_HEIGHT * 0.0611));
+    }
+    
     @Override
     public void logicEvent() {
-        timeCount++;//倍數計時器：FPS為底的時間倍數
-        if (gameOver == false) {
-            if (timeCount % 2 == 0) {
-                eventlistener();
-            }
-            if (timeCount % 100 == 0) {
-                mp--;
-            }
-            if (timeCount % 2 == 0) {
-                if (money < MAX_MONEY) {
-                    money += 1;
+        if(!win && !gameOver){
+             timeCount++;//倍數計時器：FPS為底的時間倍數
+            if (gameOver  == false || win == false) {
+                if (timeCount % 2 == 0) {
+                    eventlistener();
+                }
+                if (timeCount % 100 == 0) {
+                    mp--;
+                }
+                if (timeCount % 2 == 0) {
+                    if (money < MAX_MONEY) {
+                        money += 1;
+                    }
+                }
+                if (timeCount % 25 == 0) {
+                    stuffRandom();
                 }
             }
-            if (timeCount % 25 == 0) {
-                stuffGen();
+
+            if (timeCount == eventTime) {
+                timeCount = 0;
+            }
+            bombCollision();
+            resize();
+
+            if(towerB.getHp() < 0){
+                win = true;
+                winSound.play();
             }
         }
-
-        if (timeCount == eventTime) {
-            timeCount = 0;
-        }
-        bombCollision();
-        resize();
     }
 
     public void eventlistener() {
@@ -516,35 +514,64 @@ public class StageScene extends Scene {
         ghostMethod(dieStuff);
     }
    
-    private void stuffGen(){
+    private void stuffRandom(){
         if(player.getStage() < 4){
             if(stageCounter == delay.size()){
                 return;
             }
             if(genCounter == delay.get(stageCounter)){
-                try {
-                    stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+1 ,1,"actor"+type.get(stageCounter)));
-                    while((delay.get(++stageCounter)) == 0){
-                        stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+1 ,1,"actor"+type.get(stageCounter)));
+                if(type.get(stageCounter)< 2){
+                    try {
+                        stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+3 ,1,"actor"+type.get(stageCounter)));
+                        while((delay.get(++stageCounter)) == 0){
+                            stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconSize , iconSize , type.get(stageCounter)+3 ,1,"actor"+type.get(stageCounter)));
+                        }
+                        genCounter = 0;
+                    } catch (Exception e) {
+//                        e.printStackTrace();
                     }
-                    genCounter = 0;
-                } catch (Exception e) {
+                }
+                
+                
+                if(type.get(stageCounter) >= 2){
+                     try {
+                        stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconBigSize , iconBigSize , type.get(stageCounter) ,1,"actor"+type.get(stageCounter)));
+                        while((delay.get(++stageCounter)) == 0){
+                            stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconBigSize , iconBigSize , type.get(stageCounter) ,1,"actor"+type.get(stageCounter)));
+                        }
+                        genCounter = 0;
+                    } catch (Exception e) {
+//                        e.printStackTrace();
+                    }
                 }
             }
             genCounter++;
         }else{
             this.genRate += 0.005f;
-            try {
-                for (int i = 0; i < stuffList.size()/2; i++) {
-                    if((float)(Math.random()) < genRate){
-                        stuffList.get(i+3).add(new Stuff(-1, Resource.SCREEN_WIDTH, battleAreaY[i] , iconSize, iconSize, 3,1, "actor2"));
+            int ran = (int)(Math.random()*5);
+            if(ran < 2){
+                try {
+                    for (int i = 0; i < stuffList.size()/2; i++) {
+                        if((float)(Math.random()) < genRate){
+                            stuffList.get(i+3).add(new Stuff(-1, Resource.SCREEN_WIDTH, battleAreaY[i] , iconSize, iconSize,ran+3,1, "actor"+ran));
+                        }
                     }
+                } catch (IOException ex) {
                 }
-            } catch (IOException ex) {
+            }
+            if(ran >= 2){
+                try {
+                    for (int i = 0; i < stuffList.size()/2; i++) {
+                        if((float)(Math.random()) < genRate){
+                            stuffList.get(i+3).add(new Stuff(-1, Resource.SCREEN_WIDTH, battleAreaY[i] , iconBigSize, iconBigSize, ran,1, "actor"+ran));
+                        }
+                    }
+                } catch (IOException ex) {
+                }
             }
         }
     }
-
+    
     private void collisionCheck(ArrayList<Stuff> stuff1, ArrayList<Stuff> stuff2) {
         Stuff tmp;
         for (int i = 0; i < stuff1.size(); i++) {
@@ -575,16 +602,11 @@ public class StageScene extends Scene {
             if (tmp != null && tmp.getHp() > 0) {
                 stuff1.get(i).attack(tmp);
             }
-            if (tmp != null && tmp.getHp() < 1) {
+            if (tmp != null && tmp.getHp() <= 0) {
                 dieStuff.add(tmp);
                 coins.add(new Coin(tmp.getX0(), tmp.getY0(), tmp.getImgWidth(), tmp.getImgHeight()));
                 stuff2.remove(tmp);
             }
-
-                
-            
-            
-            
         }
     }
     
@@ -594,18 +616,22 @@ public class StageScene extends Scene {
             for (int j = 0; j < stuffList.get(i).size(); j++) {
                 bombContainer = stuffList.get(i).get(j).animation();
                 if (bombContainer != null) {
+                    if(bombContainer.checkAttack(towerB) == true){
+                        towerB.attacked(stuffList.get(i).get(j));
+                    }else {
+                        bombContainer.checkTouchGround();
+                    }
                     for (int k = 0; k < stuffList.get(i + 3).size(); k++) {
                         if (bombContainer.checkAttack(stuffList.get(i + 3).get(k)) == true) {
                             stuffList.get(i + 3).get(k).attacked(stuffList.get(i).get(j));
-                        }
-                        else if(bombContainer.checkAttack(towerB) == true){
-                            towerB.attacked(stuffList.get(i).get(j));
                         }
                         else {
                             bombContainer.checkTouchGround();
                         }
                     }
-                    bombContainer = null;
+                    if(bombContainer.checkTouchGround()){
+                        bombContainer = null;
+                    }
                 }
             }
         }
@@ -663,7 +689,7 @@ public class StageScene extends Scene {
                     if(drag <3)
                          stuffList.get(i).add(new Stuff(1, e.getX() - (iconSize / 2), battleAreaY[i], iconSize, iconSize, drag,unlock[drag], "test" + drag));
                     if(drag >=3)
-                        stuffList.get(i).add(new Stuff(1, e.getX() - (iconSize / 2), battleAreaY[i], iconSize, iconSize, drag-3, unlock[drag],"test" + drag));
+                        stuffList.get(i).add(new Stuff(1, e.getX() - (iconSize / 2), battleAreaY[i], iconBigSize, iconBigSize, drag-3, unlock[drag],"test" + drag));
                 } catch (IOException ex) {
                 }
             }
@@ -672,8 +698,12 @@ public class StageScene extends Scene {
 
     public void resize() {
         if (SCREEN_WIDTH != Resource.SCREEN_WIDTH || SCREEN_HEIGHT != Resource.SCREEN_HEIGHT) {
+            widthRate =  (float)Resource.SCREEN_WIDTH /(float)SCREEN_WIDTH ;
+            heightRate = (float)Resource.SCREEN_HEIGHT/(float)SCREEN_HEIGHT;
             SCREEN_WIDTH = Resource.SCREEN_WIDTH ;
             SCREEN_HEIGHT = Resource.SCREEN_HEIGHT;
+            
+            
             //按鈕
             returnBtn.reset(20, 20, Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT / 9);
             gameOverBtn.reset(Resource.SCREEN_WIDTH / 12 * 8, (int) (Resource.SCREEN_HEIGHT / 9 * 6), Resource.SCREEN_WIDTH / 12 * 2, Resource.SCREEN_WIDTH / 12);
@@ -696,24 +726,29 @@ public class StageScene extends Scene {
             //全部角色大小
             for(int i=0; i<stuffList.size(); i++){
                 for(int j=0; j<stuffList.get(i).size(); j++){
-                stuffList.get(i).get(j).resize();
-                 }
-             }
-            //我方角y軸
-            for (int i = 0; i < stuffList.size()/2; i++) {
-                for(int j=0; j<stuffList.get(i).size(); j++){
-                    stuffList.get(i).get(j).setY0(battleAreaY[i]);
-                }
-            //敵方角y軸
-            for(int j=0; j<stuffList.get(i+3).size(); j++){
-                    stuffList.get(i+3).get(j).setY0(battleAreaY[i]);
+                    stuffList.get(i).get(j).setX0((int)(stuffList.get(i).get(j).getX0()*widthRate));
+                    stuffList.get(i).get(j).setX1((int)(stuffList.get(i).get(j).getX1()*widthRate));
+                    stuffList.get(i).get(j).setY0((int)(stuffList.get(i).get(j).getY0()*heightRate));
+                    stuffList.get(i).get(j).setY1((int)(stuffList.get(i).get(j).getY1()*heightRate));
                 }
             }
+            //塔x軸
+            towerA.setX0((int)(towerA.getX0()*widthRate));
+            towerB.setX0((int)(towerB.getX0()*widthRate));
+            towerA.setX1((int)(towerA.getX1()*widthRate));
+            towerB.setX1((int)(towerB.getX1()*widthRate));
+            //塔y軸
+            towerA.setY0((int)(towerA.getY0()*heightRate));
+            towerB.setY0((int)(towerB.getY0()*heightRate));
+            towerA.setY1((int)(towerA.getY1()*heightRate));
+            towerB.setY1((int)(towerB.getY1()*heightRate));
             //coin大小
             for(int i=0; i<coins.size(); i++){
-                coins.get(i).setHeight(iconSize);
-                coins.get(i).setWidth(iconSize);
+                coins.get(i).setHeight((int)(coins.get(i).getHeight()*heightRate));
+                coins.get(i).setWidth((int)(coins.get(i).getWidth()*widthRate));
             }
         }
     }
+
+
 }

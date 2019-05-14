@@ -18,7 +18,7 @@ public class BombB extends Bomb{
     //         Stuff myself,  dist 0
     public BombB(Stuff me,int dist){
         try{
-            img  = ImageIO.read(getClass().getResource("/needle3.png"));
+            img  = ImageIO.read(getClass().getResource("/needle.png"));
         }catch(IOException e){
             e.printStackTrace();
         }
@@ -40,7 +40,7 @@ public class BombB extends Bomb{
     public boolean move() {
         //未碰撞
         if(boundTimes == 0){
-            x +=15;
+            x +=(int)(screenUnitWidth*15);
             return false;
         }
         return true;
@@ -86,10 +86,10 @@ public class BombB extends Bomb{
             yf = singleImageHeight*((seq++/5));
             img = fireAtt;
             //80為圖片大小
-            g.drawImage(img,x,y,x+80,y+80,xf,yf,xf+singleImageWidth,yf+singleImageWidth,null);
+            g.drawImage(img,x,y,x+(int)(screenUnitWidth*80),y+(int)(screenUnitWidth*80),xf,yf,xf+singleImageWidth,yf+singleImageWidth,null);
             
         }else{
-            g.drawImage(img,x,y,x+80,y+80,0,0,417,417,null);
+            g.drawImage(img,x,y,x+(int)(screenUnitWidth*80),y+(int)(screenUnitWidth*80),0,0,417,417,null);
         }
     }
 }

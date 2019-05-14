@@ -31,7 +31,7 @@ public class StageScene extends Scene {
     //遊戲控制
     private int timeCount = 0; //倍數計時器：初始化
     private int eventTime = 100; // eventListener時間週期：大於0的常數
-    private int money = 200;
+    private int money = 0;
     private int MAX_MONEY = 200; //
     private boolean gameOver = false;
     private Player player;
@@ -482,7 +482,7 @@ public class StageScene extends Scene {
                 if (timeCount % 100 == 0) {
                     mp--;
                 }
-                if (timeCount % 2 == 0) {
+                if (timeCount % 10 == 0) {
                     if (money < MAX_MONEY) {
                         money += 1;
                     }

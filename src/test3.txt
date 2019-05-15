@@ -1,1 +1,5 @@
+<<<<<<< HEAD
+/resources/bigCharacters.png,5,5,40,20,0,0,50,0.03125,64,64,false,樹突細胞
+=======
 /resources/bigCharacters.png,6,4,30,20,100,0,50,0.03125,64,64,false,���ˍזE
+>>>>>>> master

@@ -1,1 +1,5 @@
+<<<<<<< HEAD
+/resources/bigCharacters.png,5,5,45,22,0,0,50,0.03125,64,64,true,å·¨å™¬ç´°èƒ
+=======
 /resources/bigCharacters.png,10,2,50,15,0,0,50,0.03125,64,64,true,‹šƒ×–E
+>>>>>>> master

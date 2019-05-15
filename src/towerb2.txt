@@ -1,1 +1,1 @@
-/resources/tower_1.png,2,1,1000,15,0,0,50,0,57,72,true
+/resources/tower_1.png,2,1,500,15,0,0,50,0,57,72,true

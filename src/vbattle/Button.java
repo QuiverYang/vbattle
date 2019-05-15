@@ -126,7 +126,7 @@ public class Button extends ItemOnScreen{
             FontMetrics fm = g.getFontMetrics();
             int sw = fm.stringWidth(label);
             int sa = fm.getAscent();
-            g.drawString(label, x+width/2-sw/2-imgState*3+3, y+height/2-sa/2+height/3+imgState*5);//imgState*的部分是按下去的偏移量
+            g.drawString(label, x+width/2-sw/2-imgState*3+3, y+height/2+sa/2-2+imgState*5);//imgState*的部分是按下去的偏移量
         }
         
     }

@@ -101,7 +101,7 @@ public class StageScene extends Scene {
         
         public Money(){
             img = rc.tryGetImage("/resources/energy.png");
-            money = 200;
+            money = 0;
             MAX_MONEY = 200; //
             x = Resource.SCREEN_WIDTH / 12 * 9;
             y = (int)(Resource.SCREEN_HEIGHT*0.015f);
@@ -196,7 +196,7 @@ public class StageScene extends Scene {
         }
         for (int i = 0; i < 5; i++) {
             iconX0[i] = (int) (Resource.SCREEN_WIDTH * (0.1f * i) + Resource.SCREEN_WIDTH * (0.3f));
-            iconY0[i] = (int) (Resource.SCREEN_HEIGHT * 0.8f);
+            iconY0[i] = (int) (Resource.SCREEN_HEIGHT * 0.83f);
             iconX1[i] = iconX0[i] + (int)(Resource.SCREEN_WIDTH*0.075);
             iconY1[i] = iconY0[i] + (int)(Resource.SCREEN_HEIGHT*0.09);
             iconNum[i] = i;
@@ -242,10 +242,14 @@ public class StageScene extends Scene {
             ex.printStackTrace();
         }
         try {
-            towerA = new Stuff(1,0,(int)(Resource.SCREEN_WIDTH*0.25),57*5,72*5,player.getStage(),1,"towerA"+player.getStage());
+            int stage = player.getStage();
+            if(stage>3){
+                stage = 3;
+            }
+            towerA = new Stuff(1,0,(int)(Resource.SCREEN_WIDTH*0.25),62*5,72*5,stage,1,"towerA"+player.getStage());
             towerA.setHp(hp);
             towerA.setMaxHp(maxHp);
-            towerB = new Stuff(-1,(int)(Resource.SCREEN_WIDTH*0.75),(int)(Resource.SCREEN_WIDTH*0.25),57*5,72*5,player.getStage(),1,"towerB"+player.getStage());
+            towerB = new Stuff(-1,(int)(Resource.SCREEN_WIDTH*0.75),(int)(Resource.SCREEN_WIDTH*0.25),62*5,72*5,stage,1,"towerB"+player.getStage());
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -560,7 +564,7 @@ public class StageScene extends Scene {
                     }
                     stuffRandom();
                 }
-                if (timeCount % 10 == 0) {
+                if (timeCount % 5 == 0) {
                     if (money < MAX_MONEY) {
                         money += 1;
                     }

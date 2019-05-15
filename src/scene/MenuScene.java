@@ -115,10 +115,10 @@ public class MenuScene extends Scene {
         int sa = fm.getAscent();
         g.drawString(playerName, (int) (Resource.SCREEN_WIDTH * 0.375f) + Resource.SCREEN_WIDTH / 12 * 3 / 2 - sw / 2 + (int) (Resource.SCREEN_WIDTH * 5 / 1200), (int) (Resource.SCREEN_HEIGHT / 2) + Resource.SCREEN_HEIGHT * 50 / 900 / 2 - sa / 2 - Resource.SCREEN_HEIGHT * 60 / 900 + 15);
 
-        if (typeCheck) {
-            playerName = playerName + typeName;
-            typeCheck = false;
-        }
+//        if (typeCheck) {
+//            playerName = playerName + typeName;
+//            typeCheck = false;
+//        }
 
     }
 
@@ -171,7 +171,7 @@ public class MenuScene extends Scene {
 
                 if (e.getButton() == MouseEvent.BUTTON1 && Button.isOnBtn(e, enterPlayerNameBtn) && enterPlayerNameBtn.getClickState()) {
                     enterPlayerNameBtn.setImgState(0);
-                    if (countChar > 0) {
+                    if (playerName.length() > 0) {
                         player.setPlayerName(playerName);
                         player.setPlayerIndex(-1); //表示是新玩家
                         player.defaultPlayer();  //初始化玩家數值
@@ -194,19 +194,15 @@ public class MenuScene extends Scene {
                 int t = e.getKeyCode();
                 if (t >= KeyEvent.VK_A && t <= KeyEvent.VK_Z || t >= KeyEvent.VK_0 && t <= KeyEvent.VK_9) {
                     typeName = (char) t;
-                    if (countChar <= 6) {
-                        countChar++;
-                        typeCheck = true;
+                    if (playerName.length() < 5) {
+                        playerName += typeName;
+                        
                     }
                 }
                 if (t == KeyEvent.VK_BACK_SPACE) {
-                    if(countChar < 0){
-                        countChar = 0;
-                    }
-                    if (countChar > 0) {
-                        countChar--;
+                    if (playerName.length() > 0) {
                         try{
-                            playerName = playerName.substring(0, countChar);
+                            playerName = playerName.substring(0, playerName.length() - 1);
                         }catch(java.lang.StringIndexOutOfBoundsException ex){
                             System.out.println("StringIndexOutOfBoundsExceptio from typing");
                         }

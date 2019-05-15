@@ -511,8 +511,6 @@ public class StageScene extends Scene {
         g.drawString("HP", (int) (Resource.SCREEN_WIDTH * 4 / 30f), (int) (Resource.SCREEN_HEIGHT * 2 / 32f));
         g.fillRect((int) (Resource.SCREEN_WIDTH * 1 / 5f), (int) (Resource.SCREEN_HEIGHT * 1 / 32f),
                 (int) (Resource.SCREEN_WIDTH * 1 / 2f) * towerA.getHp() / towerA.getMaxHp(), 10);
-        System.out.println("towerA.getHp() "+towerA.getHp());
-        System.out.println("towerA.getMaxHp() "+towerA.getMaxHp());
 
         g.setColor(Color.blue);
         g.drawString("MP", (int) (Resource.SCREEN_WIDTH * 4 / 30f), (int) (Resource.SCREEN_HEIGHT * 4 / 32f));
@@ -560,7 +558,7 @@ public class StageScene extends Scene {
                     }
                     stuffRandom();
                 }
-                if (timeCount % 10 == 0) {
+                if (timeCount % 5 == 0) {
                     if (money < MAX_MONEY) {
                         money += 1;
                     }
@@ -585,13 +583,7 @@ public class StageScene extends Scene {
                 stuffList.get(i).get(j).refreshCd();
                 //刷新每隻怪物的cd時間與mp的關係
                 stuffList.get(i).get(j).setCdTime((int)(stuffList.get(i).get(j).getCdTime()
-                + stuffList.get(i).get(j).getCdTime() * (float)maxMp / (float)mp / 50f));
-                
-                
-                
-                System.out.print("cd"+(int)(stuffList.get(i).get(j).getCdTime()
-                + stuffList.get(i).get(j).getCdTime() * (float)maxMp / (float)mp / 50f));
-                
+                + stuffList.get(i).get(j).getCdTime() * (float)maxMp / (float)mp));
             }
             for (int j = 0; j < stuffList.get(i + 3).size(); j++) {
                 stuffList.get(i + 3).get(j).refreshCd();

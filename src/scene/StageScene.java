@@ -242,10 +242,10 @@ public class StageScene extends Scene {
             ex.printStackTrace();
         }
         try {
-            towerA = new Stuff(1,0,(int)(Resource.SCREEN_WIDTH*0.25),57*5,72*5,0,1,"towerA"+player.getStage());
+            towerA = new Stuff(1,0,(int)(Resource.SCREEN_WIDTH*0.25),57*5,72*5,player.getStage(),1,"towerA"+player.getStage());
             towerA.setHp(hp);
             towerA.setMaxHp(maxHp);
-            towerB = new Stuff(-1,(int)(Resource.SCREEN_WIDTH*0.75),(int)(Resource.SCREEN_WIDTH*0.25),57*5,72*5,0,1,"towerB"+player.getStage());
+            towerB = new Stuff(-1,(int)(Resource.SCREEN_WIDTH*0.75),(int)(Resource.SCREEN_WIDTH*0.25),57*5,72*5,player.getStage(),1,"towerB"+player.getStage());
         } catch (IOException ex) {
             ex.printStackTrace();
         }

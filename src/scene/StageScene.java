@@ -560,7 +560,7 @@ public class StageScene extends Scene {
                     }
                     stuffRandom();
                 }
-                if (timeCount % 2 == 0) {
+                if (timeCount % 10 == 0) {
                     if (money < MAX_MONEY) {
                         money += 1;
                     }

@@ -34,7 +34,7 @@ public class IntroScene extends Scene {
     public IntroScene(MainPanel.GameStatusChangeListener gsChangeListener) {
         super(gsChangeListener);
         rc = ImgResource.getInstance();
-        introImg = rc.tryGetImage("/resources/intro.jpg");  //遊戲說明圖片 
+        introImg = rc.tryGetImage("/resources/intro.png");  //遊戲說明圖片 
         backBtn = new Button("/resources/return1.png",  (int)(Resource.SCREEN_WIDTH *0.842f), (int)(Resource.SCREEN_HEIGHT *0.778f), Resource.SCREEN_WIDTH / 12, Resource.SCREEN_HEIGHT / 9);//退回按鈕
         darkBlue = new Color(21,25,54);
         this.introY = 0;

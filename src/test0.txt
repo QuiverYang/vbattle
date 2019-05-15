@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-/resources/tinyCharacters.png,2,2,30,10,0,0,50,0.0625,32,32,false,B細胞
-=======
-/resources/tinyCharacters.png,2,1,30,10,0,0,50,0.0625,32,32,false,B�זE
->>>>>>> master
+/resources/tinyCharacters.png,2,1,30,10,0,0,50,0.0625,32,32,false,B細胞

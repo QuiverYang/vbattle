@@ -1,2 +1,1 @@
 /resources/tinyCharacters.png,3,3,40,15,200,2,50,0.0625,32,32,false,NK細胞
-

@@ -85,7 +85,7 @@ public class Stuff {
         this.atkBase = Integer.parseInt(status[4]);
         this.range = Integer.parseInt(status[5]);
         this.attackType = Integer.parseInt(status[6]);
-        this.cdTime = this.baseCd = Integer.parseInt(status[7]);
+        this.cdTime =this.baseCd = Integer.parseInt(status[7]);
         this.speed = Float.parseFloat(status[8]);
         this.sourceWidth = Integer.parseInt(status[9]);
         this.sourceHeight = Integer.parseInt(status[10]);
@@ -226,7 +226,7 @@ public class Stuff {
     }
 
     public void setCdTime(int cdTime) {
-        this.baseCd = baseCd;
+        this.cdTime = cdTime;
     }
     
     public Bomb getBomb(){

@@ -14,6 +14,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 import vbattle.Button;
 import vbattle.Coin;
@@ -558,11 +560,11 @@ public class StageScene extends Scene {
                 }
                 if (timeCount % 100 == 0) {
                     if(mp>0){
-                        mp--;
+                        mp-=2;
                     }
                     stuffRandom();
                 }
-                if (timeCount % 5 == 0) {
+                if (timeCount % 3 == 0) {
                     if (money < MAX_MONEY) {
                         money += 1;
                     }
@@ -587,7 +589,7 @@ public class StageScene extends Scene {
                 stuffList.get(i).get(j).refreshCd();
                 //刷新每隻怪物的cd時間與mp的關係
                 stuffList.get(i).get(j).setCdTime((int)(stuffList.get(i).get(j).getCdTime()
-                + stuffList.get(i).get(j).getCdTime() * (float)maxMp / (float)mp));
+                + stuffList.get(i).get(j).getCdTime() * (float)maxMp / (float)mp/10));
             }
             for (int j = 0; j < stuffList.get(i + 3).size(); j++) {
                 stuffList.get(i + 3).get(j).refreshCd();
@@ -617,27 +619,36 @@ public class StageScene extends Scene {
                 if(type.get(stageCounter)< 2){
                     try {
                         stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconWidth , iconHeight , type.get(stageCounter)+3 ,1,"actor"+type.get(stageCounter)));
-                        while((delay.get(++stageCounter)) == 0){
-                            stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconWidth , iconHeight , type.get(stageCounter)+3 ,1,"actor"+type.get(stageCounter)));
-                        }
-                        genCounter = 0;
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        System.out.println("it's fine");
                     }
                 }
-                
                 
                 if(type.get(stageCounter) >= 2){
                      try {
                         stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconBigWidth , iconBigHeight , type.get(stageCounter) ,1,"actor"+type.get(stageCounter)));
-                        while((delay.get(++stageCounter)) == 0){
-                            stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconBigWidth , iconBigHeight , type.get(stageCounter) ,1,"actor"+type.get(stageCounter)));
-                        }
-                        genCounter = 0;
                     } catch (Exception e) {
-                        e.printStackTrace();
+                         System.out.println("it's fine");
                     }
                 }
+                
+                while(delay.size()< ++stageCounter  && delay.get(stageCounter)== 0){
+                    if(type.get(stageCounter)< 2){
+                        try {
+                            stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconWidth , iconHeight , type.get(stageCounter)+3 ,1,"actor"+type.get(stageCounter)));
+                        } catch (IOException ex) {
+                            Logger.getLogger(StageScene.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                    if(type.get(stageCounter) >= 2){
+                        try {
+                            stuffList.get(areaI.get(stageCounter)+3).add(new Stuff(-1, Resource.SCREEN_WIDTH , battleAreaY[areaI.get(stageCounter)] , iconBigWidth , iconBigHeight , type.get(stageCounter) ,1,"actor"+type.get(stageCounter)));
+                        } catch (IOException ex) {
+                            Logger.getLogger(StageScene.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
+                genCounter = 0;
             }
             genCounter++;
         }else{
